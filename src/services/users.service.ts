@@ -12,9 +12,9 @@ export class UsersService {
             password 
         )
         return {
-            nickname: createUser.nickname,
-            email: createUser.email,
-            password: createUser.password 
+            // nickname: createUser.nickname,
+            // email: createUser.email,
+            // password: createUser.password 
         }
     }
     

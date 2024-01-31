@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
-export const config = {
+const config = {
   development : {
     username : 'admin',
     password : 'admin1234',
@@ -10,3 +10,5 @@ export const config = {
     dialect : 'mysql'
   }
 };
+
+export default config;

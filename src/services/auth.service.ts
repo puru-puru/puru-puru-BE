@@ -13,9 +13,9 @@ export class AuthService {
       password
     );
     return {
-      nickname: createUser.nickname,
-      email: createUser.email,
-      password: createUser.password,
+      // nickname: createUser.nickname,
+      // email: createUser.email,
+      // password: createUser.password,
     };
   };
 

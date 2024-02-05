@@ -2,7 +2,7 @@
 import { User } from "../types/customtype/express";
 import { AuthService } from "../services/auth.service";
 import { Request, Response, NextFunction } from "express";
-import Joi from 'joi'
+import Joi, { string } from 'joi'
 
 const userSchema = Joi.object({
   email: Joi.string().email({ minDomainSegments:2, tlds: { allow: ['com', 'net'] }}),
@@ -35,21 +35,22 @@ export class AuthController {
     try {
       const { email, password } = req.body;
       const user = req.user; 
-      console.log("-----------------------------------", email, password)
 
-      const loginUser = await this.authService.loginUser(
-        email,
-        password,
-        user,
-        res,
-        next
-      );
-      console.log(loginUser);
+      const loginUser = await this.authService.loginUser(email, password, user, res, next);
+
       if (!loginUser) {
-        return res.status(400).json({ message: " 로그인 실패패 " });
+        return res.status(400).json({ message: "로그인 실패" });
       }
-      return res.status(200).json({ message: " 로그인 성공 " });
-    } catch (error) {}
+      // 토큰 발급시에 바디에 넣어야 하는데 서비스 단에서 하지 못해 컨트롤러로 넘겼음.. ㅠㅠㅠ
+      res.cookie("accessToken", `Bearer ${decodeURIComponent(loginUser.accessToken)}`);
+      res.cookie("refreshToken", `Bearer ${decodeURIComponent(loginUser.refreshToken)}`);
+
+      return res.status(200).json({ message: "로그인 성공", data:{
+         accessToken: loginUser.accessToken, refreshToken: loginUser.refreshToken
+         }});
+    } catch (error) {
+      next(error);
+    }
   };
 
   // kakaoLogin = async (req: Request, res: Response, next: NextFunction) => {

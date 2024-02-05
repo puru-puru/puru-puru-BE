@@ -34,6 +34,10 @@ Users.init(
     },
     hashedRefreshToken: {
       type: DataTypes.STRING
+    },
+    uuid: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
     }
   },
   {

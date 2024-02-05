@@ -7,9 +7,9 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 
-let acc: string = process.env.JWT_ACCESS_SECRET_KEY as string
-let rcc: string = process.env.JWT_REFRESH_SECRET_KEY as string
-let hash: string = process.env.BCRYPT_SALT as string
+const acc: string = process.env.JWT_ACCESS_SECRET_KEY!
+const rcc: string = process.env.JWT_REFRESH_SECRET_KEY!
+const hash: string = process.env.BCRYPT_SALT!
 
 export class AuthService {
   authRepository = new AuthRepository()
@@ -45,31 +45,37 @@ export class AuthService {
   };
 
   // 로그인.
-  loginUser = async (email: string, password: string, user: any, res: Response, next: NextFunction) => {
+  loginUser = async (email: string, password: string, user: any, res: Response, next: NextFunction): 
+  Promise<{ accessToken: string, refreshToken: string } | undefined> => {
     try{
+      // 에러 핸들링.
       if (!email || !password) throw { name: "ValidationError" };
       const findUser = await Users.findOne({ where: { email } })
+
       if (findUser) {
         const checkPassword = bcrypt.compare(password, findUser.password)
         if(!checkPassword) throw { name: "WorngPassword" }
-      } else throw { name: "UserNotFound" }
 
+      } else throw { name: "UserNotFound" }
+      // 로그인 할시 토큰을 부여.
       const loginUser = await this.authRepository.loginUser(email, password)
-      if(loginUser) {
-        const accessToken = this.createAccessToken(loginUser.email);
-        const refreshToken = this.createRefreshToken(loginUser.email);
-
-        const salt = bcrypt.genSaltSync(parseInt(hash))
-        const hashedRefreshToken = bcrypt.hashSync(await refreshToken, salt)
-        
-        // await Users.create({ id: loginUser.id })
-
-
-        res.cookie("accessToken", decodeURIComponent(await accessToken));
-        res.cookie("refreshToken",decodeURIComponent(await refreshToken));
-        
-      } else throw { name: "UserNotFound" }
-      return { loginUser };
+      if (loginUser) {
+        const accessToken = await this.createAccessToken(loginUser.email, next);
+        const refreshToken = await this.createRefreshToken(loginUser.email, next);
+        // 리프레쉬 토큰 디비에 저장시 해쉬화.
+        const salt = bcrypt.genSaltSync(parseInt(hash));
+        const hashedRefreshToken = bcrypt.hashSync(refreshToken, salt);
+        // 여기서 디비로 저장.
+        await Users.update(
+          { hashedRefreshToken },
+          { where: { id: loginUser.id } }
+        );
+          // 넘기기.
+        return { accessToken, refreshToken };
+      } else {
+        throw { name: "UserNotFound" }
+      }
+      // return { loginUser };
     } catch (err) {
       next(err)
     }
@@ -79,37 +85,61 @@ export class AuthService {
 
   // googleSignIn = async () => {};
 
-  createAccessToken = async (email: string) => {
-    const accessToken = jwt.sign(
+  createAccessToken = async (email: string, next: NextFunction): Promise<string> =>{
+    try{
+      const accessToken = jwt.sign(
         { email }, // JWT 데이터
         acc, // Access Token의 비밀 키
         { expiresIn: "5h" } // Access Token이 5h 뒤에 만료되도록 설정.
       );
-      console.log(acc)
-      return accessToken;
+      return accessToken 
+    } catch (err) {
+      next(err)
+      throw err;
+    }
 }
 
-  createRefreshToken = async (email: string) => {
+// 여기서 부터 토큰 옵션 설정 및 발급 해독 하는 곳.
+
+  createRefreshToken = async (email: string, next: NextFunction): Promise<string> => {
+    try{
       const refreshToken = jwt.sign(
-          { email }, // JWT 데이터
-          rcc, // Refresh Token의 비밀 키
-          { expiresIn: "7d" } // Refresh Token이 7일 뒤에 만료되도록 설정.
-        );
-        return refreshToken;
+        { email }, // JWT 데이터
+        rcc, // Refresh Token의 비밀 키
+        { expiresIn: "7d" } // Refresh Token이 7일 뒤에 만료되도록 설정.
+      );
+      return refreshToken
+    } catch (err) {
+      next(err)
+      throw err;
+    }
   }
 
-  // validateRefreshToken= async (refreshToken:string, hashedRefreshToken:string ) {
-  //     try {
-  //         const [tokenType, token] = refreshToken.split(" ");
+  decodedRefreshToken = (refreshToken: string, next: NextFunction ): any => {
+    try {
+      const [tokenType, token] = refreshToken.split(" ");
+      return jwt.decode(token, { json: true }) as any;
+    } catch (err) {
+      next(err);
+    }
+  }
 
-  //         // const checkRefreshToken = await bcrypt.compare(token, hashedRefreshToken);
+  validateRefreshToken = async (refreshToken:string, hashedRefreshToken:string, res: Response, next: NextFunction ) => {
+      try {
+          const [tokenType, token] = refreshToken.split(" ");
 
-  //         if (!checkRefreshToken) {
-  //         //   return res.status(400).json({ errorMessage: "잘못된 접근입니다. " });
-  //         }
-  //         return jwt.verify(token, rcc);
-  //       } catch (error) {
-  //         return error
-  //       }
-  // }
+          if(tokenType !== "Bearer") 
+          throw new Error ( " 로그인이 필요한 서비스 입니다. " )
+
+          const checkRefreshToken = await bcrypt.compare(token, hashedRefreshToken);
+
+          if (!checkRefreshToken) {
+            return res.status(400).json({ errorMessage: "잘못된 접근입니다. " });
+          }
+          
+          return jwt.verify(token, rcc);
+        } catch (err) {
+          next(err)
+        }
+  }
 }

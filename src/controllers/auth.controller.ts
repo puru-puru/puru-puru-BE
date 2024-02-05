@@ -35,6 +35,7 @@ export class AuthController {
     try {
       const { email, password } = req.body;
       const user = req.user; 
+      console.log("-----------------------------------", email, password)
 
       const loginUser = await this.authService.loginUser(
         email,

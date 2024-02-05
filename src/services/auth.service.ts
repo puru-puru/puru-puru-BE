@@ -62,6 +62,13 @@ export class AuthService {
         const salt = bcrypt.genSaltSync(parseInt(hash))
         const hashedRefreshToken = bcrypt.hashSync(await refreshToken, salt)
         
+        // await Users.update({
+        //   where: { id: loginUser.id},
+        //   data: {
+        //     hashedRefreshToken
+        //   }
+        // })
+
         res.cookie("accessToken", accessToken);
         res.cookie("refreshToken", refreshToken);
         

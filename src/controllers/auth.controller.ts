@@ -45,7 +45,7 @@ export class AuthController {
       );
       console.log(loginUser);
       if (!loginUser) {
-        return res.status(400).json({ message: "FAIL" });
+        return res.status(400).json({ message: " 로그인 실패패 " });
       }
       return res.status(200).json({ message: " 로그인 성공 " });
     } catch (error) {}

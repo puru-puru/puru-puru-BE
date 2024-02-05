@@ -17,4 +17,4 @@ const sequelize = new Sequelize(
 );
 
 export default sequelize;
-// 님아 소변좀 보는 김에 커피 좀 타ㅣ옴
+

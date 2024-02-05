@@ -1,75 +1,110 @@
-// 어플리케이션의 중간 부분. API 핵심적인 동작이 많이 일어남
+// 어플리케이션의 중간 부분. API 핵심적인 동작(가공) 이 많이 일어남
+import { Request, Response, NextFunction } from "express";
 import { User } from "../types/customtype/express";
-import { UsersService } from "./users.service";
+import { AuthRepository } from "../repositories/auth.repository";
+import { Users } from '../../models/Users'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+
+let acc: string = process.env.JWT_ACCESS_SECRET_KEY as string
+let rcc: string = process.env.JWT_REFRESH_SECRET_KEY as string
+let hash: string = process.env.BCRYPT_SALT as string
 
 export class AuthService {
-  usersService = new UsersService();
-  // usersRepository = new UsersRepository()
+  authRepository = new AuthRepository()
 
-  localSignUp = async (nickname: string, email: string, password: string) => {
-    const createUser = await this.usersService.createUser(
-      nickname,
-      email,
-      password
-    );
-    return {
-      // nickname: createUser.nickname,
-      // email: createUser.email,
-      // password: createUser.password,
-    };
-  };
-
-  localSignIn = async (nickname: string, password: string, user: any) => {
-    const loginUser = await this.usersService.getUser(nickname, password);
-
-    console.log(loginUser);
-    // 검증
-    if (!loginUser) {
-      return null;
+  // 회원 가입.
+  signupUser = async (nickname: string, email: string, password: string, next: NextFunction) => {
+    try {
+        // 우선 에러 처리.
+      if (!email || !password) throw { name: "ValidationError" };
+      // 여기서 검증 부분을 처리 해야 하기에.. 디비 안에 있는거 여기서 꺼내옴.
+      const isExistUser = await Users.findOne({
+        where: { email },
+      });
+      if(isExistUser) throw { name: "ExistUser" }
+      
+      // 이후 에러 뚫고 오면 비밀 번호 해쉬화.
+      const salt = bcrypt.genSaltSync(parseInt(hash))
+      const hashPassword = bcrypt.hashSync(password, salt)
+      
+      const signupUser = await this.authRepository.signupUser(
+        nickname,
+        email,
+        hashPassword
+      );
+      return {
+        nickname: signupUser.nickname,
+        email: signupUser.email,
+        password: signupUser.password
+      };
+    } catch (err) {
+      next(err)
     }
-    return {
-      loginUser,
-    };
   };
 
-  kakaoSignIn = async () => {};
+  // 로그인.
+  loginUser = async (email: string, password: string, user: any, res: Response, next: NextFunction) => {
+    try{
+      if (!email || !password) throw { name: "ValidationError" };
+      const finduUser = await Users.findOne({ where: { email } })
+      if (finduUser) {
+        const checkPassword = bcrypt.compare(password, finduUser.password)
+        if(!checkPassword) throw { name: "WorngPassword" }
+      } else throw { name: "UserNotFound" }
 
-  googleSignIn = async () => {};
+      const loginUser = await this.authRepository.loginUser(email, password)
+      if(loginUser) {
+        const accessToken = this.createAccessToken(loginUser.email);
+        const refreshToken = this.createRefreshToken(loginUser.email);
 
-  // createAccessToken = async (username:string) => {
-  //     const accessToken = jwt.sign(
-  //         { username }, // JWT 데이터
-  //         process.env.JWT_ACCESS_SECRET_KEY, // Access Token의 비밀 키
-  //         { expiresIn: "1h" } // Access Token이 10초 뒤에 만료되도록 설정.
-  //       );
+        const salt = bcrypt.genSaltSync(parseInt(hash))
+        const hashedRefreshToken = bcrypt.hashSync(await refreshToken, salt)
+        
+        res.cookie("accessToken", accessToken);
+        res.cookie("refreshToken", refreshToken);
+        
+      } else throw { name: "UserNotFound" }
+      return { loginUser };
+    } catch (err) {
+      next(err)
+    }
+  };
 
-  //       return accessToken;
+  // kakaoSignIn = async () => {};
 
-  // }
+  // googleSignIn = async () => {};
 
-  // createRefreshToken = async (username: string) => {
-  //     const refreshToken = jwt.sign(
-  //         { username }, // JWT 데이터
-  //         process.env.JWT_REFRESH_SECRET_KEY, // Refresh Token의 비밀 키
-  //         { expiresIn: "7d" } // Refresh Token이 7일 뒤에 만료되도록 설정.
-  //       );
+  createAccessToken = async (email: string) => {
+    const accessToken = jwt.sign(
+        { email }, // JWT 데이터
+        acc, // Access Token의 비밀 키
+        { expiresIn: "5h" } // Access Token이 5h 뒤에 만료되도록 설정.
+      );
+      console.log(acc)
+      return accessToken;
+}
 
-  //       return refreshToken;
-  // }
+  createRefreshToken = async (email: string) => {
+      const refreshToken = jwt.sign(
+          { email }, // JWT 데이터
+          rcc, // Refresh Token의 비밀 키
+          { expiresIn: "7d" } // Refresh Token이 7일 뒤에 만료되도록 설정.
+        );
+        return refreshToken;
+  }
 
   // validateRefreshToken= async (refreshToken:string, hashedRefreshToken:string ) {
   //     try {
   //         const [tokenType, token] = refreshToken.split(" ");
 
-  //         if (tokenType !== "Bearer")
-  //           throw new Error(" 로그인이 필요한 서비스 입니다. ");
-
-  //         const checkRefreshToken = await bcrypt.compare(token, hashedRefreshToken);
+  //         // const checkRefreshToken = await bcrypt.compare(token, hashedRefreshToken);
 
   //         if (!checkRefreshToken) {
   //         //   return res.status(400).json({ errorMessage: "잘못된 접근입니다. " });
   //         }
-  //         return jwt.verify(token, process.env.JWT_REFRESH_SECRET_KEY);
+  //         return jwt.verify(token, rcc);
   //       } catch (error) {
   //         return error
   //       }

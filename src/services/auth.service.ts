@@ -1,6 +1,6 @@
 // 어플리케이션의 중간 부분. API 핵심적인 동작(가공) 이 많이 일어남
 import { Request, Response, NextFunction } from "express";
-import { User } from "../types/customtype/express";
+// import { User } from "../types/customtype/express";
 import { AuthRepository } from "../repositories/auth.repository";
 import { Users } from '../../models/Users'
 import bcrypt from 'bcrypt'
@@ -30,7 +30,7 @@ export class AuthService {
       const hashPassword = bcrypt.hashSync(password, salt)
       
       const signupUser = await this.authRepository.signupUser(
-        nickname,
+        nickname, // 옵션을 주어서 해도 되고 안해도 되고.
         email,
         hashPassword
       );
@@ -48,9 +48,9 @@ export class AuthService {
   loginUser = async (email: string, password: string, user: any, res: Response, next: NextFunction) => {
     try{
       if (!email || !password) throw { name: "ValidationError" };
-      const finduUser = await Users.findOne({ where: { email } })
-      if (finduUser) {
-        const checkPassword = bcrypt.compare(password, finduUser.password)
+      const findUser = await Users.findOne({ where: { email } })
+      if (findUser) {
+        const checkPassword = bcrypt.compare(password, findUser.password)
         if(!checkPassword) throw { name: "WorngPassword" }
       } else throw { name: "UserNotFound" }
 
@@ -62,15 +62,11 @@ export class AuthService {
         const salt = bcrypt.genSaltSync(parseInt(hash))
         const hashedRefreshToken = bcrypt.hashSync(await refreshToken, salt)
         
-        // await Users.update({
-        //   where: { id: loginUser.id},
-        //   data: {
-        //     hashedRefreshToken
-        //   }
-        // })
+        // await Users.create({ id: loginUser.id })
 
-        res.cookie("accessToken", accessToken);
-        res.cookie("refreshToken", refreshToken);
+
+        res.cookie("accessToken", decodeURIComponent(await accessToken));
+        res.cookie("refreshToken",decodeURIComponent(await refreshToken));
         
       } else throw { name: "UserNotFound" }
       return { loginUser };

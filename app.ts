@@ -1,6 +1,4 @@
 import express, { Express, Request, Response, NextFunction } from "express";
-import errorhandleMiddleware from "./src/middlewares/errorhandle.middleware";
-import authMiddleware from "./src/middlewares/auth.middleware";
 import cookieParser from 'cookie-parser'
 import expressSession from 'express-session'
 import sequelize  from "./models/index";
@@ -11,11 +9,10 @@ import { Users } from './models/Users'
 
 const app: Express = express();
 const port = process.env.PORT
-// app.use(errorhandleMiddleware)
-
 
 app.use(express.json());
 app.use(cookieParser())
+app.use(cors())
 // app.use(
 //   expressSession({
 //     secret: process.env.MY_SECRET_KEY,
@@ -33,14 +30,14 @@ app.use("/", router);
 
 
 app.listen(port, async () => {
-  console.log(port, "Server Start");
+  console.log(`----- Server ${port} Start -----`);
   await sequelize
     .authenticate()
     .then(async () => {
       await sequelize.sync(); // 이 부분 사용시에 모델 -> 부분에 테이블을 설정 할 때 마다 디비에 추가함.
       // await Users.sync({ force: true })
       // await Boards.sync({ force: true })
-      console.log("connected DB");
+      console.log("------connected DB------");
     })
     .catch((e: Error) => {
       console.log(e);

@@ -1,4 +1,6 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, Request, Response, NextFunction } from "express";
+import errorhandleMiddleware from "./src/middlewares/errorhandle.middleware";
+import authMiddleware from "./src/middlewares/auth.middleware";
 import cookieParser from 'cookie-parser'
 import expressSession from 'express-session'
 import sequelize  from "./models/index";
@@ -7,9 +9,9 @@ import cors from 'cors'
 import { Boards } from "./models/Boards";
 import { Users } from './models/Users'
 
-
 const app: Express = express();
 const port = process.env.PORT
+// app.use(errorhandleMiddleware)
 
 
 app.use(express.json());
@@ -26,7 +28,9 @@ app.use(cookieParser())
 //   })
 // );
 
+
 app.use("/", router);
+
 
 app.listen(port, async () => {
   console.log(port, "Server Start");

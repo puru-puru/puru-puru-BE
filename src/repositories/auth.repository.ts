@@ -4,11 +4,11 @@ import { where } from "sequelize";
 import { Users } from "../../models/Users";
 
 export class AuthRepository {
-  signupUser = async (nickname: string, email: string, password: string) => {
+  signupUser = async ( email: string, nickname: string, password: string) => {
     try {
       const signupUser = await Users.create({
-        nickname,
         email,
+        nickname,
         password,
       });
       return signupUser;
@@ -28,9 +28,9 @@ export class AuthRepository {
     }
   };
 
-  logoutUser = async (user: any) => {
+  signOut = async (user: any) => {
     try {
-      await Users.update({ hashedRefreshToken: null }, { where: { id: user } });
+      await Users.update({ hashedRefreshToken: null }, { where: { email: user.email } });
     } catch (err) {
       throw err;
     }

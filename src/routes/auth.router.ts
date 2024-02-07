@@ -8,11 +8,11 @@ const authController = new AuthController();
 
 router.post("/auth/sign-up", authController.signupUser);
 
-router.post('/auth/sign-in', authController.loginUser)
+router.post('/auth/sign-in', authController.signinUser)
 
-router.post("/auth/sign-out", authMiddleware, authController.logoutUser);
+router.post("/auth/sign-out", authMiddleware, authController.signOut);
 
-router.post('/auth/kakao/sign-in', authController.loginUser)
+router.post('/auth/kakao/sign-in', authController.signinUser)
 
 
 // router.post('/auth/google/sign-in', 

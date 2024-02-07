@@ -35,8 +35,8 @@ export class AuthService {
       const hashPassword = bcrypt.hashSync(password, salt);
 
       const signupUser = await this.authRepository.signupUser(
-        nickname, // 옵션을 주어서 해도 되고 안해도 되고.
         email,
+        nickname, // 옵션을 주어서 해도 되고 안해도 되고.
         hashPassword
       );
 
@@ -50,7 +50,7 @@ export class AuthService {
     }
   };
 
-  loginUser = async (email: string, password: string, user: any) => {
+  signinUser = async (email: string, password: string, user: any) => {
     try {
       // 사용자가 있는지 확인
       const findUser = await Users.findOne({ where: { email } });
@@ -95,70 +95,70 @@ export class AuthService {
   };
 
   // 로그아웃.
-  logoutUser = async (user: any) => {
+  signOut = async (user: any) => {
     try {
-      await this.authRepository.logoutUser(user);
+      await this.authRepository.signOut(user);
     } catch (err: any) {
       throw err;
     }
   };
 
-  // 카카오 로그인
-  kakaoSignIn = async (kakaoToken: any) => {
-    try {
-      // Kakao API로부터 유저 정보를 가져옵니다.
-      const responseUser = await axios.get(
-        "https://kapi.kakao.com/v2/user/me",
-        {
-          headers: {
-            Authorization: `Bearer ${kakaoToken}`,
-          },
-        }
-      );
+  // // 카카오 로그인
+  // kakaoSignIn = async (kakaoToken: any) => {
+  //   try {
+  //     // Kakao API로부터 유저 정보를 가져옵니다.
+  //     const responseUser = await axios.get(
+  //       "https://kapi.kakao.com/v2/user/me",
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${kakaoToken}`,
+  //         },
+  //       }
+  //     );
 
-      // 가져온 이메일로 기존 유저가 있는지 확인합니다.
-      const existingEmail = await Users.findOne({
-        where: { email: responseUser.data.kakao_account.email },
-      });
+  //     // 가져온 이메일로 기존 유저가 있는지 확인합니다.
+  //     const existingEmail = await Users.findOne({
+  //       where: { email: responseUser.data.kakao_account.email },
+  //     });
 
-      if (!existingEmail) {
-        // 기존 유저가 없다면 새로운 유저를 생성합니다.
-        await this.authRepository.signupUser(
-          responseUser.data.kakao_account.email,
-          responseUser.data.properties.nickname,
-          responseUser.data.id
-        );
-      }
-      // 새로운 AccessToken 및 RefreshToken 생성
-      const accessToken = await this.createAccessToken(
-        responseUser.data.kakao_account.email
-      );
-      const refreshToken = await this.createRefreshToken(
-        responseUser.data.kakao_account.email
-      );
+  //     if (!existingEmail) {
+  //       // 기존 유저가 없다면 새로운 유저를 생성합니다.
+  //       await this.authRepository.signupUser(
+  //         responseUser.data.kakao_account.email,
+  //         responseUser.data.properties.nickname,
+  //         responseUser.data.id
+  //       );
+  //     }
+  //     // 새로운 AccessToken 및 RefreshToken 생성
+  //     const accessToken = await this.createAccessToken(
+  //       responseUser.data.kakao_account.email
+  //     );
+  //     const refreshToken = await this.createRefreshToken(
+  //       responseUser.data.kakao_account.email
+  //     );
 
-      // RefreshToken을 해싱하여 DB에 저장
-      const salt = bcrypt.genSaltSync(parseInt(hash));
-      const hashedRefreshToken = bcrypt.hashSync(
-        refreshToken || "default-token",
-        salt
-      );
+  //     // RefreshToken을 해싱하여 DB에 저장
+  //     const salt = bcrypt.genSaltSync(parseInt(hash));
+  //     const hashedRefreshToken = bcrypt.hashSync(
+  //       refreshToken || "default-token",
+  //       salt
+  //     );
 
-      await Users.update(
-        { hashedRefreshToken },
-        { where: { email: responseUser.data.kakao_account.email } }
-      );
+  //     await Users.update(
+  //       { hashedRefreshToken },
+  //       { where: { email: responseUser.data.kakao_account.email } }
+  //     );
 
-      // 성공 응답
-      return {
-        message: "카카오 로그인에 성공하였습니다.",
-        data: { accessToken, refreshToken },
-      };
-    } catch (err) {
-      console.error("Error during Kakao sign-in:", err);
-      throw err;
-    }
-  };
+  //     // 성공 응답
+  //     return {
+  //       message: "카카오 로그인에 성공하였습니다.",
+  //       data: { accessToken, refreshToken },
+  //     };
+  //   } catch (err) {
+  //     console.error("Error during Kakao sign-in:", err);
+  //     throw err;
+  //   }
+  // };
 
   // kakaoSignIn = async ( kakaoToken: any ) => {
   //   try {

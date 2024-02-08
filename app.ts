@@ -28,7 +28,6 @@ app.use(cors())
 
 app.use("/", router);
 
-
 app.listen(port, async () => {
   console.log(`----- Server ${port} Start -----`);
   await sequelize

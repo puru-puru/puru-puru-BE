@@ -4,6 +4,8 @@ import { where } from "sequelize";
 import { Users } from "../../models/Users";
 
 export class AuthRepository {
+
+  // 회원 가입
   signupUser = async ( email: string, nickname: string, password: string) => {
     try {
       const signupUser = await Users.create({
@@ -17,6 +19,7 @@ export class AuthRepository {
     }
   };
 
+  // 로구인
   loginUser = async (email: string, password: string) => {
     try {
       const loginUser = await Users.findOne({
@@ -28,6 +31,7 @@ export class AuthRepository {
     }
   };
 
+  // 로그아웃
   signOut = async (user: any) => {
     try {
       await Users.update({ hashedRefreshToken: null }, { where: { email: user.email } });

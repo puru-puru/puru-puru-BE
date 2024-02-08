@@ -3,10 +3,10 @@ dotenv.config()
 
 const config = {
   development : {
-    username : 'admin',
-    password : 'admin1234',
-    database : 'testtt',
-    host : 'database-1.chqgco4smv5l.ap-northeast-2.rds.amazonaws.com',
+    username : process.env.DB_USER,
+    password : process.env.DB_PASS,
+    database : process.env.DB_NAME,
+    host : process.env.DB_HOST,
     dialect : 'mysql'
   }
 };

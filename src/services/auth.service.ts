@@ -15,6 +15,10 @@ const hash: string = process.env.BCRYPT_SALT || "default_salt_key";
 export class AuthService {
   authRepository = new AuthRepository();
 
+  confrim = (password: string, confirmPassword: string) => {
+    return password === confirmPassword;
+  };
+  
   //회원가입
   signupUser = async (email: string, nickname: string, password: string) => {
     try {
@@ -50,6 +54,7 @@ export class AuthService {
     }
   };
 
+  // 로그인
   signinUser = async (email: string, password: string, user: any) => {
     try {
       // 사용자가 있는지 확인

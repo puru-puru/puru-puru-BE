@@ -6,12 +6,16 @@ const router = express.Router();
 
 const authController = new AuthController();
 
+// 회원 가입
 router.post("/auth/sign-up", authController.signupUser);
 
+// 회원 로그인
 router.post('/auth/sign-in', authController.signinUser)
 
+// 회원 로그아웃
 router.post("/auth/sign-out", authMiddleware, authController.signOut);
 
+// 아직 미 구혀어어언...
 router.post('/auth/kakao/sign-in', authController.signinUser)
 
 

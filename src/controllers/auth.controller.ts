@@ -12,6 +12,7 @@ const userSchema = Joi.object({
   }),
   nickname: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{5,15}$")),
   password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{5,20}$")).required(),
+  confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
 });
 
 export class AuthController {
@@ -20,13 +21,18 @@ export class AuthController {
   // 회원가입
   signupUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { email, nickname, password } = await userSchema.validateAsync(
-        req.body
-      );
+      const { email, nickname, password, confirmPassword } = await userSchema.validateAsync(req.body);
+      console.log("Confirm Password:", confirmPassword);
+        const confrim = this.authService.confrim(password, confirmPassword);
+
+    if (!confrim) {
+      throw { name: "PasswordMismatch" };
+    }
+
       const signupUser = await this.authService.signupUser(
         email,
         nickname,
-        password
+        password,
       );
 
       return res
@@ -38,6 +44,7 @@ export class AuthController {
   };
 
   // 로그인
+  // 비밀번호 확인 로직 구현 할것.
   signinUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body;
@@ -68,14 +75,14 @@ export class AuthController {
   // 로그아웃
   signOut = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log("로그아웃 라우트 도착");
       const user: any = req.user;
 
       if (!req.user) throw { name: "UserNotFound" };
 
-      await this.authService.signOut(user);
-      console.log("로그아웃 라우트 성공");
-      return res.status(200).json({ message: "로그 아웃 " });
+      await this.authService.signOut(
+        user
+        );
+      return res.status(200).json({ message: " 로그아웃 성공 " });
     } catch (err) {
       next(err);
     }

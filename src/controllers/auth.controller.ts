@@ -44,7 +44,6 @@ export class AuthController {
   };
 
   // 로그인
-  // 비밀번호 확인 로직 구현 할것.
   signinUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body;

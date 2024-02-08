@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./index";
 
-// 유저 모델 지정.
+// 식물 추천 모델 지정.
 class Plants extends Model {
   declare id: number;
   declare nickname?: string;

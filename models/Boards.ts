@@ -1,6 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./index";
-import { Users } from './Users'
+import { Comments } from "./Comments";
 
 // 게시판 지정
 class Boards extends Model {
@@ -42,7 +42,8 @@ Boards.init(
   }
 );
 
-// Users.hasMany(Boards, { foreignKey: 'id' });
-// Boards.belongsTo(Users, { foreignKey: 'id' });
+// 보드와 댓글 관의 관계
+Boards.hasMany(Comments, { foreignKey: "id" });
+Comments.belongsTo(Boards, { foreignKey: "id" });
 
 export { Boards };

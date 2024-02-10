@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
-interface DatabaseConfig {
+interface DatabaseConfig { // index.ts 에서 오류 발생 하여 추가함.
   username: string;
   password: string;
   database: string;

@@ -26,7 +26,7 @@ const storage = multerS3({
         region: process.env.REGION!
     }), // AWS S3 connect
     acl: "public-read-write", // S3 Bucket 읽기 쓰기 권한 부여
-    bucket: "quizzes-assets", // S3 Bucket name.
+    bucket: "purupuru-bk", // S3 Bucket name.
     contentType: multerS3.AUTO_CONTENT_TYPE, // 파밀 MIME Type 자동 지정.
     key: (_req, file, cb) => {
     // 파일 이름 생성 및 반환

@@ -1,4 +1,4 @@
-import { Plants } from "../../models/Plants";
+import { Plants } from '../../models/Plants'
 import { Users } from "../../models/Users";
 
 export class TestRepository {

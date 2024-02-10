@@ -1,13 +1,23 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
-const config = {
-  development : {
-    username : 'admin',
-    password : 'admin1234',
-    database : 'testtt',
-    host : 'database-1.chqgco4smv5l.ap-northeast-2.rds.amazonaws.com',
-    dialect : 'mysql'
+interface DatabaseConfig {
+  username: string;
+  password: string;
+  database: string;
+  host: string;
+  dialect: string;
+}
+
+const config: {
+  development: DatabaseConfig;
+} = {
+  development: {
+    username: process.env.MYSQL_USERNAME || "",
+    password: process.env.MYSQL_PASSWORD || "",
+    database: process.env.MYSQL_DATABASE || "",
+    host: process.env.MYSQL_HOST || "",
+    dialect: 'mysql'
   }
 };
 

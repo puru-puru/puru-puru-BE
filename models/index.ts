@@ -1,8 +1,8 @@
 import { Sequelize, Model, DataTypes } from "sequelize";
-import config from '../config/config'
+import config from "../config/config";
 
 const sequelize = new Sequelize(
-  config.development.database,
+  config.development.database, 
   config.development.username,
   config.development.password,
   {

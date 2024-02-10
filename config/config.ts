@@ -1,13 +1,23 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
-const config = {
-  development : {
-    username : process.env.DB_USER,
-    password : process.env.DB_PASS,
-    database : process.env.DB_NAME,
-    host : process.env.DB_HOST,
-    dialect : 'mysql'
+interface DatabaseConfig { // index.ts 에서 오류 발생 하여 추가함.
+  username: string;
+  password: string;
+  database: string;
+  host: string;
+  dialect: string;
+}
+
+const config: {
+  development: DatabaseConfig;
+} = {
+  development: {
+    username: process.env.MYSQL_USERNAME || "",
+    password: process.env.MYSQL_PASSWORD || "",
+    database: process.env.MYSQL_DATABASE || "",
+    host: process.env.MYSQL_HOST || "",
+    dialect: 'mysql'
   }
 };
 

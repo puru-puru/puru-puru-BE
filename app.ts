@@ -10,7 +10,7 @@ import { Boards } from "./models/Boards"; // 게시판
 import { Diaries } from './models/Diaries' // 다이어리
 import { Likes } from './models/likes' // 좋아요
 import { Comments } from './models/Comments' // 댓글
-import { Missions } from './models/Missions' //미ㅏ션
+import { Missions } from './models/Missions' //미션
 import { Plants } from './models/Plants' // 식물
 
 dotenv.config();
@@ -41,14 +41,14 @@ app.listen(port, async () => {
   await sequelize
     .authenticate()
     .then(async () => {
-      // await sequelize.sync(); // 이 부분 사용시에 모델 -> 부분에 테이블을 설정 할 때 마다 디비에 추가함.
-      await Users.sync({ force: true })
-      await Boards.sync({ force: true })
-      await Diaries.sync({ force: true })
-      await Likes.sync({ force: true })
-      await Comments.sync({ force: true })
-      await Missions.sync({ force: true })
-      await Plants.sync({ force: true })
+      await sequelize.sync(); // 이 부분 사용시에 모델 -> 부분에 테이블을 설정 할 때 마다 디비에 추가함.
+      // await Users.sync({ force: true })
+      // await Boards.sync({ force: true })
+      // await Diaries.sync({ force: true })
+      // await Likes.sync({ force: true })
+      // await Comments.sync({ force: true })
+      // await Missions.sync({ force: true })
+      // await Plants.sync({ force: true })
       console.log("------connected DB------");
     })
     .catch((e: Error) => {

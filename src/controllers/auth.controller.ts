@@ -87,18 +87,18 @@ export class AuthController {
     }
   };
 
-  // kakaoLogin = async (req: Request, res: Response, next: NextFunction) => {
-  //   try {
-  //     const { access_token } = req.body;
-  //     // Kakao 로그인 메서드 호출
-  //     const result = await this.authService.kakaoSignIn(access_token);
+  kakaoLogin = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { access_token } = req.body;
+      // Kakao 로그인 메서드 호출
+      const result = await this.authService.kakaoSignIn(access_token);
 
-  //     return res.status(200).json(result);
-  //   } catch (err) {
-  //     console.error('Error during Kakao login:', err);
-  //     next(err);
-  //   }
-  // };
+      return res.status(200).json(result);
+    } catch (err) {
+      console.error('Error during Kakao login:', err);
+      next(err);
+    }
+  };
 
   // googleLogin = async (req: Request, res: Response, next: NextFunction) => {
   //   try {

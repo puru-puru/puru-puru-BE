@@ -19,7 +19,10 @@ export class TestController {
     
     getTestResult = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const getTestResult = await this.testService.getTestResult(); 
+            const { boardNum } = req.body
+            const getTestResult = await this.testService.getTestResult(
+                boardNum
+            ); 
             return res.status(200).json({ data: getTestResult }) 
         } catch (err) {
             next(err)

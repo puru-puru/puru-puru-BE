@@ -58,6 +58,10 @@ export class AuthController {
         "refreshToken",
         `Bearer ${decodeURIComponent(String(signinUser.refreshToken))}`
       );
+      res.cookie(
+        "accessToken",
+        `Bearer ${decodeURIComponent(String(signinUser.accessToken))}`
+      );
 
       return res.status(200).json({
         message: "로그인 성공",

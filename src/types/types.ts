@@ -8,3 +8,10 @@ export interface EnvConfig {
 export interface Config {
     [env: string]: EnvConfig
 }
+
+export interface RefreshRequest {
+    body: {
+        accessToken: string;
+        refreshToken: string;
+    }
+}

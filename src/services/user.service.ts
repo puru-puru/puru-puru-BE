@@ -12,6 +12,7 @@ export class UserService {
                 nickname,
                 user
             )
+            return { setName }
         } catch (err) {
             throw err;
         }

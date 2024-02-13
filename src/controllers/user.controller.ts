@@ -15,7 +15,7 @@ export class UserController {
             const user: any = req.user;
 
             const setName = await this.userService.setName(nickname, user)
-            return res.status(200).json({ message: "닉네임 설정이 완료 되었움", data: setName})
+            return res.status(200).json({ message: "닉네임 설정이 완료 되었움"})
         } catch (err) {
             next(err)
         }

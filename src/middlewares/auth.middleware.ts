@@ -71,11 +71,8 @@ function validateAccessToken(accessToken: any): JwtPayload | any {
       throw new Error("토큰 타입이 일치하지 않습니다.");
 
       const decodedToken = jwt.verify(token, acc);
-      console.log("Decoded Token:", decodedToken); 
-
       return decodedToken as JwtPayload;
   } catch (error: any) {
-    console.error("Token Validation Error:", error);
     return null;
   }
 }

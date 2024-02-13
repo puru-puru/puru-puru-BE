@@ -17,7 +17,7 @@ export class AuthService {
   authRepository = new AuthRepository();
   userRepository = new UserRepository();
 
-  confrim = (password: string, confirmPassword: string) => {
+  confirm = (password: string, confirmPassword: string) => {
     return password === confirmPassword;
   };
 

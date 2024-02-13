@@ -1,6 +1,7 @@
 import express from "express";
 import { AuthController } from "../controllers/auth.controller";
 import authMiddleware from "../middlewares/auth.middleware";
+import { RefreshRequest } from '../types/types'
 
 const router = express.Router();
 
@@ -14,6 +15,9 @@ router.post('/auth/sign-in', authController.signinUser)
 
 // 회원 로그아웃
 router.post("/auth/sign-out", authMiddleware, authController.signOut);
+
+// 리프레쉬 토큰 재 발급
+router.post('/refresh', authController.getRefresh)
 
 // 아직 미 구혀어어언...
 router.post('/auth/kakao/sign-in', authController.signinUser)

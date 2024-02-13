@@ -33,7 +33,6 @@ Users.init(
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     hashedRefreshToken: {
       type: DataTypes.STRING

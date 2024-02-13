@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "purupuru",
+    "password": "~pro)_d1scoldent",
+    "database": "purupuru-schema",
+    "host": "purupuru-db.c3yekoygy9zx.ap-northeast-2.rds.amazonaws.com",
+    "dialect": "mysql"
+  }
+}

@@ -55,5 +55,4 @@ Plants.init(
   }
 );
 
-
 export { Plants };

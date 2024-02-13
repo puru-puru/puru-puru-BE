@@ -41,15 +41,17 @@ export class AuthService {
       const hashPassword = bcrypt.hashSync(password, salt);
 
       // const signupUser = await this.authRepository.signupUser(
-      //   email, 
+      //   email,
       //   nickname, // 옵션을 주어서 해도 되고 안해도 되고.
       //   hashPassword
       // );
 
+      console.log(hashPassword);
+
       const signupUser = await this.userRepository.createUser({
         email,
         nickname,
-        hashPassword,
+        password: hashPassword,
       });
 
       return {
@@ -64,7 +66,6 @@ export class AuthService {
   signinUser = async (email: string, password: string, user: any) => {
     try {
       // 사용자가 있는지 확인
-
       const findUser = await this.userRepository.findUser({ where: { email } });
 
       if (!findUser) {
@@ -219,7 +220,7 @@ export class AuthService {
       );
       return refreshToken;
     } catch (err) {
-      throw err
+      throw err;
     }
   };
 
@@ -228,7 +229,7 @@ export class AuthService {
       const [tokenType, token] = refreshToken.split(" ");
       return jwt.decode(token, { json: true }) as any;
     } catch (err) {
-      throw err
+      throw err;
     }
   };
 
@@ -251,7 +252,7 @@ export class AuthService {
 
       return jwt.verify(token, rcc);
     } catch (err) {
-      throw err
+      throw err;
     }
   };
 }

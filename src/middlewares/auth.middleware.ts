@@ -68,7 +68,7 @@ function validateAccessToken(accessToken: any): JwtPayload | any {
     console.log("Received Token:", accessToken); // 디버깅 로그 추가
 
     if (tokenType !== "Bearer")
-      throw new Error("로그인이 필요한 서비스입니다.");
+      throw new Error("토큰 타입이 일치하지 않습니다.");
 
       const decodedToken = jwt.verify(token, acc);
       return decodedToken as JwtPayload;

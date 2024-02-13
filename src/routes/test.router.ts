@@ -6,10 +6,10 @@ const router = express.Router()
 
 const testController = new TestController();
 
-// 커뮤니티 전체 글 조회
+// 테스트 화면
 router.get('/test', authMiddleware, testController.getNickName)
 
-// 커뮤니티 글 작성
+// 테스트 결과
 router.post('/test', authMiddleware, testController.getTestResult)
 
 

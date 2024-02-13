@@ -13,6 +13,7 @@ import { Comments } from './models/Comments' // 댓글
 import { Missions } from './models/Missions' //미션
 import { Plants } from './models/plants' // 식물
 import { plantsDB } from './src/seeders/plantsDB' // 식물 시드 데이터
+import { missionsDB } from './src/seeders/missionsDB' // 미션 시드 데이터
 
 dotenv.config();
 
@@ -37,13 +38,21 @@ app.use(
 
 app.use("/", router);
 
+// 여기는 시드 데이터를 삽입하는 메서드 입니다.
 const createPlantDB = () => {
   plantsDB.map(plants => {
     Plants.create(plants);
   })
 }
 
+const createMissionDB = () => {
+  missionsDB.map(missions => {
+    Missions.create(missions);
+  })
+}
+
 //createPlantDB();
+//createMissionDB();
 
 app.listen(port, async () => {
   console.log(`----- Server ${port} Start -----`);

@@ -32,9 +32,9 @@ export class AuthController {
       const { email, nickname, password, confirmPassword } =
         await userSchema.validateAsync(req.body);
       console.log("Confirm Password:", confirmPassword);
-      const confrim = this.authService.confrim(password, confirmPassword);
+      const confirm = this.authService.confirm(password, confirmPassword);
 
-      if (!confrim) {
+      if (!confirm) {
         throw { name: "PasswordMismatch" };
       }
 
@@ -46,7 +46,7 @@ export class AuthController {
 
       return res
         .status(200)
-        .json({ message: " 회원 가입 성공 ", data: signupUser });
+        .json({ message: " 회원 가입 성공 " });
     } catch (err) {
       next(err);
     }
@@ -107,7 +107,7 @@ export class AuthController {
       const refreshToken = req.headers["refresh"] as string | undefined;
       const accessToken = req.headers["authorization"];
       if (!refreshToken || !accessToken) {
-        throw new Error(" need to loggin imma! ");
+        throw new Error(" 토큰 입력이 안되었음. ");
       }
       const decodedInfo = await this.decodedAccessToken(accessToken);
 
@@ -115,7 +115,7 @@ export class AuthController {
         where: { email: decodedInfo.email },
       });
       if (!user) {
-        throw new Error(" no user foun ");
+        throw new Error(" 유저 정보가 없습니다. ");
       }
 
       const verifyRefreshToken = await this.validateRefreshToken(
@@ -139,7 +139,6 @@ export class AuthController {
         throw new Error(" 로그인이 필요한 서비스 입니다. ");
       }
       const newAccessToken = await this.createAccessToken(user.email);
-
       const newRefreshToken = await this.createRefreshToken(user.email);
 
       const salt = bcrypt.genSaltSync(parseInt(hash));
@@ -148,6 +147,7 @@ export class AuthController {
         salt
       );
       await Users.update({ hashedRefreshToken }, { where: { id: user.id } });
+
       return res.status(200).json({
         message: "토큰 재 발급.",
         data: { newAccessToken, newRefreshToken },

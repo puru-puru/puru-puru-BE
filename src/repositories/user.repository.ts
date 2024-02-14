@@ -1,7 +1,7 @@
 import { Users } from "../../models/Users";
 
 export class UserRepository {
-    // 바꾸어야 할듯
+
   setName = async (nickname: string, user: any) => {
     try {
       await Users.update({ nickname }, { where: { id: user.id } });

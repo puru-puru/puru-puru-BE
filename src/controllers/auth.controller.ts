@@ -31,7 +31,7 @@ export class AuthController {
     try {
       const { email, nickname, password, confirmPassword } =
         await userSchema.validateAsync(req.body);
-      console.log("Confirm Password:", confirmPassword);
+
       const confirm = this.authService.confirm(password, confirmPassword);
 
       if (!confirm) {

@@ -73,14 +73,9 @@ export class AuthService {
       if (!checkPassword) {
         throw { name: "WorngPassword" };
       }
-      // 로그인 할시 토큰을 부여.
-      const loginUser = await this.userRepository.findUser({ email, password });
 
-      if (!loginUser) {
-        throw { name: "UserNotFound" };
-      }
-      const accessToken = await this.createAccessToken(loginUser.email);
-      const refreshToken = await this.createRefreshToken(loginUser.email);
+      const accessToken = await this.createAccessToken(findUser.email);
+      const refreshToken = await this.createRefreshToken(findUser.email);
 
       // 리프레쉬 토큰 디비에 저장시 해쉬화.
       const salt = bcrypt.genSaltSync(parseInt(hash));
@@ -89,15 +84,13 @@ export class AuthService {
         salt
       );
       // 여기서 디비로 저장. <-- 원래 레포계층에서 하려 했으나... ㅠㅠ
-
       await Users.update(
         { hashedRefreshToken },
-        { where: { id: loginUser.id } }
+        { where: { id: findUser.id } }
       );
 
       // 넘기기.
       return { accessToken, refreshToken };
-      // return { loginUser };
     } catch (err: any) {
       throw err;
     }

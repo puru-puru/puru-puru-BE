@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./index";
+import {UserPlant} from "./UserPlant";
 
 // 식물 추천 모델 지정.
 class Plants extends Model {
@@ -12,7 +13,7 @@ class Plants extends Model {
 // 실제 디비에 들어갈 값
 Plants.init(
   {
-    id: {
+    plantsId: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       allowNull: false,
@@ -54,5 +55,9 @@ Plants.init(
     underscored: false,
   }
 );
+
+// UserPlant와의 관계
+Plants.hasMany(UserPlant, { foreignKey: 'plantsId' });
+UserPlant.belongsTo(Plants, { foreignKey: 'plantsId' });
 
 export { Plants };

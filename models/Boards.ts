@@ -4,6 +4,9 @@ import { Comments } from "./Comments";
 
 // 게시판 지정
 class Boards extends Model {
+  static boardPatch(boardId: string, title: string, image: string, content: string) {
+      throw new Error("Method not implemented.");
+  }
   declare id: number;
   declare title: string;
   declare image?: string;

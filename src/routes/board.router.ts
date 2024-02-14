@@ -16,10 +16,10 @@ router.post('/boards', authMiddleware, boardController.boardPost)
 // 커뮤니티 상세 보기
 router.get('/boards/:boardId', authMiddleware, boardController.boardDetail)
 
-// // 커뮤니티 글 수정.
+// 커뮤니티 글 수정.
 router.patch('/boards/:boardId', authMiddleware, boardController.boardPatch)
 
-// // 커뮤니티 글 삭제.
+// 커뮤니티 글 삭제.
 // router.delete('/boards/:boardId', authMiddleware, boardController.boardDelete)
 
 

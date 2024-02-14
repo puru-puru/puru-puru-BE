@@ -1,10 +1,10 @@
+// import { User } from '../types/customtype/express'
 import { BoardService } from '../services/board.service'
 import { Request, Response, NextFunction } from 'express'
 import { Boards } from '../../models/Boards'
 import { where } from 'sequelize';
-import { addAbortListener } from 'events';
 // import Joi from 'joi' <-- 정확한 형식이 생기면 활용.
-// import upload from '../../~~~' <-- 이미지 업로드 //s3사용할떄 풀어야함
+// import upload from '../../~~~' <-- 이미지 업로드
 
 export class BoardController {
     boardService = new BoardService();
@@ -58,6 +58,7 @@ export class BoardController {
         }
     }
 
+    // 커뮤니티 게시글 수정하기
     boardPatch = async (req: Request, res: Response, next: NextFunction) => {
         try {
             console.log("컨트롤러 들어옴");
@@ -74,10 +75,13 @@ export class BoardController {
         } catch (err) {
             next(err);
         }
-
     }
 
+    
 }
+
+
+
 
 // router.get('/boards', boardController.boardList)
 

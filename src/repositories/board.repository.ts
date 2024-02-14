@@ -19,6 +19,7 @@ export class BoardRepository {
         }
     }
 
+    // 커뮤니티 게시글 작성하기
     boardPost = async (title: string, image: string, content: string, user: any) => {
         try {
             console.log("레포 들옹ㅁ")
@@ -35,6 +36,7 @@ export class BoardRepository {
         }
     }
 
+    // 커뮤니티 게시글 상세보기
     boardDetail = async (boardId: string) => {
         try {
             console.log("리포지토리 들어옴");
@@ -48,34 +50,7 @@ export class BoardRepository {
         }
     }
 
-    // boardPatch = async (boardId: string, title: string, image: string, content: string, user: any) => {
-    //     try {
-    //         console.log("리포지토리 들어옴")
-    //         const existingBoard = await Boards.findOne({ where : { id: boardId, userId: user.id }});
-    //         console.log("existingBoard", existingBoard)
-
-    //         if (!existingBoard) {
-    //             throw new Error ("수정할 게시글을 찾을 수 없습니다.");
-    //         }
-    //         // 게시글 수정
-    //         existingBoard.title = title;
-    //         existingBoard.image = image;
-    //         existingBoard.content = content;
-
-    //         // await existingBoard.save(); // db저장 전 존재여부 확인
-    //         if (existingBoard && existingBoard.changed()) {
-    //             await existingBoard.save();
-    //         }
-
-    //         console.log("리포지토리 나갑니다.")
-
-    //         return existingBoard;
-    //     } catch (err) {
-    //         console.error("Error during findOne:", err);
-    //         throw err;
-    //     }
-    // }
-
+    // 커뮤니티 게시글 수정하기
     boardPatch = async (boardId: string, title: string, image: string, content: string) => {
         try {
             console.log("리포지토리 들어옴");
@@ -89,15 +64,16 @@ export class BoardRepository {
                 return null;
             }
 
-            if (patchedBoard && patchedBoard.length > 0) {
             // 수정한 내용의 게시물이 있다면 patchedBoard[0] 를 반환홥니다.
-            return patchedBoard[0].toJSON();
-            }
-            return null;
+            return patchedBoard[0];
         } catch (err) {
             throw err;
         }
-
     }
+
+
+
+    // 커뮤니티 게시글 삭제하기
+
 
 }

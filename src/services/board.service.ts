@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { BoardRepository } from '../repositories/board.repository'
 import { Boards } from '../../models/Boards'
+import { combineTableNames } from 'sequelize/types/utils';
 
 
 export class BoardService {
@@ -16,6 +17,7 @@ export class BoardService {
         }
     }
 
+    // 커뮤니티 게시글 작성하기
     boardPost = async (title: string, image: string, content: string, user: any) => {
         try {
             console.log("서비스 부분 들어옴")
@@ -37,6 +39,7 @@ export class BoardService {
         }
     }
 
+    // 커뮤니티 게시글 상세보기
     boardDetail = async (boardId: string) => {
         try {
             console.log("서비스 들어옴");
@@ -46,6 +49,7 @@ export class BoardService {
         }
     }
 
+    // 커뮤니티 게시글 수정하기
     boardPatch = async (boardId: string, title: string, image: string, content: string) => {
         try {
             console.log("서비스 부분 들어옴");
@@ -56,7 +60,9 @@ export class BoardService {
         } catch (err) {
             throw err;
         }
-
     }
+
+    // 커뮤니티 게시글 삭제하기
+
 
 }

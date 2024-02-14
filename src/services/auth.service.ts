@@ -1,6 +1,5 @@
 // 어플리케이션의 중간 부분. API 핵심적인 동작(가공) 이 많이 일어남
 import { Request, Response, NextFunction } from "express";
-import { AuthRepository } from "../repositories/auth.repository";
 import { UserRepository } from "../repositories/user.repository";
 import { Users } from "../../models/Users";
 import bcrypt from "bcrypt";
@@ -14,7 +13,6 @@ const rcc: string =
 const hash: string = process.env.BCRYPT_SALT || "default_salt_key";
 
 export class AuthService {
-  authRepository = new AuthRepository();
   userRepository = new UserRepository();
 
   confirm = (password: string, confirmPassword: string) => {
@@ -46,8 +44,6 @@ export class AuthService {
       //   hashPassword
       // );
 
-      console.log(hashPassword);
-
       const signupUser = await this.userRepository.createUser({
         email,
         nickname,
@@ -78,7 +74,7 @@ export class AuthService {
         throw { name: "WorngPassword" };
       }
       // 로그인 할시 토큰을 부여.
-      const loginUser = await this.authRepository.loginUser(email, password);
+      const loginUser = await this.userRepository.findUser({ email, password });
 
       if (!loginUser) {
         throw { name: "UserNotFound" };
@@ -110,7 +106,10 @@ export class AuthService {
   // 로그아웃.
   signOut = async (user: any) => {
     try {
-      await this.authRepository.signOut(user);
+      await this.userRepository.updateUser(
+        { hashedRefreshToken: null },
+        { where: { email: user.email }}
+      ); 
     } catch (err: any) {
       throw err;
     }
@@ -188,9 +187,7 @@ export class AuthService {
   //   if(!user){
   //     await user.
   //   }
-
   //   } catch (error) {
-
   //   }
   // };
 

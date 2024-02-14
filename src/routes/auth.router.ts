@@ -1,7 +1,6 @@
 import express from "express";
 import { AuthController } from "../controllers/auth.controller";
 import authMiddleware from "../middlewares/auth.middleware";
-import { RefreshRequest } from "../types/types";
 
 const router = express.Router();
 

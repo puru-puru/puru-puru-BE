@@ -8,10 +8,11 @@ export class UserService {
 
     setName = async (nickname: string, user: any) => {
         try {
-            const setName = await this.userRepository.setName(
-                nickname,
-                user
+            const setName = await this.userRepository.updateUser(
+                { nickname },
+                { where: { id: user.id } }
             )
+            return { setName }
         } catch (err) {
             throw err;
         }

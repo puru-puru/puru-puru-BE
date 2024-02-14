@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 
 export default function (err: any, req: Request, res: Response, next: NextFunction) {
     try {
-        // console.log("Error Handling Middleware:", err);
         if (err.name === "ValidationError") {
             if (err.details[0].type === "any.only") {
                 return res.status(400).json({ errorMessage: "두 비밀번호가 일치하지 않습니다." });

@@ -5,7 +5,7 @@ import { Boards } from '../../models/Boards'
 
 export class BoardService {
     boardRepository = new BoardRepository();
-    
+
     // 커뮤니티 전체 게시글 조회
     boardList = async () => {
         try {
@@ -16,7 +16,7 @@ export class BoardService {
         }
     }
 
-    boardPost = async (title: string, image:string ,content: string, user: any ) => {
+    boardPost = async (title: string, image: string, content: string, user: any) => {
         try {
             console.log("서비스 부분 들어옴")
             const boardPost = await this.boardRepository.boardPost(
@@ -36,4 +36,27 @@ export class BoardService {
             throw err;
         }
     }
+
+    boardDetail = async (boardId: string) => {
+        try {
+            console.log("서비스 들어옴");
+            return await this.boardRepository.boardDetail(boardId);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    boardPatch = async (boardId: string, title: string, image: string, content: string) => {
+        try {
+            console.log("서비스 부분 들어옴");
+            const updatedBoard = await this.boardRepository.boardPatch(boardId, title, image, content);
+            console.log("서비스 부분 나감");
+
+            return updatedBoard;
+        } catch (err) {
+            throw err;
+        }
+
+    }
+
 }

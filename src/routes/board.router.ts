@@ -1,4 +1,5 @@
 import express from 'express'
+// import express, { Request, Response } from 'express'; // TS에서 ES6문법으로 작성할 때 이와 같이 작성함.
 import { BoardController } from '../controllers/board.controller';
 import authMiddleware  from '../middlewares/auth.middleware'
 
@@ -13,10 +14,10 @@ router.get('/boards', boardController.boardList)
 router.post('/boards', authMiddleware, boardController.boardPost)
 
 // 커뮤니티 상세 보기
-// router.get('/boards/:boardId', authMiddleware, boardController.boardDetail)
+router.get('/boards/:boardId', authMiddleware, boardController.boardDetail)
 
 // // 커뮤니티 글 수정.
-// router.patch('/boards/:boardId', authMiddleware, boardController.boardPetch)
+router.patch('/boards/:boardId', authMiddleware, boardController.boardPatch)
 
 // // 커뮤니티 글 삭제.
 // router.delete('/boards/:boardId', authMiddleware, boardController.boardDelete)
@@ -24,3 +25,4 @@ router.post('/boards', authMiddleware, boardController.boardPost)
 
 export default router
 
+    

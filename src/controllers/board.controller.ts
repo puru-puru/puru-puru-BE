@@ -1,10 +1,10 @@
-// import { User } from '../types/customtype/express'
 import { BoardService } from '../services/board.service'
 import { Request, Response, NextFunction } from 'express'
 import { Boards } from '../../models/Boards'
 import { where } from 'sequelize';
+import { addAbortListener } from 'events';
 // import Joi from 'joi' <-- 정확한 형식이 생기면 활용.
-// import upload from '../../~~~' <-- 이미지 업로드
+// import upload from '../../~~~' <-- 이미지 업로드 //s3사용할떄 풀어야함
 
 export class BoardController {
     boardService = new BoardService();
@@ -21,6 +21,7 @@ export class BoardController {
         }
     }
 
+    // 커뮤니티 게시글 작성
     boardPost = async (req: Request, res: Response, next: NextFunction) => {
         try {
             console.log("들어옴")
@@ -38,6 +39,42 @@ export class BoardController {
         } catch (err) {
             next(err)
         }
+    }
+
+    //  커뮤니티 게시글 상세보기
+    boardDetail = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            console.log("컨트롤러 들어옴")
+            const { boardId } = req.params;
+            const board = await this.boardService.boardDetail(boardId);
+
+            if (!board) {
+                return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
+            }
+            console.log("컨트롤러 나감")
+            return res.status(200).json({ data: board });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    boardPatch = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            console.log("컨트롤러 들어옴");
+            const { boardId } = req.params;
+            const { title, image, content } = req.body;
+
+            const patchedBoard = await this.boardService.boardPatch(boardId, title, image, content);
+
+            if (!patchedBoard) {
+                return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
+            }
+
+            return res.status(200).json({ message: '게시글이 수정되었습니다.', data: patchedBoard });
+        } catch (err) {
+            next(err);
+        }
+
     }
 
 }

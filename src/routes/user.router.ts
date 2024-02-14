@@ -7,6 +7,6 @@ const router = express.Router()
 const userController = new UserController
 
 // 닉네임 설정.
-router.post("/users/set-neame", authMiddleware, userController.setName)
+router.post("/users/set-name", authMiddleware, userController.setName)
 
 export default router

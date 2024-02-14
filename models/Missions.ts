@@ -26,7 +26,7 @@ Missions.init(
         timestamps: true, // 이거로 createdAt, updatedAt 적용
         paranoid: true, // deletedAt 구현.
         underscored: false,
-      }
+    }
 )
 
 export { Missions }

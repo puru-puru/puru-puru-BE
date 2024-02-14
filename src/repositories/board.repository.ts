@@ -71,6 +71,19 @@ export class BoardRepository {
         }
     }
 
+    getBoardById = async (boardId: string) => {
+        try {
+            console.log("게시글 확인 리포지토리 부분 들어옴");
+            const board = await Boards.findOne({ where: { id: boardId } });
+            // console.log( {message : "id값 : " , boardId} );
+            console.log("게시글 확인 리포지토리 부분 나감");
+    
+            return board;
+        } catch (err) {
+            throw err;
+        }
+    }
+
 
 
     // 커뮤니티 게시글 삭제하기

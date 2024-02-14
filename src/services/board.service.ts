@@ -49,14 +49,31 @@ export class BoardService {
         }
     }
 
+    // // 커뮤니티 게시글 수정하기
+    // boardPatch = async (boardId: string, title: string, image: string, content: string) => {
+    //     try {
+    //         console.log("서비스 부분 들어옴");
+    //         const updatedBoard = await this.boardRepository.boardPatch(boardId, title, image, content);
+    //         console.log("서비스 부분 나감");
+
+    //         return updatedBoard;
+    //     } catch (err) {
+    //         throw err;
+    //     }
+    // }
+
     // 커뮤니티 게시글 수정하기
     boardPatch = async (boardId: string, title: string, image: string, content: string) => {
         try {
             console.log("서비스 부분 들어옴");
-            const updatedBoard = await this.boardRepository.boardPatch(boardId, title, image, content);
+            const existingBoard = await this.boardRepository.getBoardById(boardId);
+            if (existingBoard){ // 게시글이 존재하면 수정을 진행
+                await this.boardRepository.boardPatch(boardId, title, image, content);    
+            }
+            
             console.log("서비스 부분 나감");
 
-            return updatedBoard;
+            return existingBoard;
         } catch (err) {
             throw err;
         }

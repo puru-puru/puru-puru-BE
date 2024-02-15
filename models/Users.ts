@@ -12,6 +12,7 @@ class Users extends Model {
   declare email: string;
   declare password: string;
   declare hashedRefreshToken: string;
+  declare agreedService: boolean;
 }
 // 실제 디비에 들어갈 값
 Users.init(
@@ -41,6 +42,10 @@ Users.init(
     uuid: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4
+    },
+    agreedService: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   },
   {

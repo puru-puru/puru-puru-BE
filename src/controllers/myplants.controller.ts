@@ -57,7 +57,7 @@ export class MyplantsController {
 
             return res.status(200).json({ data: searchedResult }) 
         } catch (err) {
-           
+           next(err)
         }
     }
 
@@ -71,7 +71,7 @@ export class MyplantsController {
 
             return res.status(200).json({ data: savePlants}) 
         } catch (err) {
-           
+            next(err)
         }
     }
 }

@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./index";
+import { Galleries } from './Galleries'
 
 // 식물 추천 모델 지정.
 class UserPlant extends Model {

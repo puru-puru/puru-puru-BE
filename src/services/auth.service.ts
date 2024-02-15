@@ -102,13 +102,13 @@ export class AuthService {
     }
   };
 
-  // refreshTokens = async (user: any) => {
-  //   try {
-  //     const refreshToken = req.headers["ref"]
-  //   } catch (err) {
-      
-  //   }
-  // }
+  agreedService = async (userId: any, agreedService: boolean) => {
+    try {
+      await this.userRepository.agreedService(userId, agreedService)
+    } catch (err) {
+      throw err;
+    }
+  }
 
   // 카카오 로그인
   // kakaoSignIn = async (kakaoToken: any) => {

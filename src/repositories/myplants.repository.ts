@@ -16,7 +16,7 @@ export class MyplantsRepository {
                 id: user.id
             });
 
-            const questions = await Templelates.findAll();
+            const questions = await Templelates.findAll(); // 전부 가져옴. 미쳤네
 
             function shuffelArray(array: any[]): any[] {
                 for (let i = array.length - 1; i > 0; i--) {

@@ -2,6 +2,7 @@ import { DataTypes, Model } from "sequelize";
 import sequelize from "./index";
 import { SavedTemplelates } from './SavedTemplelates'
 import { UserPlant } from './UserPlant'
+import { Galleries } from "./Galleries";
 
 class Diaries extends Model {
     declare diaryId: number;
@@ -49,5 +50,9 @@ SavedTemplelates.belongsTo(Diaries, { foreignKey: 'diaryId' });
 // UserPlant와의 관계
 Diaries.hasOne(UserPlant, { foreignKey: 'diaryId' });
 UserPlant.belongsTo(Diaries, { foreignKey: 'diaryId' });
+
+// 갤러리 와의 관계
+Diaries.hasMany(Galleries, { foreignKey: "diaryId" }) 
+Galleries.belongsTo(Diaries, { foreignKey: "diaryId" })
 
 export { Diaries }

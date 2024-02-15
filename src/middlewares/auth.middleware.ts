@@ -40,6 +40,7 @@ export default async function (req: Request, res: Response, next: NextFunction) 
     }
 
     req.user = user
+    
     next()
 
   } catch (error:any) {

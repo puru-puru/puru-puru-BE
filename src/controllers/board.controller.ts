@@ -82,13 +82,4 @@ export class BoardController {
 
 
 
-
-// router.get('/boards', boardController.boardList)
-
-// router.post('/boards', boardController.boardPost)
-
-// router.get('/boards/:boardId', boardController.boardDetail)
-
-// router.patch('/boards/:boardId', boardController.boardPetch)
-
 // router.delete('/boards/:boardId', boardController.boardDelete)

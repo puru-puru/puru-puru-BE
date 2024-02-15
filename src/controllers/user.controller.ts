@@ -13,9 +13,25 @@ export class UserController {
         try {
             const { nickname } = await userSchema.validateAsync(req.body)
             const user: any = req.user;
-
             const setName = await this.userService.setName(nickname, user)
+
             return res.status(200).json({ message: "닉네임 설정이 완료 되었움"})
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    getUser = async(req: Request, res: Response, next: NextFunction) => {
+        try {
+            const user: any = req.user
+            
+            if(!user) {
+                return res.status(404).json({  message: "사용자 정보를 찾을 수 없습니다." })
+            }
+
+            const userData = await this.userService.userInfo(user.id);
+
+            return res.status(200).json({ data: userData })
         } catch (err) {
             next(err)
         }

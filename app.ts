@@ -65,8 +65,8 @@ const createTemplelateDB = () => {
 }
 
 
-//createPlantDB();
-//createMissionDB();
+createPlantDB();
+createMissionDB();
 //createTemplelateDB();
 
 app.listen(port, async () => {

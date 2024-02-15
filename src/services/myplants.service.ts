@@ -31,4 +31,16 @@ export class MyplantsService {
             throw err;
         }
     }
+
+    answering = async (user: any, diaryId: any, templelateId: any) => {
+        try {
+            const answering = await this.myplantsrepository.answering(
+                user, diaryId, templelateId
+            )
+
+            return answering;            
+        } catch (err) {
+            throw err;
+        }
+    }
 }

@@ -13,7 +13,7 @@ router.get('/diaries', authMiddleware, myplantscontroller.showMyPlants)
 router.post('/diaries', authMiddleware, myplantscontroller.postMyPlant )
 
 // 반려 식물 템플릿 질문에 답하기
-router.post('/:diaryId/templelates/:templelateId', authMiddleware, )
+router.post('/:diaryId/templelates/:templelateId', authMiddleware, myplantscontroller.answering)
 
 
 // 반려 식물 검색

@@ -22,10 +22,11 @@ export class MyplantsService {
 
     showMyPlants = async (user: any) => {
         try {
-            const postMyPlant = await this.myplantsrepository.showMyPlants(
+            const showMyPlant = await this.myplantsrepository.showMyPlants(
                 user
             )
-            return postMyPlant;            
+
+            return showMyPlant;            
         } catch (err) {
             throw err;
         }

@@ -2,6 +2,8 @@ import { CreatedAt } from "sequelize-typescript";
 import { Diaries } from "../../models/Diaries";
 import { Templelates } from "../../models/Templelates";
 import { SavedTemplelates } from "../../models/SavedTemplelates";
+import { UserPlant } from "../../models/UserPlant";
+import { Plants } from "../../models/plants";
 
 export class MyplantsRepository {
 
@@ -54,17 +56,24 @@ export class MyplantsRepository {
                     id: user.id
                 },
                 attributes: {
-                    exclude: ['diaryId', 'createdAt', 'updatedAt', 'deletedAt', 'id']
+                    exclude: ['createdAt', 'updatedAt', 'deletedAt', 'id']
                 },
                 include: [{
+                    model: UserPlant,
+                    attributes: ['userplantId'],
+                    include: [{
+                        model: Plants,
+                        attributes: ['plantName', 'type', 'content']
+                    }]
+                },
+                {
+                    model: SavedTemplelates,
+                    attributes: ['id', 'answer'],
                     include: [{
                         model: Templelates,
                         attributes: ['question']
                     }],
-                    model: SavedTemplelates,
-                    attributes: ['id', 'answer'],
-
-                }]
+                }],
             });
             return MyPlants;
 
@@ -73,13 +82,30 @@ export class MyplantsRepository {
         }
     }
 
-    answering = async (user: any, diaryId: any, templelateId: any) => {
-        try{    
-            const question = await SavedTemplelates.findOne({
-                
+    answering = async (user: any, diaryId: any, templateId: any, answer: any) => {
+        try {
+            await SavedTemplelates.update({ answer: answer },
+                {
+                    where: {
+                        id: templateId
+                    }
+                });
+
+            return { "Message": "답변이 등록되었습니다" }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    savePlants = async (diaryId: any, plantsId: any) => {
+        try {
+            await UserPlant.create({
+                diaryId,
+                plantsId
             })
 
-        }catch(err){
+            return { "Message": "식물이 해당 일지에 저장되었습니다" }
+        } catch (err) {
             throw err;
         }
     }

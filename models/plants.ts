@@ -4,11 +4,11 @@ import {UserPlant} from "./UserPlant";
 
 // 식물 추천 모델 지정.
 class Plants extends Model {
-  declare id: number;
-  declare nickname?: string;
-  declare email: string;
-  declare password: string;
-  declare hashedRefreshToken: string;
+  declare plantsId: number;
+  declare plantName: string;
+  declare type: string;
+  declare image: string;
+  declare content: string;
 }
 // 실제 디비에 들어갈 값
 Plants.init(

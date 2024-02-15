@@ -49,19 +49,6 @@ export class BoardService {
         }
     }
 
-    // // 커뮤니티 게시글 수정하기
-    // boardPatch = async (boardId: string, title: string, image: string, content: string) => {
-    //     try {
-    //         console.log("서비스 부분 들어옴");
-    //         const updatedBoard = await this.boardRepository.boardPatch(boardId, title, image, content);
-    //         console.log("서비스 부분 나감");
-
-    //         return updatedBoard;
-    //     } catch (err) {
-    //         throw err;
-    //     }
-    // }
-
     // 커뮤니티 게시글 수정하기
     boardPatch = async (boardId: string, title: string, image: string, content: string) => {
         try {

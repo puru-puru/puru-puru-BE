@@ -54,10 +54,10 @@ export class BoardService {
         try {
             console.log("서비스 부분 들어옴");
             const existingBoard = await this.boardRepository.getBoardById(boardId);
-            if (existingBoard){ // 게시글이 존재하면 수정을 진행
-                await this.boardRepository.boardPatch(boardId, title, image, content);    
+            if (existingBoard) { // 게시글이 존재하면 수정을 진행
+                await this.boardRepository.boardPatch(boardId, title, image, content);
             }
-            
+
             console.log("서비스 부분 나감");
 
             return existingBoard;
@@ -67,6 +67,18 @@ export class BoardService {
     }
 
     // 커뮤니티 게시글 삭제하기
+    boardDelete = async (boardId: number) => {
+        try {
+            const deletedCount = await this.boardRepository.boardDelete(boardId);
 
+            if (deletedCount > 0) {
+                return { message: '게시글을 삭제했습니다.' };
+            } else {
+                return { message: '삭제할 게시글이 없습니다.' };
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
 
 }

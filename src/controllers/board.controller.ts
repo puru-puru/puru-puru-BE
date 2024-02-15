@@ -21,6 +21,7 @@ export class BoardController {
         }
     }
 
+    // 커뮤니티 게시글 작성
     boardPost = async (req: Request, res: Response, next: NextFunction) => {
         try {
             console.log("들어옴")
@@ -40,7 +41,47 @@ export class BoardController {
         }
     }
 
+    //  커뮤니티 게시글 상세보기
+    boardDetail = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            console.log("컨트롤러 들어옴")
+            const { boardId } = req.params;
+            const board = await this.boardService.boardDetail(boardId);
+
+            if (!board) {
+                return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
+            }
+            console.log("컨트롤러 나감")
+            return res.status(200).json({ data: board });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    // 커뮤니티 게시글 수정하기
+    boardPatch = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            console.log("컨트롤러 들어옴");
+            const { boardId } = req.params;
+            const { title, image, content } = req.body;
+
+            const patchedBoard = await this.boardService.boardPatch(boardId, title, image, content);
+            // console.log(patchedBoard);
+            if (!patchedBoard) {
+                return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
+            }
+
+            return res.status(200).json({ message: '게시글이 수정되었습니다.', data: patchedBoard });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    
 }
+
+
+
 
 // router.get('/boards', boardController.boardList)
 

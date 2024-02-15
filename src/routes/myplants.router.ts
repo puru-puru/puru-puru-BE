@@ -13,14 +13,14 @@ router.get('/diaries', authMiddleware, myplantscontroller.showMyPlants)
 router.post('/diaries', authMiddleware, myplantscontroller.postMyPlant )
 
 // 반려 식물 템플릿 질문에 답하기
-router.post('/:diaryId/templelates/:templelateId', authMiddleware, myplantscontroller.answering)
+router.patch('/:diaryId/templates/:templateId', authMiddleware, myplantscontroller.answering)
 
 
 // 반려 식물 검색
-router.get('/plants/search', authMiddleware, )
+router.get('/plants/search', myplantscontroller.searching)
 
 // 반려 식물 검색 후 저장
-router.post('/plants/save', authMiddleware, )
+router.post('/plants/:diaryId/save', authMiddleware, myplantscontroller.savePlants)
 
 // 반려 식물 신규 등록
 router.post('/newplants', authMiddleware, )

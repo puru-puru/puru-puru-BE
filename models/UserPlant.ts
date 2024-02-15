@@ -3,21 +3,16 @@ import sequelize from "./index";
 
 // 식물 추천 모델 지정.
 class UserPlant extends Model {
-  declare id: number;
-  declare name: string;
+  declare userplantId: number;
 }
 // 실제 디비에 들어갈 값
 UserPlant.init(
   {
-    id: {
+    userplantId: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false,
     }
   },
   {

@@ -38,12 +38,6 @@ export class AuthService {
       const salt = bcrypt.genSaltSync(parseInt(hash));
       const hashPassword = bcrypt.hashSync(password, salt);
 
-      // const signupUser = await this.authRepository.signupUser(
-      //   email,
-      //   nickname, // 옵션을 주어서 해도 되고 안해도 되고.
-      //   hashPassword
-      // );
-
       const signupUser = await this.userRepository.createUser({
         email,
         nickname,
@@ -107,6 +101,14 @@ export class AuthService {
       throw err;
     }
   };
+
+  // refreshTokens = async (user: any) => {
+  //   try {
+  //     const refreshToken = req.headers["ref"]
+  //   } catch (err) {
+      
+  //   }
+  // }
 
   // 카카오 로그인
   // kakaoSignIn = async (kakaoToken: any) => {

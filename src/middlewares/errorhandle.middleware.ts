@@ -14,7 +14,9 @@ export default function (err: any, req: Request, res: Response, next: NextFuncti
             return res.status(409).json({ errorMessage: "비밀번호가 일치하지 않습니다." });
         } else if (err.name === "UserNotFound") {
             return res.status(400).json({ errorMessage: "사용자를 찾을 수 없습니다." });
-        } 
+        } else if (err.name === "BoardNotFound") {
+            return res.status(400).json({ errorMessage: "게시물 찾을 수 없음" })
+        }
         next(err);
     } catch (err) {
         res.status(500).json({ errorMessage: "서버 내부 에러가 발생했습니다." });

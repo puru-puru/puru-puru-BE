@@ -26,6 +26,7 @@ export class MyplantsController {
             const showMyPlants = await this.myplantsservice.showMyPlants(
                 user
             ); 
+
             return res.status(200).json({ data: showMyPlants }) 
         } catch (err) {
             next(err)

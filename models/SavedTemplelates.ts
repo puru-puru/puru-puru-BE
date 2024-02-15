@@ -17,7 +17,7 @@ SavedTemplelates.init(
     },
     answer: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
   },
   {

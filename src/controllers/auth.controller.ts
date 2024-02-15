@@ -157,6 +157,22 @@ export class AuthController {
     }
   };
 
+  agreedService = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user: any = req.user;
+      const { agreedService } = req.body;
+
+      if( agreedService === undefined ) {
+        return res.status(400).json({ message: " 약관 동의 부탁. " })
+      }
+      await this.authService.agreedService(user.id, agreedService);
+
+      return res.status(200).json({ message: "이용 동의 업데이트 완료." })
+    } catch (err) {
+      next(err)
+    }
+  }
+
   // kakaoLogin = async (req: Request, res: Response, next: NextFunction) => {
   //   try {
   //     const { access_token } = req.body;

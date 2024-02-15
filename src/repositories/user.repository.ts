@@ -70,10 +70,18 @@ export class UserRepository {
       if(!findPkUser) {
         return null;
       }
-      
+
       return findPkUser
     } catch (err) {
       throw err;
+    }
+  }
+
+  agreedService = async (userId: any, agreedService: boolean) => {
+    try {
+      await Users.update({ agreedService }, { where: { id: userId } })
+    } catch (err) {
+      
     }
   }
 }

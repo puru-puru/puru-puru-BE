@@ -26,10 +26,52 @@ export class MyplantsController {
             const showMyPlants = await this.myplantsservice.showMyPlants(
                 user
             ); 
+
             return res.status(200).json({ data: showMyPlants }) 
         } catch (err) {
             next(err)
         }
     }
 
+    answering = async (req: Request, res: Response, next: NextFunction) =>{
+        try {
+            const user: any = req.user;
+            const {diaryId, templateId }= req.params;
+            const {answer}= req.body;
+            const answering = await this.myplantsservice.answering(
+                user, diaryId, templateId, answer
+            ); 
+
+            return res.status(200).json({ data: answering }) 
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    searching = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const {keyword} = req.body;
+            const searchedResult = await this.myplantsservice.searching(
+                keyword
+            )
+
+            return res.status(200).json({ data: searchedResult }) 
+        } catch (err) {
+           
+        }
+    }
+
+    savePlants = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const {diaryId} = req.params;
+            const {plantsId} = req.body;
+            const savePlants = await this.myplantsservice.savePlants(
+                diaryId, plantsId
+            );
+
+            return res.status(200).json({ data: savePlants}) 
+        } catch (err) {
+           
+        }
+    }
 }

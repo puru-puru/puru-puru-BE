@@ -17,6 +17,7 @@ import { Plants } from './models/plants' // 식물
 import { plantsDB } from './src/seeders/plantsDB' // 식물 시드 데이터
 import { Missions } from './models/Missions' //미션
 import { missionsDB } from './src/seeders/missionsDB' // 미션 시드 데이터
+import { templelatesDB } from './src/seeders/templelatesDB' // 템플렛 시드 데이터
 
 dotenv.config();
 
@@ -54,8 +55,16 @@ const createMissionDB = () => {
   })
 }
 
-// createPlantDB();
-// createMissionDB();
+const createTemplelateDB = () => {
+  templelatesDB.map(templelates => {
+    Templelates.create(templelates);
+  })
+}
+
+
+//createPlantDB();
+//createMissionDB();
+//createTemplelateDB();
 
 app.listen(port, async () => {
   console.log(`----- Server ${port} Start -----`);

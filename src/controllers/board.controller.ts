@@ -77,7 +77,20 @@ export class BoardController {
         }
     }
 
-    
+    // 커뮤니티 게시글 삭제하기
+    boardDelete = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const boardId = parseInt(req.params.boardId);
+
+            const result = await this.boardService.boardDelete(boardId);
+
+            res.status(200).json(result);
+        } catch (err) {
+            next(err);
+        }
+    }
+
+
 }
 
 

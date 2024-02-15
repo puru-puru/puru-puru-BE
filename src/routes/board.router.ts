@@ -20,7 +20,7 @@ router.get('/boards/:boardId', authMiddleware, boardController.boardDetail)
 router.patch('/boards/:boardId', authMiddleware, boardController.boardPatch)
 
 // 커뮤니티 글 삭제.
-// router.delete('/boards/:boardId', authMiddleware, boardController.boardDelete)
+router.delete('/boards/:boardId', authMiddleware, boardController.boardDelete)
 
 
 export default router

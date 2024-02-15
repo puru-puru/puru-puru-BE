@@ -73,4 +73,14 @@ export class MyplantsRepository {
         }
     }
 
+    answering = async (user: any, diaryId: any, templelateId: any) => {
+        try{    
+            const question = await SavedTemplelates.findOne({
+                
+            })
+
+        }catch(err){
+            throw err;
+        }
+    }
 }

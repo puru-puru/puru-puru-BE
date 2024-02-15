@@ -33,4 +33,19 @@ export class MyplantsController {
         }
     }
 
+    answering = async (req: Request, res: Response, next: NextFunction) =>{
+        try {
+            const user: any = req.user;
+            const {diaryId, templelateId }= req.params;
+            const answering = await this.myplantsservice.answering(
+                user, diaryId, templelateId
+            ); 
+
+            return res.status(200).json({ data: answering }) 
+        } catch (err) {
+            next(err)
+        }
+    }
+
+
 }

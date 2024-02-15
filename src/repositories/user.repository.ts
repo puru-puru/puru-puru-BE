@@ -1,3 +1,4 @@
+import { options } from "joi";
 import { Users } from "../../models/Users";
 
 export class UserRepository {
@@ -61,4 +62,18 @@ export class UserRepository {
       throw err;
     }
   };
+
+  findPkUser = async (options: any) => {
+    try {
+      const findPkUser = await Users.findByPk(options)
+
+      if(!findPkUser) {
+        return null;
+      }
+      
+      return findPkUser
+    } catch (err) {
+      throw err;
+    }
+  }
 }

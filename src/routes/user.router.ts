@@ -9,4 +9,7 @@ const userController = new UserController
 // 닉네임 설정.
 router.post("/users/set-name", authMiddleware, userController.setName)
 
+// 내 정보 ?
+router.get('/users', authMiddleware, userController.getUser)
+
 export default router

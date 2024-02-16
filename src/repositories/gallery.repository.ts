@@ -1,34 +1,40 @@
 import { Galleries } from "../../models/Galleries";
 
 export class GalleryRepository {
+  getGallery = async (user: any, diaryId: string) => {
+    try {
+      const gallery = await Galleries.findAll({
+        where: {
+          deletedAt: null,
+          id: user.id,
+          diaryId: diaryId,
+        },
+      });
 
-    getGalleries = async (user: any) => {
-        try {
-            const getGalleries = await Galleries.findAll({
-                where: {
-                    deletedAt: null,
-                    id: user.id
-                }
-            })
-            if(!getGalleries) {
-                throw { name: "Nopic" }
-            }
-            return getGalleries
-        } catch (err) {
-            throw err;
-        }
-    }
+      if (!gallery) {
+        throw { name: "Nopic" };
+      }
 
-    uploadGallery = async (data: any, options: any) => {
-        try {
-            const uploadGallery = await Galleries.create(options)
-            
-            if(!uploadGallery) {
-                return null;
-            }
-            return uploadGallery
-        } catch (err) {
-            throw err;
-        }
+      return gallery;
+    } catch (err) {
+      throw err;
     }
+  };
+
+  uploadImage = async (user: any, diaryId: string, imageUrl: string) => {
+    try {
+      const uploadImage = await Galleries.create({
+        image: imageUrl,
+        diaryId: diaryId,
+      });
+
+      if (!uploadImage) {
+        throw new Error("이미지 업로드에 실패했습니다.");
+      }
+
+      return uploadImage;
+    } catch (err) {
+      throw err;
+    }
+  };
 }

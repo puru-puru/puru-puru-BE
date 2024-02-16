@@ -9,7 +9,7 @@ export class UserService {
     try {
       const setName = await this.userRepository.updateUser(
         { nickname },
-        { where: { id: user.id } }
+        { where: { userId: user.userId } }
       );
       return { setName };
     } catch (err) {
@@ -26,7 +26,7 @@ export class UserService {
       }
   
       const userData = {
-        id: userInfo.id,
+        userId: userInfo.userId,
         nickname: userInfo.nickname,
         email: userInfo.email,
       };

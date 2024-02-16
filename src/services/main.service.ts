@@ -10,7 +10,7 @@ export class MainService {
     getInfo = async () => {
         try {
             const missions: any[] = await this.mainRepository.getInfo();
-            const plants: any[] = await this.testRepository.getDB()
+            const plants: any[] = await this.mainRepository.getSelectedDB();
 
             const randomMission = this.getRandom(missions);
             const shuffelPlants = this.shuffelArray(plants);

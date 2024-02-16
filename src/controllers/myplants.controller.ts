@@ -58,7 +58,7 @@ export class MyplantsController {
 
             return res.status(200).json(searchedResult) 
         } catch (err) {
-           next(err)
+            next(err)
         }
     }
 

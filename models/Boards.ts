@@ -1,12 +1,9 @@
+// Boards 모델
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./index";
 import { Comments } from "./Comments";
 
-// 게시판 지정
 class Boards extends Model {
-  static boardPatch(boardId: string, title: string, image: string, content: string) {
-      throw new Error("Method not implemented.");
-  }
   declare boardId: number;
   declare title: string;
   declare image?: string;
@@ -45,7 +42,7 @@ Boards.init(
   }
 );
 
-// 보드와 댓글 관의 관계
+// Boards와 Comments 간의 관계 설정
 Boards.hasMany(Comments, { foreignKey: "boardId" });
 Comments.belongsTo(Boards, { foreignKey: "boardId" });
 

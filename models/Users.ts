@@ -1,3 +1,4 @@
+// Users 모델
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./index";
 import { Boards } from './Boards'
@@ -5,19 +6,18 @@ import { Diaries } from './Diaries'
 import { Comments } from './Comments'
 import { Likes } from './likes'
 
-// 유저 모델 지정.
 class Users extends Model {
-  declare id: number;
+  declare userId: number;
   declare nickname?: string;
   declare email: string;
   declare password: string;
   declare hashedRefreshToken: string;
   declare agreedService: boolean;
 }
-// 실제 디비에 들어갈 값
+
 Users.init(
   {
-    id: {
+    userId: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       allowNull: false,
@@ -59,20 +59,17 @@ Users.init(
   }
 );
 
-// 게시판 과 관계
-Users.hasMany(Boards, { foreignKey: 'id' });
-Boards.belongsTo(Users, { foreignKey: 'id' });
+// Users와 Boards 간의 관계 설정
+Users.hasMany(Boards, { foreignKey: 'userId' });
+Boards.belongsTo(Users, { foreignKey: 'userId', as: 'author' });
 
-// 반려 식물 일지 관계
-Users.hasMany(Diaries, { foreignKey: "id" })
-Diaries.belongsTo(Users, { foreignKey: 'id' })
+Users.hasMany(Diaries, { foreignKey: "userId" })
+Diaries.belongsTo(Users, { foreignKey: 'userId' })
 
-// 댓글 과의 관계
-Users.hasMany(Comments, { foreignKey: 'id' })
-Comments.belongsTo(Users, { foreignKey: "id" })
+Users.hasMany(Comments, { foreignKey: 'userId' })
+Comments.belongsTo(Users, { foreignKey: "userId" })
 
-// 좋아요 와의 관계
-Users.hasMany(Likes, { foreignKey: "id" })
-Likes.belongsTo(Users, { foreignKey: "id" })
+Users.hasMany(Likes, { foreignKey: "userId" })
+Likes.belongsTo(Users, { foreignKey: "userId" })
 
 export { Users };

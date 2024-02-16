@@ -17,7 +17,7 @@ export class MyplantsRepository {
                 image: imageUrl
             });
 
-            const questions = await Templelates.findAll(); // 전부 가져옴. 미쳤네
+            const questions = await Templelates.findAll(); 
 
             function shuffelArray(array: any[]): any[] {
                 for (let i = array.length - 1; i > 0; i--) {

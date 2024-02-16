@@ -1,12 +1,12 @@
 import { Galleries } from "../../models/Galleries";
 
 export class GalleryRepository {
-  getGallery = async (user: any, diaryId: string) => {
+  getGallery = async (user: any, diaryId: any) => {
     try {
       const gallery = await Galleries.findAll({
         where: {
           deletedAt: null,
-          id: user.id,
+        //   id: user.id,
           diaryId: diaryId,
         },
       });
@@ -21,7 +21,7 @@ export class GalleryRepository {
     }
   };
 
-  uploadImage = async (user: any, diaryId: string, imageUrl: string) => {
+  uploadImage = async (user: any, diaryId: any, imageUrl: string) => {
     try {
       const uploadImage = await Galleries.create({
         image: imageUrl,

@@ -56,7 +56,7 @@ export class MyplantsController {
                 keyword
             )
 
-            return res.status(200).json(searchedResult) 
+            return res.status(200).json({data: searchedResult}) 
         } catch (err) {
            next(err)
         }

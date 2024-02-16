@@ -7,7 +7,7 @@ class Boards extends Model {
   static boardPatch(boardId: string, title: string, image: string, content: string) {
       throw new Error("Method not implemented.");
   }
-  declare id: number;
+  declare boardId: number;
   declare title: string;
   declare image?: string;
   declare content: string;
@@ -15,7 +15,7 @@ class Boards extends Model {
 
 Boards.init(
   {
-    id: {
+    boardId: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       allowNull: false,
@@ -46,7 +46,7 @@ Boards.init(
 );
 
 // 보드와 댓글 관의 관계
-Boards.hasMany(Comments, { foreignKey: "id" });
-Comments.belongsTo(Boards, { foreignKey: "id" });
+Boards.hasMany(Comments, { foreignKey: "boardId" });
+Comments.belongsTo(Boards, { foreignKey: "boardId" });
 
 export { Boards };

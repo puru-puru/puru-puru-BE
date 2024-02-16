@@ -1,27 +1,29 @@
-import { Request, Response, NextFunction } from 'express'
-import { GalleryRepository } from '../repositories/gallery.repository'
-import { Galleries } from '../../models/Galleries'
+import { Request, Response, NextFunction } from "express";
+import { GalleryRepository } from "../repositories/gallery.repository";
+import { Galleries } from "../../models/Galleries";
 
-export class GalleryService{
-    galleryRepository = new GalleryRepository()
+export class GalleryService {
+  galleryRepository = new GalleryRepository();
 
-    getGalleries = async (user: any) => {
-        try {
-            const getGalleries = await this.galleryRepository.getGalleries(user)
+  getGallery = async (user: any, diaryId: string) => {
+    try {
+      const gallery = await this.galleryRepository.getGallery(user, diaryId);
 
-            return getGalleries
-        } catch (err) {
-            throw err;
-        }
+      return gallery;
+
+    } catch (err) {
+      throw err;
     }
+  };
 
-    uploadGallery = async (user: any, imageUrl: any) => {
-        try {
-            const uploadGallery = await this.galleryRepository.uploadGallery(user, imageUrl)
+  uploadImage = async (user: any, diaryId: string, imageUrl: string) => {
+    try {
+      await this.galleryRepository.uploadImage(user, diaryId, imageUrl);
 
-            return uploadGallery
-        } catch (err) {
-            throw err;
-        }
+      return "이미지 업로드 완료";
+
+    } catch (err) {
+      throw err;
     }
+  };
 }

@@ -7,9 +7,10 @@ const router = express.Router()
 const galleryController = new GalleryController()
 
 // 사용자 사진 전체 조회
-router.get("/galleries", authMiddleware, galleryController.getGalleries)
+router.get("/galleries/:diaryId", authMiddleware, galleryController.getGallery)
 
 // 사용자 사진 등록
-router.post("/galleries", authMiddleware, upload.single('image'), galleryController.uploadGallery)
+router.post("/galleries/:diaryId", authMiddleware, upload.single('image'), galleryController.uploadImage)
+
 
 export default router;

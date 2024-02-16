@@ -6,6 +6,7 @@ import mainRouter from './main.router'
 import userRouter from './user.router'
 import myplantsRouter from './myplants.router'
 import gallerytRouter from './gallery.router'
+import upload from "../../assets/upload";
 import errorhandleMiddleware from "../middlewares/errorhandle.middleware";
 
 const router = express.Router();

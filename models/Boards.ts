@@ -1,8 +1,8 @@
-// Boards 모델
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./index";
 import { Comments } from "./Comments";
 
+// 게시판 지정
 class Boards extends Model {
   declare boardId: number;
   declare title: string;
@@ -42,7 +42,7 @@ Boards.init(
   }
 );
 
-// Boards와 Comments 간의 관계 설정
+// 보드와 댓글 관의 관계
 Boards.hasMany(Comments, { foreignKey: "boardId" });
 Comments.belongsTo(Boards, { foreignKey: "boardId" });
 

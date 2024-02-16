@@ -14,7 +14,7 @@ router.get('/diaries', authMiddleware, myplantscontroller.showMyPlants)
 router.post('/diaries', authMiddleware, upload.single('image'), myplantscontroller.postMyPlant )
 
 // 반려 식물 템플릿 질문에 답하기
-router.patch('/:diaryId/templates/:templateId', authMiddleware, myplantscontroller.answering)
+router.patch('/random/templates/:templateId', authMiddleware, myplantscontroller.answering)
 
 // 반려 식물 삭제
 router.patch('/diaries/:diaryId', authMiddleware, myplantscontroller.deletePlants)

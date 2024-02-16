@@ -5,7 +5,7 @@ export class UserRepository {
 
   setName = async (nickname: string, user: any) => {
     try {
-      await Users.update({ nickname }, { where: { id: user.id } });
+      await Users.update({ nickname }, { where: { id: user.userId } });
     } catch (err) {
       throw err;
     }

@@ -7,13 +7,13 @@ const router = express.Router()
 
 const boardController = new BoardController();
 
-// 커뮤니티 전체 글 조회
+// 커뮤니티 전체 글 조회 ok
 router.get('/boards', boardController.boardList)
 
-// 커뮤니티 글 작성
+// 커뮤니티 글 작성 ok
 router.post('/boards', upload.single("image"), authMiddleware, boardController.boardPost)
 
-// 커뮤니티 상세 보기
+// 커뮤니티 상세 보기 
 router.get('/boards/:boardId', authMiddleware, boardController.boardDetail)
 
 // 커뮤니티 글 수정.

@@ -11,30 +11,29 @@ export class BoardController {
     // 커뮤니티 게시글 전체 조회
     boardList = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const boards = await this.boardService.boardList(); // 여기서 요청을 넘겨줌
-
-            return res.status(200).json({ data: boards }) // 다시 뿌려주기 여기로.
+            const boards = await this.boardService.boardList();
+            return res.status(200).json({ data: boards });
         } catch (err) {
-            next(err)
+            next(err);
         }
     }
 
     // 커뮤니티 게시글 작성
     boardPost = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { title, content } = req.body
-            const imageUrl = (req.file as any)?.location
+            const { title, content } = req.body;
+            const imageUrl = (req.file as any)?.location;
             const user: any = req.user;
-
+    
             const boardPost = await this.boardService.boardPost(
                 title,
                 imageUrl,
                 content,
-                user
-            )
-            return res.status(200).json({ message: " 등록 완료 ", data: boardPost })
+                user.userId,  // user.id를 사용하여 userId를 전달
+            );
+            return res.status(200).json({ message: " 등록 완료 ", data: boardPost });
         } catch (err) {
-            next(err)
+            next(err);
         }
     }
 

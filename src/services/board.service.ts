@@ -11,24 +11,12 @@ export class BoardService {
     // 커뮤니티 전체 게시글 조회
     boardList = async () => {
         try {
-            const boards = await Boards.findAll({
-                where: {
-                    deletedAt: null,
-                },
-                include: [
-                    {
-                        model: Users,
-                        attributes: ['nickname'], // 가져올 사용자 모델의 속성을 지정합니다.
-                    },
-                ],
-                attributes: ['title', 'content', 'createdAt'], 
-            });
-    
+            const boards = await this.boardRepository.boardList();
             return boards;
         } catch (err) {
             throw err;
         }
-    };
+    }
 
     // 커뮤니티 게시글 작성하기
     boardPost = async (title: string, imageUrl: any, content: string, user: any) => {

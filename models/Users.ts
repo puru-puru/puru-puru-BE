@@ -61,7 +61,7 @@ Users.init(
 
 // 게시판 과 관계
 Users.hasMany(Boards, { foreignKey: 'userId' });
-Boards.belongsTo(Users, { foreignKey: 'userId' });
+Boards.belongsTo(Users, { foreignKey: 'userId', as: 'author'  });
 
 // 반려 식물 일지 관계
 Users.hasMany(Diaries, { foreignKey: "userId" })

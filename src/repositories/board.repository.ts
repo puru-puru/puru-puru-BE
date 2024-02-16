@@ -1,4 +1,5 @@
 import { Boards } from "../../models/Boards";
+import { Users } from "../../models/Users";
 
 export class BoardRepository {
 
@@ -8,24 +9,33 @@ export class BoardRepository {
             const boards = await Boards.findAll({
                 where: {
                     deletedAt: null
-                }
-            })
-            return boards
+                },
+                include: [
+                    {
+                        model: Users,
+                        attributes: ['nickname'],
+                        as: 'author'
+                    },
+                ],
+                attributes: ['boardId','title', 'image', 'content', 'createdAt'],
+            });
+
+            return boards;
         } catch (err) {
             throw err;
         }
     }
 
     // 커뮤니티 게시글 작성하기
-    boardPost = async (title: string, imageUrl: any, content: string, user: any) => {
+    boardPost = async (title: string, imageUrl: any, content: string, userId: any) => {
         try {
             const boardPost = await Boards.create({
                 title,
                 image: imageUrl,
                 content,
-                user
-            })
-            return boardPost
+                userId,  // userId를 직접 전달
+            });
+            return boardPost;
         } catch (err) {
             throw err;
         }

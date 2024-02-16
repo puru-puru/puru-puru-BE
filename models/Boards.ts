@@ -2,7 +2,6 @@ import { DataTypes, Model } from "sequelize";
 import sequelize from "./index";
 import { Comments } from "./Comments";
 
-// 게시판 지정
 class Boards extends Model {
   declare boardId: number;
   declare title: string;

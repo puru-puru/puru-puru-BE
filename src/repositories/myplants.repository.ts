@@ -7,10 +7,9 @@ import { Plants } from "../../models/plants";
 
 export class MyplantsRepository {
 
-    postMyPlant = async (image: string, name: string, plantAt: Date, user: any) => {
+    postMyPlant = async (name: string, plantAt: string, user: any, imageUrl: string) => {
         try {
             const newDiary = await Diaries.create({
-                image,
                 name,
                 plantAt,
                 id: user.id

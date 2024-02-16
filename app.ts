@@ -1,7 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import cookieParser from 'cookie-parser'
 import expressSession from 'express-session'
-import sequelize  from "./models/index";
+import sequelize from "./models/index";
 import router from "./src/routes/index";
 import dotenv from 'dotenv'
 import cors from 'cors'
@@ -81,7 +81,7 @@ app.listen(port, async () => {
       // await Missions.sync({ force: true })
       // await Plants.sync({ force: true })
       // await UserPlant.sync({ force: true })
-      //  await Galleries.sync({ force: true })
+      // await Galleries.sync({ force: true })
       // await Templelates.sync({ force: true })
       // await SavedTemplelates.sync({ force: true })
       console.log("------connected DB------");

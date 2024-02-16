@@ -1,6 +1,7 @@
 import express from 'express'
 import { MyplantsController } from '../controllers/myplants.controller';
 import authMiddleware  from '../middlewares/auth.middleware'
+import upload from '../../assets/upload'
 
 const router = express.Router()
 
@@ -10,7 +11,7 @@ const myplantscontroller = new MyplantsController();
 router.get('/diaries', authMiddleware, myplantscontroller.showMyPlants)
 
 // 반려 식물 등록
-router.post('/diaries', authMiddleware, myplantscontroller.postMyPlant )
+router.post('/diaries', authMiddleware, upload.single('image'), myplantscontroller.postMyPlant )
 
 // 반려 식물 템플릿 질문에 답하기
 router.patch('/:diaryId/templates/:templateId', authMiddleware, myplantscontroller.answering)

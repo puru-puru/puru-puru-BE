@@ -7,11 +7,11 @@ export class MyplantsService {
     myplantsrepository = new MyplantsRepository();
     testrepository = new TestRepository();
 
-    postMyPlant = async (image: string, name: string, plantAt: Date, user: any) => {
+    postMyPlant = async ( name: string, plantAt: string, user: any, imageUrl: string) => {
         try {
 
             const postMyPlant = await this.myplantsrepository.postMyPlant(
-                image, name, plantAt, user
+                name, plantAt, user, imageUrl
             )
 
             return postMyPlant;

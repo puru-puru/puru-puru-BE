@@ -57,10 +57,10 @@ export class MyplantsService {
         }
     }
 
-    savePlants = async (diaryId: any, plantsId: any) => {
+    savePlants = async (user: any, plantsId: any) => {
         try {
             const savePlants = await this.myplantsrepository.savePlants(
-                diaryId, plantsId
+                user, plantsId
             );
 
             return savePlants;
@@ -80,10 +80,10 @@ export class MyplantsService {
         }
     }
 
-    newPlants = async (diaryId: any, plantName: string, type: string, content: string) => {
+    newPlants = async (user: any, plantName: string, type: string, content: string) => {
         try {
             const newPlants = await this.myplantsrepository.newPlants(
-                diaryId, plantName, type, content
+                user, plantName, type, content
             );
             return newPlants;
         } catch (err) {

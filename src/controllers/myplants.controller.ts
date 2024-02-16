@@ -10,7 +10,7 @@ export class MyplantsController {
     postMyPlant = async (req: Request, res: Response, next: NextFunction) =>{
         try {
             const { name, plantAt } = req.body
-            const imageUrl = (req.file as any)?.key;
+            const imageUrl = (req.file as any)?.location;
             const user: any = req.user;
             const postMyPlant = await this.myplantsservice.postMyPlant(
                 name, plantAt, user, imageUrl
@@ -64,10 +64,10 @@ export class MyplantsController {
 
     savePlants = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const {diaryId} = req.params;
-            const {plantsId} = req.body;
+            const {plantsId} = req.params;
+            const user: any = req.user;
             const savePlants = await this.myplantsservice.savePlants(
-                diaryId, plantsId
+                user, plantsId
             );
 
             return res.status(200).json({ data: savePlants}) 
@@ -83,23 +83,23 @@ export class MyplantsController {
                 diaryId
             );
 
-            return res.status(200).json({ data: deletePlants}) 
+            return res.status(200).json(deletePlants) 
         } catch (err) {
-           
+            next(err)
         }
     }
     
     newPlants = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const {plantName, type, content} = req.body;
-            const {diaryId} = req.params;
+            const user: any = req.user;
             const newPlants = await this.myplantsservice.newPlants(
-                diaryId, plantName, type, content
+                user, plantName, type, content
             );
 
-            return res.status(200).json({ data: newPlants}) 
+            return res.status(200).json(newPlants) 
         } catch (err) {
-           
+            next(err)
         }
     }
 }

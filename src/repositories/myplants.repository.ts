@@ -76,6 +76,7 @@ export class MyplantsRepository {
                     }],
                 }],
             });
+
             return MyPlants;
 
         } catch (err) {
@@ -98,10 +99,19 @@ export class MyplantsRepository {
         }
     }
 
-    savePlants = async (diaryId: any, plantsId: any) => {
+    savePlants = async (user: any, plantsId: any) => {
         try {
+
+            const findDiaries = await Diaries.findAll({
+                where: {
+                    id: user.id
+                }
+            });
+            
+            const diaryId = findDiaries[findDiaries.length-1].diaryId
+
             await UserPlant.create({
-                diaryId,
+                diaryId: diaryId,
                 plantsId
             })
 
@@ -123,7 +133,7 @@ export class MyplantsRepository {
         }
     }
 
-    newPlants = async (diaryId: any, plantName: string, type: string, content: string) => {
+    newPlants = async (user: any, plantName: string, type: string, content: string) => {
         try {
             const newPlant = await Plants.create({
                 plantName: plantName,
@@ -132,6 +142,15 @@ export class MyplantsRepository {
                 content: content,
                 tag: '#신규 식물'
             })
+
+            const findDiaries = await Diaries.findAll({
+                where: {
+                    id: user.id
+                }
+            });
+            
+            const diaryId = findDiaries[findDiaries.length-1].diaryId
+
             await UserPlant.create({
                 diaryId,
                 plantsId: newPlant.plantsId

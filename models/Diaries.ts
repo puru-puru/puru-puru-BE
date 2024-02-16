@@ -28,7 +28,7 @@ Diaries.init(
         allowNull: false,
     },
     plantAt: {
-        type: DataTypes.DATE,
+        type: DataTypes.STRING,
         allowNull: false,
     }
 },

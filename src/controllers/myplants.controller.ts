@@ -9,10 +9,11 @@ export class MyplantsController {
 
     postMyPlant = async (req: Request, res: Response, next: NextFunction) =>{
         try {
-            const { image, name, plantAt } = req.body
+            const { name, plantAt } = req.body
+            const imageUrl = (req.file as any)?.key;
             const user: any = req.user;
             const postMyPlant = await this.myplantsservice.postMyPlant(
-                image, name, plantAt, user 
+                name, plantAt, user, imageUrl
             ); 
             return res.status(200).json({ data: postMyPlant }) 
         } catch (err) {

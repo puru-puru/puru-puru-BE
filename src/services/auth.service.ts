@@ -80,7 +80,7 @@ export class AuthService {
       // 여기서 디비로 저장. <-- 원래 레포계층에서 하려 했으나... ㅠㅠ
       await Users.update(
         { hashedRefreshToken },
-        { where: { id: findUser.userId } }
+        { where: { id: findUser.id } }
       );
 
       // 넘기기.

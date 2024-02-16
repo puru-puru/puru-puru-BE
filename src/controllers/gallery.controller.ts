@@ -21,7 +21,7 @@ export class GalleryController {
     try {
       const { diaryId } = req.params;
       const user: any = req.user;
-      const imageUrl = (req.file as any)?.location; // Assuming S3 file location
+      const imageUrl = (req.file as any)?.location;
 
       if (!imageUrl) {
         throw new Error("이미지 URL이 없습니다.");
@@ -41,7 +41,7 @@ export class GalleryController {
       const user: any = req.user;
 
       const gallery = await this.galleryService.deleteGallery(user, galleryId)
-      
+
       return res.status(200).json({ message: "삭제 완료" })
     } catch (err) {
       next(err)

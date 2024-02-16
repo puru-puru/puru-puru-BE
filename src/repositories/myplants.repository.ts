@@ -63,7 +63,7 @@ export class MyplantsRepository {
                     attributes: ['userplantId'],
                     include: [{
                         model: Plants,
-                        attributes: ['plantName', 'type', 'content']
+                        attributes: ['type', 'content']
                     }]
                 },
                 {
@@ -105,6 +105,38 @@ export class MyplantsRepository {
             })
 
             return { "Message": "식물이 해당 일지에 저장되었습니다" }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    deletePlants = async (diaryId: any) => {
+        try {
+            await Diaries.update({deletedAt: "deleted"}, {
+                where: {diaryId}
+            })
+
+            return { "Message": "해당 일지를 삭제하였습니다" }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    newPlants = async (diaryId: any, plantName: string, type: string, content: string) => {
+        try {
+            const newPlant = await Plants.create({
+                plantName: plantName,
+                type: type,
+                image: '아직 지정 안됨',
+                content: content,
+                tag: '#신규 식물'
+            })
+            await UserPlant.create({
+                diaryId,
+                plantsId: newPlant.plantsId
+            }) 
+
+            return { "Message": "신규 식물이 등록되었으며, 나의 식물에 포함되었습니다" }
         } catch (err) {
             throw err;
         }

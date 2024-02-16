@@ -74,4 +74,31 @@ export class MyplantsController {
            
         }
     }
+
+    deletePlants = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const {diaryId} = req.params;
+            const deletePlants = await this.myplantsservice.deletePlants(
+                diaryId
+            );
+
+            return res.status(200).json({ data: deletePlants}) 
+        } catch (err) {
+           
+        }
+    }
+    
+    newPlants = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const {plantName, type, content} = req.body;
+            const {diaryId} = req.params;
+            const newPlants = await this.myplantsservice.newPlants(
+                diaryId, plantName, type, content
+            );
+
+            return res.status(200).json({ data: newPlants}) 
+        } catch (err) {
+           
+        }
+    }
 }

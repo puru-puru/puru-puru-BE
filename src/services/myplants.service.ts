@@ -68,4 +68,26 @@ export class MyplantsService {
             throw err;
         }
     }
+
+    deletePlants = async (diaryId: any) => {
+        try {
+            const deletePlants = await this.myplantsrepository.deletePlants(
+                diaryId
+            );
+            return deletePlants;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    newPlants = async (diaryId: any, plantName: string, type: string, content: string) => {
+        try {
+            const newPlants = await this.myplantsrepository.newPlants(
+                diaryId, plantName, type, content
+            );
+            return newPlants;
+        } catch (err) {
+            throw err;
+        }
+    }
 }

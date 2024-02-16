@@ -22,16 +22,19 @@ export class GalleryController {
       const { diaryId } = req.params;
       const user: any = req.user;
       const imageUrl = (req.file as any)?.key;
-
+  
       if (!imageUrl) {
         throw new Error("이미지 URL이 없습니다.");
       }
-
-      await this.galleryService.uploadImage(user, diaryId, imageUrl);
-
-      return res
-        .status(200)
-        .json({ message: "이미지 등록 완료", data: imageUrl });
+  
+      const uploadedImage = await this.galleryService.uploadImage(user, diaryId, imageUrl);
+  
+      return res.status(200).json({
+        message: "이미지 등록 완료",
+        data: {
+          imageUrl: uploadedImage.data.image,
+        },
+      });
     } catch (err) {
       next(err);
     }

@@ -15,7 +15,7 @@ export class MyplantsController {
             const postMyPlant = await this.myplantsservice.postMyPlant(
                 name, plantAt, user, imageUrl
             ); 
-            return res.status(200).json({ data: postMyPlant }) 
+            return res.status(200).json(postMyPlant) 
         } catch (err) {
             next(err)
         }
@@ -28,7 +28,7 @@ export class MyplantsController {
                 user
             ); 
 
-            return res.status(200).json({ data: showMyPlants }) 
+            return res.status(200).json(showMyPlants) 
         } catch (err) {
             next(err)
         }
@@ -43,7 +43,7 @@ export class MyplantsController {
                 user, diaryId, templateId, answer
             ); 
 
-            return res.status(200).json({ data: answering }) 
+            return res.status(200).json(answering ) 
         } catch (err) {
             next(err)
         }
@@ -51,12 +51,12 @@ export class MyplantsController {
 
     searching = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const {keyword} = req.body;
+            const {keyword} = req.params;
             const searchedResult = await this.myplantsservice.searching(
                 keyword
             )
 
-            return res.status(200).json({ data: searchedResult }) 
+            return res.status(200).json(searchedResult) 
         } catch (err) {
            next(err)
         }

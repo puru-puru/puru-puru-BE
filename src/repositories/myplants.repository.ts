@@ -9,10 +9,12 @@ export class MyplantsRepository {
 
     postMyPlant = async (name: string, plantAt: string, user: any, imageUrl: string) => {
         try {
+
             const newDiary = await Diaries.create({
                 name,
                 plantAt,
-                id: user.id
+                id: user.id,
+                image: imageUrl
             });
 
             const questions = await Templelates.findAll(); // 전부 가져옴. 미쳤네

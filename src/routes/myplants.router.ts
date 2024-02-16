@@ -20,7 +20,7 @@ router.patch('/:diaryId/templates/:templateId', authMiddleware, myplantscontroll
 router.patch('/diaries/:diaryId', authMiddleware, myplantscontroller.deletePlants)
 
 // 반려 식물 검색
-router.get('/plants/search', myplantscontroller.searching)
+router.get('/plants/search/:keyword', myplantscontroller.searching)
 
 // 반려 식물 검색 후 저장
 router.post('/plants/:diaryId/save', authMiddleware, myplantscontroller.savePlants)

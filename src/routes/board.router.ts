@@ -24,5 +24,3 @@ router.delete('/boards/:boardId', authMiddleware, boardController.boardDelete)
 
 
 export default router
-
-    

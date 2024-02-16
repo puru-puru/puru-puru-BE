@@ -18,10 +18,15 @@ export class GalleryService {
 
   uploadImage = async (user: any, diaryId: any, imageUrl: string) => {
     try {
-      await this.galleryRepository.uploadImage(user, diaryId, imageUrl);
-
-      return "이미지 업로드 완료";
-
+      const uploadedImage = await this.galleryRepository.uploadImage(user, diaryId, imageUrl);
+  
+      return {
+        message: "이미지 업로드 완료",
+        data: {
+          id: uploadedImage.id,
+          image: `https://${process.env.BUCKET_NAME}.s3.${process.env.REGION}.amazonaws.com/${uploadedImage.image}`,
+        },
+      };
     } catch (err) {
       throw err;
     }

@@ -16,7 +16,7 @@ export const plantsDB = [
     {
         plantName: '멜라니 고무나무',
         type: '뽕나무과',
-        image: 'https://img.marieclairekorea.com/2021/04/mck_606694305c650.jpg',
+        image: 'https://img.marieclairekorea.com/2021/04/mck_606694305c650.jpg', 
         content: '와인 빛을 띠는 두꺼운 잎이 있는 나무. 생명력이 강해, 초보자가 관리하기 쉽다. 다만 냉해를 입지 않기 위해 온도에 주의해야 함.',
         tag: '#수수한'
     },

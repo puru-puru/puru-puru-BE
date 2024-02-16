@@ -1,7 +1,7 @@
 import express from 'express'
 import { GalleryController } from '../controllers/gallery.controller' 
 import authMiddleware from '../middlewares/auth.middleware'
-import upload from '../../assets/upload'
+import upload from '../../assets/upload' 
 
 const router = express.Router()
 const galleryController = new GalleryController()
@@ -13,4 +13,4 @@ router.get("/galleries/:diaryId", authMiddleware, galleryController.getGallery)
 router.post("/galleries/:diaryId", authMiddleware, upload.single('image'), galleryController.uploadImage)
 
 
-export default router;
+export default router;  

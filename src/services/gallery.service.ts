@@ -5,18 +5,18 @@ import { Galleries } from "../../models/Galleries";
 export class GalleryService {
   galleryRepository = new GalleryRepository();
 
-  getGallery = async (user: any, diaryId: string) => {
+  getGallery = async (user: any, diaryId: any) => {
     try {
       const gallery = await this.galleryRepository.getGallery(user, diaryId);
 
       return gallery;
-
+      
     } catch (err) {
       throw err;
     }
   };
 
-  uploadImage = async (user: any, diaryId: string, imageUrl: string) => {
+  uploadImage = async (user: any, diaryId: any, imageUrl: string) => {
     try {
       await this.galleryRepository.uploadImage(user, diaryId, imageUrl);
 

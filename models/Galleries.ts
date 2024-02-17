@@ -26,7 +26,7 @@ Galleries.init(
         timestamps: true,
         paranoid: true,
         underscored: false,
-      }
+    }
 )
 
 export { Galleries }

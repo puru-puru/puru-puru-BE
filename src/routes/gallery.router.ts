@@ -12,5 +12,7 @@ router.get("/galleries/:diaryId", authMiddleware, galleryController.getGallery)
 // 사용자 사진 등록
 router.post("/galleries/:diaryId", authMiddleware, upload.single('image'), galleryController.uploadImage)
 
+// 등록 사진 삭제.
+router.delete('/galleries/:galleryId', authMiddleware, galleryController.deleteGallery)
 
 export default router;  

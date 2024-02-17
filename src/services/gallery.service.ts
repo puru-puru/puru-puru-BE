@@ -5,28 +5,40 @@ import { Galleries } from "../../models/Galleries";
 export class GalleryService {
   galleryRepository = new GalleryRepository();
 
+  // 이미지 조회
   getGallery = async (user: any, diaryId: any) => {
     try {
       const gallery = await this.galleryRepository.getGallery(user, diaryId);
 
       return gallery;
-      
     } catch (err) {
       throw err;
     }
   };
 
+
+  // 이미지 업로드
   uploadImage = async (user: any, diaryId: any, imageUrl: string) => {
     try {
       const uploadedImage = await this.galleryRepository.uploadImage(user, diaryId, imageUrl);
+
+      return uploadedImage;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  deleteGallery = async (user: any, galleryId: any) => {
+    try {
+      const foundGallery = await this.galleryRepository.findGallery({ where: { id: galleryId } });
   
-      return {
-        message: "이미지 업로드 완료",
-        data: {
-          id: uploadedImage.id,
-          image: `https://${process.env.BUCKET_NAME}.s3.${process.env.REGION}.amazonaws.com/${uploadedImage.image}`,
-        },
-      };
+      if (!foundGallery) {
+        throw { name: "GalleryNotFound" };
+      }
+  
+      const deleteGallery = await this.galleryRepository.deleteGallery(galleryId);
+  
+      return deleteGallery;
     } catch (err) {
       throw err;
     }

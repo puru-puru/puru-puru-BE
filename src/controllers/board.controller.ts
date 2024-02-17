@@ -17,7 +17,7 @@ export class BoardController {
             return res.status(200).json({ data: boards });
         } catch (err) {
             next(err);
-        }
+        } 
     }
 
     // 커뮤니티 게시글 작성
@@ -31,7 +31,7 @@ export class BoardController {
                 title,
                 imageUrl,
                 content,
-                user.userId,  // user.id를 사용하여 userId를 전달
+                user.userId, 
             );
             return res.status(200).json({ message: " 등록 완료 ", data: boardPost });
         } catch (err) {

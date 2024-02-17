@@ -3,27 +3,27 @@ import { Users } from "../../models/Users";
 
 export class BoardRepository {
 
-    // 커뮤니티 게시글 전체 조회
-    boardList = async (user: any) => {
-        try {
-            const boards = await Boards.findAll({
-                where: {
-                    deletedAt: null
+ // 커뮤니티 게시글 전체 조회
+ boardList = async (user: any) => {
+    try {
+        const boards = await Boards.findAll({
+            where: {
+                deletedAt: null
+            },
+            include: [
+                {
+                    model: Users,
+                    attributes: ['nickname'],
+                    as: 'author'
                 },
-                include: [
-                    {
-                        model: Users,
-                        attributes: ['nickname'],
-                        as: 'author'
-                    },
-                ],
-                attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
-            });
-            return boards;
-        } catch (err) {
-            throw err;
-        }
+            ],
+            attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
+        });
+        return boards;
+    } catch (err) {
+        throw err;
     }
+}
 
     // 커뮤니티 게시글 작성하기
     boardPost = async (title: string, imageUrl: any, content: string, userId: any) => {
@@ -32,7 +32,7 @@ export class BoardRepository {
                 title,
                 image: imageUrl,
                 content,
-                userId,  // userId를 직접 전달
+                userId,  
             });
             return boardPost;
         } catch (err) {

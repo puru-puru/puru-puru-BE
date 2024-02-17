@@ -5,7 +5,7 @@ import { Galleries } from "../../models/Galleries";
 export class GalleryService {
   galleryRepository = new GalleryRepository();
 
-  // 이미지 조회
+
   getGallery = async (user: any, diaryId: any) => {
     try {
       const gallery = await this.galleryRepository.getGallery(user, diaryId);

@@ -19,6 +19,7 @@ export class CommentController {
             ); 
             return res.status(200).json(comment) 
         } catch (err) {
+
             next(err)
         }
     }
@@ -33,6 +34,7 @@ export class CommentController {
             ); 
             return res.status(200).json(comment) 
         } catch (err) {
+
             next(err)
         }
     }
@@ -47,8 +49,11 @@ export class CommentController {
             ); 
             return res.status(200).json(comment) 
         } catch (err) {
+
             next(err)
         }
     }
 
+
 }
+

@@ -12,10 +12,12 @@ export class CommentRepository {
             })
 
             return { "Message": "댓글을 작성했습니다" }
+
         } catch (err) {
             throw err;
         }
     }
+
 
     updateComment = async (content: string, commentId: any, boardId: any, user: any) => {
         try {
@@ -32,10 +34,12 @@ export class CommentRepository {
             }
 
             return { "Message": "댓글을 수정했습니다" }
+
         } catch (err) {
             throw err;
         }
     }
+
 
     deleteComment = async (content: string, commentId: any, boardId: any, user: any) => {
         try {
@@ -52,8 +56,10 @@ export class CommentRepository {
             }
 
             return { "Message": "댓글을 삭제했습니다" }
+
         } catch (err) {
             throw err;
         }
     }
+
 }

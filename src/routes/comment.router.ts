@@ -7,6 +7,7 @@ const router = express.Router()
 
 const commentController = new CommentController();
 
+
 // 해당 글에 댓글 작성
 router.post('/boards/:boardId/comments', authMiddleware, commentController.postComment)
 
@@ -15,6 +16,7 @@ router.patch('/boards/:boardId/comments/:commentId', authMiddleware, commentCont
 
 // 해당 글의 댓글 삭제
 router.patch('/boards/:boardId/comments/:commentId/delete', authMiddleware, commentController.deleteComment)
+
 
 
 

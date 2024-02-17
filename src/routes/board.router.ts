@@ -7,8 +7,8 @@ const router = express.Router()
 
 const boardController = new BoardController();
 
-// 커뮤니티 전체 글 조회 사실상 메인페이지.
-router.get('/boards', boardController.boardList)
+// 커뮤니티 전체조회. ( 로그인한 사용자의 닉네임 또한 불러 올 수 있어야 함. )
+router.get('/boards', authMiddleware, boardController.boardList)
 
 // 커뮤니티 글 작성 ok
 router.post('/boards', upload.single("image"), authMiddleware, boardController.boardPost)

@@ -13,7 +13,7 @@ export class MyplantsRepository {
             const newDiary = await Diaries.create({
                 name,
                 plantAt,
-                id: user.id,
+                userId: user.userId,
                 image: imageUrl
             });
 
@@ -54,7 +54,7 @@ export class MyplantsRepository {
             const MyPlants = await Diaries.findAll({
                 where: {
                     deletedAt: null,
-                    id: user.id
+                    userId: user.userId
                 },
                 attributes: {
                     exclude: ['createdAt', 'updatedAt', 'deletedAt', 'id']
@@ -104,7 +104,7 @@ export class MyplantsRepository {
 
             const findDiaries = await Diaries.findAll({
                 where: {
-                    id: user.id
+                    userId: user.userId
                 }
             });
             

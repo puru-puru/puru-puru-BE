@@ -32,7 +32,7 @@ app.use(
   expressSession({
     secret: process.env.MY_SECRET_KEY!,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,
       secure: true, // https 일때 도 값이 잘 들어갈 수 있도록 배포시에 주석풀기.
@@ -72,7 +72,7 @@ app.listen(port, async () => {
   await sequelize
     .authenticate()
     .then(async () => {
-      // await sequelize.sync(); // 이 부분 사용시에 모델 -> 부분에 테이블을 설정 할 때 마다 디비에 추가함.
+      await sequelize.sync(); // 이 부분 사용시에 모델 -> 부분에 테이블을 설정 할 때 마다 디비에 추가함.
       // await Users.sync({ force: true })
       // await Boards.sync({ force: true })
       // await Diaries.sync({ force: true })

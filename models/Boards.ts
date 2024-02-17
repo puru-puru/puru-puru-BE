@@ -2,11 +2,7 @@ import { DataTypes, Model } from "sequelize";
 import sequelize from "./index";
 import { Comments } from "./Comments";
 
-// 게시판 지정
 class Boards extends Model {
-  static boardPatch(boardId: string, title: string, image: string, content: string) {
-      throw new Error("Method not implemented.");
-  }
   declare boardId: number;
   declare title: string;
   declare image?: string;

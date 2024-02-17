@@ -13,8 +13,10 @@ import errorhandleMiddleware from "../middlewares/errorhandle.middleware";
 const router = express.Router();
 
 
+
 router.use('/api', [authRouter, boardRouter, testRouter, userRouter, mainRouter, 
     myplantsRouter, gallerytRouter, commentRouter])
+
 router.use(errorhandleMiddleware);
 
 

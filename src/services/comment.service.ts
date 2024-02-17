@@ -7,15 +7,18 @@ import { combineTableNames } from 'sequelize/types/utils';
 export class CommentService {
     commentRepository = new CommentRepository();
 
+
     postComment = async (content: string, boardId: any, user: any) => {
         try {
             return await this.commentRepository.postComment(
                 content, boardId, user
             ) 
         } catch (err) {
+
             throw err;
         }
     }
+
 
     updateComment = async (content: string, commentId: any, boardId: any, user: any) => {
         try {
@@ -23,9 +26,11 @@ export class CommentService {
                 content, commentId, boardId, user
             ) 
         } catch (err) {
+
             throw err;
         }
     }
+
 
     deleteComment = async (content: string, commentId: any, boardId: any, user: any) => {
         try {
@@ -33,9 +38,8 @@ export class CommentService {
                 content, commentId, boardId, user
             ) 
         } catch (err) {
+
             throw err;
         }
     }
-
-
 }

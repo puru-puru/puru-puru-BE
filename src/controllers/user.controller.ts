@@ -29,7 +29,7 @@ export class UserController {
                 return res.status(404).json({  message: "사용자 정보를 찾을 수 없습니다." })
             }
 
-            const userData = await this.userService.userInfo(user.id);
+            const userData = await this.userService.userInfo(user.userId);
 
             return res.status(200).json({ data: userData })
         } catch (err) {
@@ -37,4 +37,3 @@ export class UserController {
         }
     }
 }
-

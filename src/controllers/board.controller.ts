@@ -1,17 +1,19 @@
-// import { User } from '../types/customtype/express'
-import { BoardService } from '../services/board.service'
 import { Request, Response, NextFunction } from 'express'
+import { BoardService } from '../services/board.service'
+import { UserService } from '../services/user.service';
 import { Boards } from '../../models/Boards'
 import { where } from 'sequelize';
 
 
 export class BoardController {
     boardService = new BoardService();
+    userService = new UserService()
 
     // 커뮤니티 게시글 전체 조회
     boardList = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const boards = await this.boardService.boardList();
+            const user = req.user;
+            const boards = await this.boardService.boardList(user);
             return res.status(200).json({ data: boards });
         } catch (err) {
             next(err);

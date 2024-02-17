@@ -73,7 +73,7 @@ app.listen(port, async () => {
     .authenticate()
     .then(async () => {
       // await sequelize.sync(); // 이 부분 사용시에 모델 -> 부분에 테이블을 설정 할 때 마다 디비에 추가함.
-      // await Users.sync({ force: true })
+      // // await Users.sync({ force: true })
       // await Boards.sync({ force: true })
       // await Diaries.sync({ force: true })
       // await Likes.sync({ force: true })

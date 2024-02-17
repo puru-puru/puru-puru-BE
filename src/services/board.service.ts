@@ -9,9 +9,9 @@ export class BoardService {
     boardRepository = new BoardRepository();
 
     // 커뮤니티 전체 게시글 조회
-    boardList = async () => {
+    boardList = async (user: any) => {
         try {
-            const boards = await this.boardRepository.boardList();
+            const boards = await this.boardRepository.boardList(user);
             return boards;
         } catch (err) {
             throw err;

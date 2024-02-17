@@ -12,9 +12,10 @@ export class MainService {
             const missions: any[] = await this.mainRepository.getInfo();
             const plants: any[] = await this.mainRepository.getSelectedDB();
 
-            const randomMission = this.getRandom(missions);
+            const shuffleMission = this.shuffelArray(missions);
             const shuffelPlants = this.shuffelArray(plants);
             const randomPlants = shuffelPlants.slice(0,3);
+            const randomMission = shuffleMission.slice(0,3);
 
             return { mission: randomMission, plant: randomPlants }
         } catch (err) {

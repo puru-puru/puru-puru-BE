@@ -7,7 +7,7 @@ const router = express.Router()
 
 const boardController = new BoardController();
 
-// 커뮤니티 전체 글 조회 ok
+// 커뮤니티 전체 글 조회 사실상 메인페이지.
 router.get('/boards', boardController.boardList)
 
 // 커뮤니티 글 작성 ok

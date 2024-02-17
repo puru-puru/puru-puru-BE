@@ -4,7 +4,7 @@ import { Users } from "../../models/Users";
 export class BoardRepository {
 
     // 커뮤니티 게시글 전체 조회
-    boardList = async () => {
+    boardList = async (user: any) => {
         try {
             const boards = await Boards.findAll({
                 where: {
@@ -17,9 +17,8 @@ export class BoardRepository {
                         as: 'author'
                     },
                 ],
-                attributes: ['boardId','title', 'image', 'content', 'createdAt'],
+                attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
             });
-
             return boards;
         } catch (err) {
             throw err;

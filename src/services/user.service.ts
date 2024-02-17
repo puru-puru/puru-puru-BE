@@ -30,9 +30,16 @@ export class UserService {
         nickname: userInfo.nickname,
         email: userInfo.email,
       };
+  
       return userData;
     } catch (err) {
       throw err;
     }
   };
+  
 }
+// if(!user) {
+//   return res.status(404).json({ message: "사용자 정보를 찾을 수 없습니다." })
+// }
+
+// const userData = await this.userService.userInfo(user.userId)

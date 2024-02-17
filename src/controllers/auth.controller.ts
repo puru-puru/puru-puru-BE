@@ -146,7 +146,7 @@ export class AuthController {
         newRefreshToken || "default-token",
         salt
       );
-      await Users.update({ hashedRefreshToken }, { where: { id: user.id } });
+      await Users.update({ hashedRefreshToken }, { where: { userId: user.userId } });
 
       return res.status(200).json({
         message: "토큰 재 발급.",
@@ -156,6 +156,22 @@ export class AuthController {
       next(err);
     }
   };
+
+  agreedService = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user: any = req.user;
+      const { agreedService } = req.body;
+
+      if( agreedService === undefined ) {
+        return res.status(400).json({ message: " 약관 동의 부탁. " })
+      }
+      await this.authService.agreedService(user.id, agreedService);
+
+      return res.status(200).json({ message: "이용 동의 업데이트 완료." })
+    } catch (err) {
+      next(err)
+    }
+  }
 
   // kakaoLogin = async (req: Request, res: Response, next: NextFunction) => {
   //   try {

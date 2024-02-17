@@ -1,10 +1,11 @@
+import { options } from "joi";
 import { Users } from "../../models/Users";
 
 export class UserRepository {
 
   setName = async (nickname: string, user: any) => {
     try {
-      await Users.update({ nickname }, { where: { id: user.id } });
+      await Users.update({ nickname }, { where: { id: user.userId } });
     } catch (err) {
       throw err;
     }
@@ -61,4 +62,26 @@ export class UserRepository {
       throw err;
     }
   };
+
+  findPkUser = async (options: any) => {
+    try {
+      const findPkUser = await Users.findByPk(options)
+
+      if(!findPkUser) {
+        return null;
+      }
+
+      return findPkUser
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  agreedService = async (userId: any, agreedService: boolean) => {
+    try {
+      await Users.update({ agreedService }, { where: { id: userId } })
+    } catch (err) {
+      
+    }
+  }
 }

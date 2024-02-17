@@ -14,7 +14,8 @@ declare global {
 }
 
 export class User {
-  uuid:string;
-  nickname:string;
-  
+
+  uuid: string;
+  nickname: string;
+
 }

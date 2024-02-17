@@ -7,17 +7,17 @@ const router = express.Router()
 
 const commentController = new CommentController();
 
-// 커뮤니티 작성된 게시글에 댓글 목록 조회
-router.get('/boards/:boardId', authMiddleware, commentController.commentList)
 
-// 커뮤니티 작성된 게시글에 댓글 달기
-router.post('/boards/:boardId/comments', authMiddleware, commentController.commentPost)
+// 해당 글에 댓글 작성
+router.post('/boards/:boardId/comments', authMiddleware, commentController.postComment)
 
-// 커뮤니티 작성된 게시글의 댓글 수정하기
-router.patch('/boards/:boardId/comments/:commentsId', authMiddleware, commentController.commentPatch)
+// 해당 글에 있는 댓글 수정
+router.patch('/boards/:boardId/comments/:commentId', authMiddleware, commentController.updateComment)
 
-// 커뮤니티 작성된 게시글의 댓글 삭제하기
-router.delete('/boards/:boardId/comments/:commentsId', authMiddleware, commentController.commentDelete)
+// 해당 글의 댓글 삭제
+router.patch('/boards/:boardId/comments/:commentId/delete', authMiddleware, commentController.deleteComment)
+
+
 
 
 export default router

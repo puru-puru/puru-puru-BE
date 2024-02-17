@@ -1,54 +1,44 @@
 import { Request, Response, NextFunction } from 'express'
 import { CommentRepository } from '../repositories/comment.repository'
-import { Comments } from '../../models/Comments'
+import { Boards } from '../../models/Boards'
 import { combineTableNames } from 'sequelize/types/utils';
 
 
 export class CommentService {
     commentRepository = new CommentRepository();
 
-    // 커뮤니티 게시글 댓글 목록
-    commentList = async () => {
-        try {
 
-        } catch (err){
+    postComment = async (content: string, boardId: any, user: any) => {
+        try {
+            return await this.commentRepository.postComment(
+                content, boardId, user
+            ) 
+        } catch (err) {
+
             throw err;
         }
     }
 
-    // 커뮤니티 게시글 댓글 작성
-    commentPost = async (content: string, user: any) => {
+
+    updateComment = async (content: string, commentId: any, boardId: any, user: any) => {
         try {
-            console.log("서비스 진입 (커뮤댓글작성");
-            const commentPost = await this.commentRepository.commentPost(
-                content,
-                user
-            )
-            console.log(commentPost);
-            console.log("서비스 퇴장 (커뮤댓글작성)");
-            return {
-                content: commentPost.content,
-                user
-            }
-        } catch (err){
+            return await this.commentRepository.updateComment(
+                content, commentId, boardId, user
+            ) 
+        } catch (err) {
+
             throw err;
         }
     }
 
-    // 커뮤니티 게시글 댓글 수정
-    commentPatch = async () => {
+
+    deleteComment = async (content: string, commentId: any, boardId: any, user: any) => {
         try {
+            return await this.commentRepository.deleteComment(
+                content, commentId, boardId, user
+            ) 
+        } catch (err) {
 
-        } catch (err){
-            throw err;
-        }
-    }
-
-    // 커뮤니티 게시글 댓글 삭제
-    commentDelete = async () => {
-        try {
-
-        } catch (err){
             throw err;
         }
     }

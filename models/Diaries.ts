@@ -1,37 +1,34 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./index";
-import { Comments } from './Comments'
+import { SavedTemplelates } from './SavedTemplelates'
+import { UserPlant } from './UserPlant'
+import { Galleries } from "./Galleries";
 
 class Diaries extends Model {
-    declare id: number;
-    declare title: string;
+    declare diaryId: number;
     declare image?: string;
-    declare content: string;
+    declare name: string;
     declare plantAt: string;
 }
 
 Diaries.init(
     {
-    id: {
+    diaryId: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true,
     },
-    title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
     image: {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    content: {
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
     },
     plantAt: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
     }
 },
@@ -46,6 +43,16 @@ Diaries.init(
   }
 )
 
+// SavedTemplelates와의 관계
+Diaries.hasMany(SavedTemplelates, { foreignKey: 'diaryId' });
+SavedTemplelates.belongsTo(Diaries, { foreignKey: 'diaryId' });
 
+// UserPlant와의 관계
+Diaries.hasOne(UserPlant, { foreignKey: 'diaryId' });
+UserPlant.belongsTo(Diaries, { foreignKey: 'diaryId' });
+
+// 갤러리 와의 관계
+Diaries.hasMany(Galleries, { foreignKey: "diaryId" }) 
+Galleries.belongsTo(Diaries, { foreignKey: "diaryId" })
 
 export { Diaries }

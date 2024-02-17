@@ -38,12 +38,6 @@ export class AuthService {
       const salt = bcrypt.genSaltSync(parseInt(hash));
       const hashPassword = bcrypt.hashSync(password, salt);
 
-      // const signupUser = await this.authRepository.signupUser(
-      //   email,
-      //   nickname, // 옵션을 주어서 해도 되고 안해도 되고.
-      //   hashPassword
-      // );
-
       const signupUser = await this.userRepository.createUser({
         email,
         nickname,
@@ -86,10 +80,10 @@ export class AuthService {
       // 여기서 디비로 저장. <-- 원래 레포계층에서 하려 했으나... ㅠㅠ
       await Users.update(
         { hashedRefreshToken },
-        { where: { id: findUser.id } }
+        { where: { userId: findUser.userId } }
       );
 
-      // 넘기기.
+      // 넘기기
       return { accessToken, refreshToken };
     } catch (err: any) {
       throw err;
@@ -107,6 +101,14 @@ export class AuthService {
       throw err;
     }
   };
+
+  agreedService = async (userId: any, agreedService: boolean) => {
+    try {
+      await this.userRepository.agreedService(userId, agreedService)
+    } catch (err) {
+      throw err;
+    }
+  }
 
   // 카카오 로그인
   // kakaoSignIn = async (kakaoToken: any) => {

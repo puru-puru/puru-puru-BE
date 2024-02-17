@@ -2,51 +2,60 @@ import { Comments } from "../../models/Comments";
 
 export class CommentRepository {
 
-    // 커뮤니티 게시글의 댓글 목록 조회
-    commentList = async (commentId: string) => {
-        try {
-            console.log("리포지토리 진입 (커뮤댓글목록)")
-            const comments = await Comments.findAll({
-                where: {
-                    commentId: commentId,
-                    deletedAt: null
-                }
-            })
-            console.log("리포지토리 퇴장 (커뮤댓글목록)")
-            return comments
-        } catch (err) {
-            console.error("리포지토리 에러", err)
-            throw err;
-        }
-    }
 
-    // 커뮤니티 게시글의 댓글 작성하기
-    commentPost = async (content: string, user: any) => {
+    postComment = async (content: string, boardId: any, user: any) => {
         try {
-            console.log("리포지토리 진입 (커뮤댓글작성)")
-            const commentPost = await Comments.create({
+            await Comments.create({
+                boardId,
                 content,
-                user
+                userId: user.userId
             })
-            console.log("리포지토리 퇴장 (커뮤댓글목록)")
-            return commentPost
-        } catch (err) {
-            throw err;
-        }
-    }
 
-    // 커뮤니티 게시글의 댓글 수정하기
-    commentPatch = async () => {
-        try {
+            return { "Message": "댓글을 작성했습니다" }
 
         } catch (err) {
             throw err;
         }
     }
 
-    // 커뮤니티 게시글의 댓글 삭제하기
-    commentDelete = async () => {
+
+    updateComment = async (content: string, commentId: any, boardId: any, user: any) => {
         try {
+            const comment = await Comments.update({ content },
+                {
+                    where: {
+                        id: commentId,
+                        userId: user.userId
+                    }
+                })
+
+            if (!comment) {
+                return { "Message": "해당 댓글은 존재하지 않거나 삭제권한이 없습니다" }
+            }
+
+            return { "Message": "댓글을 수정했습니다" }
+
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
+    deleteComment = async (content: string, commentId: any, boardId: any, user: any) => {
+        try {
+            const comment = await Comments.update({ deletedAt: 'deleted' },
+                {
+                    where: {
+                        id: commentId,
+                        userId: user.userId
+                    }
+                })
+
+            if (!comment) {
+                return { "Message": "해당 댓글은 존재하지 않거나 삭제권한이 없습니다" }
+            }
+
+            return { "Message": "댓글을 삭제했습니다" }
 
         } catch (err) {
             throw err;

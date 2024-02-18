@@ -63,6 +63,8 @@ export class AuthService {
         // 비밀번호 확인
       }
 
+      const hasNickname = findUser.nickname !== null;
+
       const checkPassword = await bcrypt.compare(password, findUser.password);
       if (!checkPassword) {
         throw { name: "WorngPassword" };
@@ -84,7 +86,7 @@ export class AuthService {
       );
 
       // 넘기기
-      return { accessToken, refreshToken };
+      return { accessToken, refreshToken, hasNickname };
     } catch (err: any) {
       throw err;
     }
@@ -110,7 +112,7 @@ export class AuthService {
     }
   }
 
-  // 카카오 로그인
+  // 카카오 로그인 
   // kakaoSignIn = async (kakaoToken: any) => {
   //   try {
   //     // Kakao API로부터 유저 정보를 가져옵니다.

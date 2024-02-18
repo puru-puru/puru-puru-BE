@@ -7,6 +7,7 @@ class Boards extends Model {
   declare title: string;
   declare image?: string;
   declare content: string;
+  declare author: { nickname: string };
 }
 
 Boards.init(

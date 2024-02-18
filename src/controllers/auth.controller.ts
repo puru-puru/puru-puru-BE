@@ -80,6 +80,7 @@ export class AuthController {
         data: {
           accessToken: signinUser.accessToken,
           refreshToken: signinUser.refreshToken,
+          hasNickName: signinUser.hasNickname
         },
       });
     } catch (err) {
@@ -157,6 +158,8 @@ export class AuthController {
     }
   };
 
+
+  // 사용자 약관 동의 부분인데 아직 잘 모르겠음..
   agreedService = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user: any = req.user;
@@ -165,7 +168,7 @@ export class AuthController {
       if( agreedService === undefined ) {
         return res.status(400).json({ message: " 약관 동의 부탁. " })
       }
-      await this.authService.agreedService(user.id, agreedService);
+      await this.authService.agreedService(user.userId, agreedService);
 
       return res.status(200).json({ message: "이용 동의 업데이트 완료." })
     } catch (err) {

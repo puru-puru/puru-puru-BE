@@ -8,7 +8,7 @@ const router = express.Router()
 const commentController = new CommentController();
 
 
-// 해당 글에 댓글 작성
+// 해당 글에 댓글 작성 
 router.post('/boards/:boardId/comments', authMiddleware, commentController.postComment)
 
 // 해당 글에 있는 댓글 수정

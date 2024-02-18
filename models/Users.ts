@@ -68,8 +68,8 @@ Users.hasMany(Diaries, { foreignKey: "userId" })
 Diaries.belongsTo(Users, { foreignKey: 'userId' })
 
 // 댓글 과의 관계
-Users.hasMany(Comments, { foreignKey: 'userId' })
-Comments.belongsTo(Users, { foreignKey: "userId" })
+Users.hasMany(Comments, { foreignKey: 'userId', as: 'comments' })
+Comments.belongsTo(Users, { foreignKey: "userId", as: 'user' })
 
 // 좋아요 와의 관계
 Users.hasMany(Likes, { foreignKey: "userId" })

@@ -1,9 +1,10 @@
 import { Boards } from "../../models/Boards";
 import { Users } from "../../models/Users";
+import { Comments } from "../../models/Comments";
 
 export class BoardRepository {
 
- // 커뮤니티 게시글 전체 조회
+ // 커뮤니티 게시글 전체 조회 및 메인 페이지
  boardList = async (user: any) => {
     try {
         const boards = await Boards.findAll({
@@ -19,7 +20,13 @@ export class BoardRepository {
             ],
             attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
         });
-        return boards;
+        // 로그인 한 사용자의 정보를 가져옴. 
+        const boardData = boards.map(board => {
+            const boardInfo: any = board
+            return boardInfo;
+        });
+
+        return boardData;
     } catch (err) {
         throw err;
     }
@@ -41,41 +48,58 @@ export class BoardRepository {
     }
 
     // 커뮤니티 게시글 상세보기
-    boardDetail = async (boardId: string) => {
+    boardDetail = async (boardId: any) => {
         try {
-            const board = await Boards.findByPk(boardId);
-
-            // 게시글이 없을 경우 null을 반환
-            return board ? board.toJSON() : null;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    // 커뮤니티 게시글 수정하기
-    boardPatch = async (boardId: string, title: string, image: string, content: string) => {
-        try {
-            const [updatedRowsCount, patchedBoard] = await Boards.update(
-                { title, image, content },
-                { where: { id: boardId }, returning: true }
-            );
-
-            // 수정된 내용이 없다면 null을 반환하게끔
-            if (updatedRowsCount === 0) {
+            const board = await Boards.findByPk(boardId, {
+                include: [
+                    {
+                        model: Users,
+                        attributes: [ 'nickname' ],
+                        as: 'author'
+                    },
+                    {
+                        model: Comments,
+                        attributes: [ 'id', 'content', 'createdAt' ],
+                        include: [
+                            {
+                                model: Users,
+                                attributes: [ 'nickname' ],
+                                as: 'user'
+                            }
+                        ]
+                    },
+                ]
+            });
+            if (!board) {
                 return null;
             }
 
-            // 수정한 내용의 게시물이 있다면 patchedBoard[0] 를 반환홥니다.
-            return patchedBoard[0];
+            return board
         } catch (err) {
             throw err;
         }
     }
 
-    getBoardById = async (boardId: string) => {
+    
+
+    // 커뮤니티 게시글 수정하기
+    boardPatch = async (boardId: any, title: string, image: string, content: string) => {
         try {
-            const board = await Boards.findOne({ where: { id: boardId } });
-            // console.log( {message : "id값 : " , boardId} );
+            await Boards.update(
+                { title, image, content },
+                { where: { boardId } }
+            );
+            const fixedBoard = await Boards.findOne({where: {boardId}})
+            
+            return fixedBoard;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getBoardById = async (boardId: any) => {
+        try {
+            const board = await Boards.findOne({ where: { boardId } });
 
             return board;
         } catch (err) {
@@ -84,10 +108,10 @@ export class BoardRepository {
     }
 
     // 커뮤니티 게시글 삭제하기
-    boardDelete = async (boardId: number) => {
+    boardDelete = async (boardId: any) => {
         try {
             const deletedCount = await Boards.destroy({
-                where: { id: boardId },
+                where: { boardId },
             });
 
             return deletedCount;

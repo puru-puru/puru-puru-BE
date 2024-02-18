@@ -12,9 +12,11 @@ export class BoardController {
     // 커뮤니티 게시글 전체 조회
     boardList = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const user = req.user;
+            const user: any = req.user;
+
             const boards = await this.boardService.boardList(user);
-            return res.status(200).json({ data: boards });
+
+            return res.status(200).json({ data: boards, loginUser: user.nickname });
         } catch (err) {
             next(err);
         } 
@@ -44,11 +46,12 @@ export class BoardController {
         try {
             const { boardId } = req.params;
             const board = await this.boardService.boardDetail(boardId);
-
+    
             if (!board) {
                 return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
             }
-            return res.status(200).json({ data: board });
+    
+            return res.status(200).json({ data: { board } });
         } catch (err) {
             next(err);
         }
@@ -64,7 +67,6 @@ export class BoardController {
             if (!patchedBoard) {
                 return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
             }
-
             return res.status(200).json({ message: '게시글이 수정되었습니다.', data: patchedBoard });
         } catch (err) {
             next(err);
@@ -74,7 +76,7 @@ export class BoardController {
     // 커뮤니티 게시글 삭제하기
     boardDelete = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const boardId = parseInt(req.params.boardId);
+            const { boardId } = req.params
 
             const result = await this.boardService.boardDelete(boardId);
 
@@ -83,10 +85,4 @@ export class BoardController {
             next(err);
         }
     }
-
-
 }
-
-
-
-// router.delete('/boards/:boardId', boardController.boardDelete)

@@ -60,7 +60,6 @@ export class AuthService {
 
       if (!findUser) {
         throw { name: "UserNotFound" };
-        // 비밀번호 확인
       }
 
       const hasNickname = findUser.nickname !== null;
@@ -104,6 +103,7 @@ export class AuthService {
     }
   };
 
+  // 동의 약관 처리 부분.. 아직 테스트 진행 해보지 모했음.
   agreedService = async (userId: any, agreedService: boolean) => {
     try {
       await this.userRepository.agreedService(userId, agreedService)

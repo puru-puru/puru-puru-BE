@@ -102,7 +102,7 @@ export class AuthController {
     }
   };
 
-  // 리프레쉬 토큰 재 발급
+  // 리프레쉬 토큰 재 발급 ( 3계층으로 어떻게 나누어야 할지 감이 안 잡혀서.. 컨트롤러에서 현재는 처리중. )
   getRefresh = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const refreshToken = req.headers["refresh"] as string | undefined;

@@ -22,7 +22,7 @@ Plants.init(
     plantName: {
       type: DataTypes.STRING,
       allowNull: true,
-      unique: true,
+      unique: false,
     },
     type: {
       type: DataTypes.STRING,
@@ -32,12 +32,12 @@ Plants.init(
     image: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      unique: false,
     },
     content: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      unique: false,
     },
     tag: {
       type: DataTypes.STRING,

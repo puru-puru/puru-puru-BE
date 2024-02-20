@@ -12,6 +12,7 @@ class Users extends Model {
   declare email: string;
   declare password: string;
   declare hashedRefreshToken: string;
+  declare staus: string;
   declare agreedService: boolean;
 }
 // 실제 디비에 들어갈 값
@@ -38,6 +39,10 @@ Users.init(
     },
     hashedRefreshToken: {
       type: DataTypes.STRING
+    },
+    status: {
+      type: DataTypes.ENUM("ADMIN", "USER"),
+      defaultValue: "USER",
     },
     uuid: {
       type: DataTypes.UUID,

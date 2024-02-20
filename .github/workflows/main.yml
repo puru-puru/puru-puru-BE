@@ -31,7 +31,7 @@ jobs:
     - name: 저장소 체크아웃.
       uses: actions/checkout@v2
 
-    - name: 노드 설정.
+    - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '14'

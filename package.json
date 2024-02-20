@@ -6,7 +6,7 @@
   "scripts": {
     "test": "ts-node app.ts && exit 0 || exit 1",
     "start": "node dist/app.js",
-    "build": "tsc -w",
+    "build": "tsc -p .",
     "dev": "nodemon --watch \"src/**/*.ts\" --exec \"ts-node\" ./app.ts"
   },
   "dependencies": {

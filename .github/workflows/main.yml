@@ -3,7 +3,7 @@ name: 깃허브 액션 테스트.
 on:
   push:
     branches:
-      - main
+      - '*'
 
 jobs:
   build-and-test:
@@ -16,7 +16,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '18.19.0'
+        node-version: '14'
 
     - name: 의존성 설치.
       run: npm install

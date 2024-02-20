@@ -18,7 +18,7 @@ const upload = multer({
   storage: multerS3({
     s3: s3,
     acl: process.env.ACL_OPTIONS as string,
-    bucket: process.env.BUCKET_NAME as string,
+    bucket: 'purupuru-bk',
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file: Express.MulterS3.File, cb) => {
       const extension = path.extname(file.originalname);

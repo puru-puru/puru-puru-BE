@@ -22,6 +22,10 @@ export default function (err: any, req: Request, res: Response, next: NextFuncti
             return res.status(400).json({ errorMessage: " 이미지 업로드에 실패 했습니다. " })
         } else if (err.name === "GalleryNotFound") {
             return res.status(404).json({ errorMessage: " 이미지를 찾을 수 없습니다. " })
+        } else if (err.name === "NotAllowedName") {
+            return res.status(400).json({ errorMessage: " 닉네임은 한글,영어,숫자로만 입력해주세요 " })
+        } else if (err.name === "ExistName") {
+            return res.status(409).json({ errorMessage: " 이미 존재 하는 닉네임 입니다. " })
         }
         next(err);
     } catch (err) {

@@ -17,7 +17,7 @@ router.post('/boards', upload.single("image"), authMiddleware, boardController.b
 router.get('/boards/:boardId', authMiddleware, boardController.boardDetail)
 
 // 커뮤니티 글 수정. ok <-- 되는데 S3 미연결 해보세요
-router.patch('/boards/:boardId', authMiddleware, boardController.boardPatch)
+router.patch('/boards/:boardId', upload.single("image"), authMiddleware, boardController.boardPatch)
 
 // 커뮤니티 글 삭제. ok
 router.delete('/boards/:boardId', authMiddleware, boardController.boardDelete)

@@ -5,16 +5,18 @@ import sequelize from "./models/index";
 import router from "./src/routes/index";
 import dotenv from 'dotenv'
 import cors from 'cors'
+import passport from "passport";
+import { configurePassport } from './passport';
 import { Users } from './models/Users' // 유저
 import { Boards } from "./models/Boards"; // 게시판
 import { Likes } from './models/likes' // 좋아요
 import { Comments } from './models/Comments' // 댓글
 import { Diaries } from './models/Diaries' // 다이어리
 import { UserPlant } from './models/UserPlant' // 다이어리와 연계되는 식물
-import { Templelates } from './models/Templelates' // 질문 템플릿
 import { SavedTemplelates } from './models/SavedTemplelates' // 사용자가 저장한 질문과 답변
-import { Plants } from './models/plants' // 식물
 import { Galleries } from "./models/Galleries"; // 사용자의 반려 식물 중 사진첩.
+import { Templelates } from './models/Templelates' // 질문 템플릿
+import { Plants } from './models/plants' // 식물
 import { plantsDB } from './src/seeders/plantsDB' // 식물 시드 데이터
 import { Missions } from './models/Missions' //미션
 import { missionsDB } from './src/seeders/missionsDB' // 미션 시드 데이터
@@ -27,10 +29,11 @@ const port = process.env.PORT
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors())
+app.use(cors());
+
 app.use(
   expressSession({
-    secret: process.env.MY_SECRET_KEY!,
+    secret: process.env.MY_SECRET_KEY as string,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -40,6 +43,10 @@ app.use(
   })
 );
 
+// Passport 설정
+configurePassport(passport);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/", router);
 
@@ -62,7 +69,6 @@ const createTemplelateDB = () => {
   })
 }
 
-
 // createPlantDB(); 
 // createMissionDB(); 
 // createTemplelateDB();
@@ -72,7 +78,7 @@ app.listen(port, async () => {
   await sequelize
     .authenticate()
     .then(async () => {
-      await sequelize.sync(); // 이 부분 사용시에 모델 -> 부분에 테이블을 설정 할 때 마다 디비에 추가함.
+      // await sequelize.sync(); // 이 부분 사용시에 모델 -> 부분에 테이블을 설정 할 때 마다 디비에 추가함.
       // await Users.sync({ force: true })
       // await Boards.sync({ force: true })
       // await Diaries.sync({ force: true })

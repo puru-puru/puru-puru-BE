@@ -7,6 +7,12 @@ export class UserService {
 
   setName = async (nickname: string, user: any) => {
     try {
+      const isExistName = await Users.findOne({
+        where: {nickname},
+      })
+      if(isExistName) {
+        throw { name: "ExistName" }
+      }
       const setName = await this.userRepository.updateUser(
         { nickname },
         { where: { userId: user.userId } }

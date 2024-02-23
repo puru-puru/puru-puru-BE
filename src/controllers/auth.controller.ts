@@ -2,16 +2,10 @@
 import { AuthService } from "../services/auth.service";
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import { Users } from "../../models/Users";
+import dotenv from "dotenv"
 import axios from "axios";
 
-const acc: string =
-  process.env.JWT_ACCESS_SECRET_KEY || "default_access_secret_key";
-const rcc: string =
-  process.env.JWT_REFRESH_SECRET_KEY || "default_refresh_secret_key";
-const hash: string = process.env.BCRYPT_SALT || "default_salt_key";
+dotenv.config()
 
 const userSchema = Joi.object({
   email: Joi.string().email({
@@ -32,21 +26,13 @@ export class AuthController {
       const { email, nickname, password, confirmPassword } =
         await userSchema.validateAsync(req.body);
 
-      const confirm = this.authService.confirm(password, confirmPassword);
-
-      if (!confirm) {
+      if (!this.authService.confirmPassword(password, confirmPassword)) {
         throw { name: "PasswordMismatch" };
       }
 
-      const signupUser = await this.authService.signupUser(
-        email,
-        nickname,
-        password
-      );
+      await this.authService.signupUser(email, nickname, password);
 
-      return res
-        .status(200)
-        .json({ message: " 회원 가입 성공 " });
+      return res.status(200).json({ message: "회원 가입 성공" });
     } catch (err) {
       next(err);
     }
@@ -57,31 +43,19 @@ export class AuthController {
     try {
       const { email, password } = req.body;
       const user: any = req.user;
-      const signinUser = await this.authService.signinUser(
-        email,
-        password,
-        user
-      );
+      const signinUser = await this.authService.signinUser(email, password, user);
+
       if (!signinUser) {
         return res.status(400).json({ message: "로그인 실패" });
       }
 
-      res.cookie(
-        "refreshToken",
-        `Bearer ${decodeURIComponent(String(signinUser.refreshToken))}`
-      );
-      res.cookie(
-        "accessToken",
-        `Bearer ${decodeURIComponent(String(signinUser.accessToken))}`
-      );
+      const { accessToken, refreshToken, hasNickname } = signinUser;
+
+      this.setCookies(res, accessToken, refreshToken);
 
       return res.status(200).json({
         message: "로그인 성공",
-        data: {
-          accessToken: signinUser.accessToken,
-          refreshToken: signinUser.refreshToken,
-          hasNickName: signinUser.hasNickname
-        },
+        data: { accessToken, refreshToken, hasNickname },
       });
     } catch (err) {
       next(err);
@@ -96,63 +70,25 @@ export class AuthController {
       if (!req.user) throw { name: "UserNotFound" };
 
       await this.authService.signOut(user);
-      return res.status(200).json({ message: " 로그아웃 성공 " });
+      return res.status(200).json({ message: "로그아웃 성공" });
     } catch (err) {
       next(err);
     }
   };
 
-  // 리프레쉬 토큰 재 발급
+  // 토큰 재 발급 
   getRefresh = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const refreshToken = req.headers["refresh"] as string | undefined;
-      const accessToken = req.headers["authorization"];
-      if (!refreshToken || !accessToken) {
-        throw new Error(" 토큰 입력이 안되었음. ");
-      }
-      const decodedInfo = await this.decodedAccessToken(accessToken);
+      // const accessToken = req.headers["authorization"]; 
 
-      const user = await Users.findOne({
-        where: { email: decodedInfo.email },
-      });
-      if (!user) {
-        throw new Error(" 유저 정보가 없습니다. ");
+      if (!refreshToken) {
+        throw new Error("토큰 입력이 안되었음.");
       }
 
-      const verifyRefreshToken = await this.validateRefreshToken(
-        refreshToken,
-        user.hashedRefreshToken,
-        res
-      );
-      if (verifyRefreshToken === "invalid token") {
-        await Users.update(
-          { hashedRefreshToken: null },
-          { where: { email: user.email } }
-        );
-        return res.status(401).json({ message: "토큰 인증 실패" });
-      }
+      const { newAccessToken, newRefreshToken } = await this.authService.refreshAccessToken(refreshToken);
 
-      if (verifyRefreshToken === "jwt expired") {
-        await Users.update(
-          { hashedRefreshToken: null },
-          { where: { email: user.email } }
-        );
-        throw new Error(" 로그인이 필요한 서비스 입니다. ");
-      }
-      const newAccessToken = await this.createAccessToken(user.email);
-      const newRefreshToken = await this.createRefreshToken(user.email);
-
-      const salt = bcrypt.genSaltSync(parseInt(hash));
-      const hashedRefreshToken = bcrypt.hashSync(
-        newRefreshToken || "default-token",
-        salt
-      );
-      await Users.update({ hashedRefreshToken }, { where: { userId: user.userId } });
-
-      return res.status(200).json({
-        message: "토큰 재 발급.",
-        data: { newAccessToken, newRefreshToken },
-      });
+      return res.status(200).json({message: "토큰 재 발급.",data: { newAccessToken, newRefreshToken },});
     } catch (err) {
       next(err);
     }
@@ -176,90 +112,9 @@ export class AuthController {
     }
   }
 
-  // kakaoLogin = async (req: Request, res: Response, next: NextFunction) => {
-  //   try {
-  //     const { access_token } = req.body;
-  //     // Kakao 로그인 메서드 호출
-  //     const result = await this.authService.kakaoSignIn(access_token);
 
-  //     return res.status(200).json(result);
-  //   } catch (err) {
-  //     console.error('Error during Kakao login:', err);
-  //     next(err);
-  //   }
-  // };
-
-  // googleLogin = async (req: Request, res: Response, next: NextFunction) => {
-  //   try {
-  //     const { email, password } = req.body;
-  //     const user = req.user;
-
-  //     const loginUser = await this.authService.localSignIn(
-  //       email,
-  //       password,
-  //       user
-  //     );
-  //     return res.status(200).json({ message: "ok" });
-  //   } catch (error) {}
-  // };
-
-  // 토큰 값 해독 부분 잠깐 컨트롤러로 옮겨 왔음
-  decodedAccessToken = (accessToken: string) => {
-    try {
-      const [tokenType, token] = accessToken.split(" ");
-      return jwt.decode(token, { json: true }) as any;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  // 리프레쉬 토큰도 잠깐 옮겨왔음.
-  validateRefreshToken = async (
-    refreshToken: string,
-    hashedRefreshToken: string,
-    res: Response
-  ) => {
-    try {
-      const [tokenType, token] = refreshToken.split(" ");
-
-      if (tokenType !== "Bearer")
-        throw new Error(" 로그인이 필요한 서비스 입니다. ");
-
-      const checkRefreshToken = await bcrypt.compare(token, hashedRefreshToken);
-
-      if (!checkRefreshToken) {
-        return res.status(400).json({ errorMessage: "잘못된 접근입니다. " });
-      }
-
-      return jwt.verify(token, rcc);
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  createAccessToken = async (email: string) => {
-    try {
-      const accessToken = jwt.sign(
-        { email }, // JWT 데이터
-        acc, // Access Token의 비밀 키
-        { expiresIn: "5h" } // Access Token이 5h 뒤에 만료되도록 설정.
-      );
-      return accessToken;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  createRefreshToken = async (email: string) => {
-    try {
-      const refreshToken = jwt.sign(
-        { email }, // JWT 데이터
-        rcc, // Refresh Token의 비밀 키
-        { expiresIn: "7d" } // Refresh Token이 7일 뒤에 만료되도록 설정.
-      );
-      return refreshToken;
-    } catch (err) {
-      throw err;
-    }
-  };
+  setCookies = async (res: Response, accessToken: string, refreshToken: string) => {
+    res.cookie("refreshToken", `Bearer ${decodeURIComponent(String(refreshToken))}`);
+    res.cookie("accessToken", `Bearer ${decodeURIComponent(String(accessToken))}`);
+  }
 }

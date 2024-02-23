@@ -12,7 +12,10 @@ class Users extends Model {
   declare email: string;
   declare password: string;
   declare hashedRefreshToken: string;
+  declare status: string;
   declare agreedService: boolean;
+  declare snsId: number;
+  declare provider: any;
 }
 // 실제 디비에 들어갈 값
 Users.init(
@@ -29,15 +32,16 @@ Users.init(
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     hashedRefreshToken: {
       type: DataTypes.STRING
+    },
+    status: {
+      type: DataTypes.ENUM("ADMIN", "USER"),
+      defaultValue: "USER",
     },
     uuid: {
       type: DataTypes.UUID,
@@ -46,7 +50,15 @@ Users.init(
     agreedService: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
-    }
+    },
+    snsId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    provider: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     sequelize,

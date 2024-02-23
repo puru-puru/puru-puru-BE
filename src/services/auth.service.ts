@@ -105,9 +105,9 @@ export class AuthService {
   };
 
   // 토큰 재 발급.
-  refreshAccessToken = async (refreshToken: string, accessToken: string) => {
+  refreshAccessToken = async (refreshToken: string) => {
     try {
-      const decodedInfo = this.decodedAccessToken(accessToken);
+      const decodedInfo = this.decodedAccessToken(refreshToken);
   
       const user = await Users.findOne({
         where: { email: decodedInfo.email },

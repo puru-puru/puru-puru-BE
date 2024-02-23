@@ -10,6 +10,7 @@ export class BoardService {
     boardRepository = new BoardRepository();
     
 
+    
     // 커뮤니티 전체 게시글 조회
     boardList = async (user: any) => {
         try {
@@ -47,12 +48,10 @@ export class BoardService {
     }
 
     // 커뮤니티 게시글 수정하기
-    boardPatch = async (boardId: any, title: string, image: string, content: string) => {
+    boardPatch = async (boardId: any, title: string, imageUrl: any, content: string) => {
         try {
-            const existingBoard = await this.boardRepository.getBoardById(boardId);
-            if (existingBoard) { // 게시글이 존재하면 수정을 진행
-                return await this.boardRepository.boardPatch(boardId, title, image, content);
-            }
+            const patchedBoard = await this.boardRepository.boardPatch(boardId, title, imageUrl, content);
+            return patchedBoard;
         } catch (err) {
             throw err;
         }

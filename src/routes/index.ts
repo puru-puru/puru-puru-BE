@@ -7,13 +7,15 @@ import userRouter from './user.router'
 import myplantsRouter from './myplants.router'
 import gallerytRouter from './gallery.router'
 import commentRouter from './comment.router'
+import recommenderRouter from './recommender.router'
+import upload from "../../assets/upload";
 import errorhandleMiddleware from "../middlewares/errorhandle.middleware";
 
 const router = express.Router();
 
 
 router.use('/api', [authRouter, boardRouter, testRouter, userRouter, mainRouter, 
-    myplantsRouter, gallerytRouter, commentRouter])
+    myplantsRouter, gallerytRouter, commentRouter, recommenderRouter])
 
 router.use(errorhandleMiddleware);
 

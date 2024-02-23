@@ -10,7 +10,7 @@ const testController = new TestController();
 router.get('/test', authMiddleware, testController.getNickName)
 
 // 테스트 결과
-router.post('/test', authMiddleware, testController.getTestResult)
+router.get('/test-result', authMiddleware, testController.getTestResult)
 
 
 

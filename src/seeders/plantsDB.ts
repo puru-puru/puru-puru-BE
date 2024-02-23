@@ -163,7 +163,7 @@ export const plantsDB = [
     {
         plantName: '그린아트',
         type: '아글라오네마',
-        image: '’https://images.unsplash.com/photo-1661944914253-5680edd3c756?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fCVFQyU5NSU4NCVFQSVCOCU4MCVFQiU5RCVCQyVFQyU5OCVBNCVFQiU4NCVBNCVFQiVBNyU4OHxlbnwwfHwwfHx8MA%3D%3D',
+        image: 'https://images.unsplash.com/photo-1661944914253-5680edd3c756?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fCVFQyU5NSU4NCVFQSVCOCU4MCVFQiU5RCVCQyVFQyU5OCVBNCVFQiU4NCVBNCVFQiVBNyU4OHxlbnwwfHwwfHx8MA%3D%3D',
         content: '반 그늘 상태 에서 관리하면 좋습니다 ! 물은 일주일에 1~2번씩 물을 주세요 ! ',
         tag: '#상쾌한 #특별한, '
     },

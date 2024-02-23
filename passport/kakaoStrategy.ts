@@ -13,7 +13,7 @@ export const configureKakaoStrategy = (passport: any) => {
       clientID: process.env.KAKAO_CLIENT_REST_ID as string,
       clientSecret: process.env.KAKAO_CLIENT_SECRET as string,
       // 알겠지만 이놈이 콜백.
-      callbackURL: 'http://localhost:3000/api/auth/login/kakao/return',
+      callbackURL: 'http://localhost:5173/api/auth/login/kakao/return',
     },
     // 인증 후 사용자 프로필을 처리 하는 콜백 함수.
     async (accessToken, refreshToken, profile, done) => {

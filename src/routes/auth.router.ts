@@ -40,7 +40,7 @@ router.get('/auth/login/kakao/return', passport.authenticate('kakao', {
       const token = req.user
       const query = "?token=" + token;
       res.locals.token = token;
-      res.redirect('/')
+      res.redirect('/http://localhost:5173')
     }
 );
 

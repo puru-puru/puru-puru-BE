@@ -4,18 +4,19 @@ import { UserRepository } from "../repositories/user.repository";
 import { Users } from "../../models/Users";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv"
 import axios from "axios";
 
-const acc: string =
-  process.env.JWT_ACCESS_SECRET_KEY || "default_access_secret_key";
-const rcc: string =
-  process.env.JWT_REFRESH_SECRET_KEY || "default_refresh_secret_key";
+dotenv.config()
+
+const acc: string = process.env.JWT_ACCESS_SECRET_KEY || "default_access_secret_key";
+const rcc: string = process.env.JWT_REFRESH_SECRET_KEY || "default_refresh_secret_key";
 const hash: string = process.env.BCRYPT_SALT || "default_salt_key";
 
 export class AuthService {
   userRepository = new UserRepository();
 
-  confirm = (password: string, confirmPassword: string) => {
+  confirmPassword = (password: string, confirmPassword: string) => {
     return password === confirmPassword;
   };
 
@@ -60,7 +61,6 @@ export class AuthService {
 
       if (!findUser) {
         throw { name: "UserNotFound" };
-        // 비밀번호 확인
       }
 
       const hasNickname = findUser.nickname !== null;
@@ -79,7 +79,7 @@ export class AuthService {
         refreshToken || "default-token",
         salt
       );
-      // 여기서 디비로 저장. <-- 원래 레포계층에서 하려 했으나... ㅠㅠ
+      
       await Users.update(
         { hashedRefreshToken },
         { where: { userId: findUser.userId } }
@@ -104,6 +104,55 @@ export class AuthService {
     }
   };
 
+  // 토큰 재 발급.
+  refreshAccessToken = async (refreshToken: string) => {
+    try {
+      const decodedInfo = this.decodedAccessToken(refreshToken);
+  
+      const user = await Users.findOne({
+        where: { email: decodedInfo.email },
+      });
+      if (!user) {
+        throw new Error("유저 정보가 없습니다.");
+      }
+  
+      const verifyRefreshToken = await this.validateRefreshToken(
+        refreshToken,
+        user.hashedRefreshToken,
+      );
+      if (verifyRefreshToken === "invalid token") {
+        await Users.update(
+          { hashedRefreshToken: null },
+          { where: { email: user.email } }
+        );
+        throw new Error("토큰 인증 실패");
+      }
+  
+      if (verifyRefreshToken === "jwt expired") {
+        await Users.update(
+          { hashedRefreshToken: null },
+          { where: { email: user.email } }
+        );
+        throw new Error("로그인이 필요한 서비스입니다.");
+      }
+  
+      const newAccessToken = await this.createAccessToken(user.email);
+      const newRefreshToken = await this.createRefreshToken(user.email);
+  
+      const salt = bcrypt.genSaltSync(parseInt(hash));
+      const hashedRefreshToken = bcrypt.hashSync(
+        newRefreshToken || "default-token",
+        salt
+      );
+      await Users.update({ hashedRefreshToken }, { where: { userId: user.userId } });
+  
+      return { newAccessToken, newRefreshToken };
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  // 동의 약관 처리 부분.. 아직 테스트 진행 해보지 모했음.
   agreedService = async (userId: any, agreedService: boolean) => {
     try {
       await this.userRepository.agreedService(userId, agreedService)
@@ -112,85 +161,43 @@ export class AuthService {
     }
   }
 
-  // 카카오 로그인 
-  // kakaoSignIn = async (kakaoToken: any) => {
-  //   try {
-  //     // Kakao API로부터 유저 정보를 가져옵니다.
-  //     const responseUser = await axios.get(
-  //       "https://kapi.kakao.com/v2/user/me",
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${kakaoToken}`,
-  //         },
-  //       }
-  //     );
-
-  //     // 가져온 이메일로 기존 유저가 있는지 확인합니다.
-  //     const existingEmail = await Users.findOne({
-  //       where: { email: responseUser.data.kakao_account.email },
-  //     });
-
-  //     if (!existingEmail) {
-  //       // 기존 유저가 없다면 새로운 유저를 생성합니다.
-  //       await this.authRepository.signupUser(
-  //         responseUser.data.kakao_account.email,
-  //         responseUser.data.properties.nickname,
-  //         responseUser.data.id
-  //       );
-  //     }
-  //     // 새로운 AccessToken 및 RefreshToken 생성
-  //     const accessToken = await this.createAccessToken(
-  //       responseUser.data.kakao_account.email
-  //     );
-  //     const refreshToken = await this.createRefreshToken(
-  //       responseUser.data.kakao_account.email
-  //     );
-
-  //     // RefreshToken을 해싱하여 DB에 저장
-  //     const salt = bcrypt.genSaltSync(parseInt(hash));
-  //     const hashedRefreshToken = bcrypt.hashSync(
-  //       refreshToken || "default-token",
-  //       salt
-  //     );
-
-  //     await Users.update(
-  //       { hashedRefreshToken },
-  //       { where: { email: responseUser.data.kakao_account.email } }
-  //     );
-
-  //     // 성공 응답
-  //     return {
-  //       message: "카카오 로그인에 성공하였습니다.",
-  //       data: { accessToken, refreshToken },
-  //     };
-  //   } catch (err) {
-  //     console.error("Error during Kakao sign-in:", err);
-  //     throw err;
-  //   }
-  // };
-
-  // kakaoSignIn = async ( kakaoToken: any ) => {
-  //   try {
-  //     const result = await axios.get("https://kapi.kakao.com/v2/user/me", {
-  //       headers: {
-  //         Authorization: `Bearer ${kakaoToken}`,
-  //       }
-  //     })
-  //     const {data} = result
-  //     const email = data.kakao_account.email;
-
-  //     if(!email) throw new Error ("key_error")
-  //     const user = await Users.findOne({ where: email })
-  //   if(!user){
-  //     await user.
-  //   }
-  //   } catch (error) {
-  //   }
-  // };
-
-  // googleSignIn = async () => {};
 
   // 여기서 부터 토큰 옵션 설정 및 발급 해독 하는 곳.
+
+  setCookies = async (res: Response, accessToken: string, refreshToken: string) => {
+    res.cookie("refreshToken", `Bearer ${decodeURIComponent(String(refreshToken))}`);
+    res.cookie("accessToken", `Bearer ${decodeURIComponent(String(accessToken))}`);
+  }
+
+  // 토큰 값 해독 부분 잠깐 컨트롤러로 옮겨 왔음
+  decodedAccessToken = (accessToken: string) => {
+    try {
+      const [tokenType, token] = accessToken.split(" ");
+      return jwt.decode(token, { json: true }) as any;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  // 리프레쉬 토큰도 잠깐 옮겨왔음.
+  validateRefreshToken = async (refreshToken: string,hashedRefreshToken: string,) => {
+    try {
+      const [tokenType, token] = refreshToken.split(" ");
+
+      if (tokenType !== "Bearer")
+        throw new Error(" 로그인이 필요한 서비스 입니다. ");
+
+      const checkRefreshToken = await bcrypt.compare(token, hashedRefreshToken);
+
+      if (!checkRefreshToken) {
+        throw new Error("잘못된 접근입니다.");
+      }
+
+      return jwt.verify(token, rcc);
+    } catch (err) {
+      throw err;
+    }
+  };
 
   createAccessToken = async (email: string) => {
     try {
@@ -206,47 +213,16 @@ export class AuthService {
   };
 
   createRefreshToken = async (email: string) => {
-    try {
-      const refreshToken = jwt.sign(
-        { email }, // JWT 데이터
-        rcc, // Refresh Token의 비밀 키
-        { expiresIn: "7d" } // Refresh Token이 7일 뒤에 만료되도록 설정.
-      );
-      return refreshToken;
-    } catch (err) {
-      throw err;
-    }
-  };
+  try {
+    const refreshToken = jwt.sign(
+      { email }, // JWT 데이터
+      rcc, // Refresh Token의 비밀 키
+      { expiresIn: "7d" } // Refresh Token이 7일 뒤에 만료되도록 설정.
+    );
+    return refreshToken;
+  } catch (err) {
+    throw err;
+  }
+};
 
-  decodedRefreshToken = (refreshToken: string) => {
-    try {
-      const [tokenType, token] = refreshToken.split(" ");
-      return jwt.decode(token, { json: true }) as any;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  validateRefreshToken = async (
-    refreshToken: string,
-    hashedRefreshToken: string,
-    res: Response
-  ) => {
-    try {
-      const [tokenType, token] = refreshToken.split(" ");
-
-      if (tokenType !== "Bearer")
-        throw new Error(" 로그인이 필요한 서비스 입니다. ");
-
-      const checkRefreshToken = await bcrypt.compare(token, hashedRefreshToken);
-
-      if (!checkRefreshToken) {
-        return res.status(400).json({ errorMessage: "잘못된 접근입니다. " });
-      }
-
-      return jwt.verify(token, rcc);
-    } catch (err) {
-      throw err;
-    }
-  };
 }

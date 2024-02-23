@@ -138,26 +138,29 @@ export class MyplantsRepository {
             const newPlant = await Plants.create({
                 plantName: plantName,
                 type: type,
-                image: '아직 지정 안됨',
+                image: '아직 지정 안됨', // 중복된 이미지라도 이제 오류 발생 안 함
                 content: content,
                 tag: '#신규 식물'
-            })
-
+            });
+            
+            
             const findDiaries = await Diaries.findAll({
                 where: {
-                    id: user.id
+                    userId: user.userId
                 }
             });
             
-            const diaryId = findDiaries[findDiaries.length-1].diaryId
-
+            const diaryId = findDiaries[findDiaries.length - 1]?.diaryId; 
+            
             await UserPlant.create({
                 diaryId,
                 plantsId: newPlant.plantsId
-            }) 
-
-            return { "Message": "신규 식물이 등록되었으며, 나의 식물에 포함되었습니다" }
+            });
+            
+            return { "Message": "신규 식물이 등록되었으며, 나의 식물에 포함되었습니다" };
+            
         } catch (err) {
+            console.error('Error in newPlants:', err);
             throw err;
         }
     }

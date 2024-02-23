@@ -9,7 +9,9 @@ export class MainController {
  
     getInfo = async (req: Request, res: Response, next: NextFunction)=>{
         try {
-            const getInfo = await this.mainService.getInfo(); 
+            const user: any = req.user
+            const getInfo = await this.mainService.getInfo(user.nickname); 
+
             return res.status(200).json({ data: getInfo }) 
         } catch (err) {
             next(err)

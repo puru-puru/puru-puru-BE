@@ -108,7 +108,7 @@ export class BoardRepository {
             throw err;
         }
     }
-    
+
     getBoardById = async (boardId: any) => {
         try {
             const board = await Boards.findOne({ where: { boardId } });
@@ -131,10 +131,5 @@ export class BoardRepository {
             throw err;
         }
     }
-
-
-
-    // 커뮤니티 게시글 삭제하기
-
 
 }

@@ -1,4 +1,3 @@
-import { options } from "joi";
 import { Users } from "../../models/Users";
 
 export class UserRepository {

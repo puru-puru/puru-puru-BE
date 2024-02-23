@@ -85,6 +85,7 @@ export class MyplantsService {
             const newPlants = await this.myplantsrepository.newPlants(
                 user, plantName, type, content
             );
+
             return newPlants;
         } catch (err) {
             throw err;

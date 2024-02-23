@@ -7,7 +7,6 @@ const router = express.Router()
 const mainController = new MainController();
 
 // 테스트 화면
-router.get('/main', mainController.getInfo)
-
+router.get('/main', authMiddleware, mainController.getInfo)
 
 export default router

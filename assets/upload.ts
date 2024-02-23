@@ -1,7 +1,10 @@
 import multer from 'multer';
 import multerS3 from 'multer-s3';
 import { S3Client } from '@aws-sdk/client-s3';
+import dotenv from 'dotenv'
 import path from 'path';
+
+dotenv.config()
 
 const s3 = new S3Client({
   credentials: {
@@ -20,8 +23,6 @@ const upload = multer({
     key: (req, file: Express.MulterS3.File, cb) => {
       const extension = path.extname(file.originalname);
       const generatedKey = `test/${Date.now()}${extension}`;
-      const fullUrl = `https://${process.env.BUCKET_NAME}.s3.${process.env.REGION}.amazonaws.com/${generatedKey}`;
-      // req.imagePath = fullUrl; // 이 부분 주석 처리
       cb(null, generatedKey);
     },
   }),

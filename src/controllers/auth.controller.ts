@@ -2,10 +2,7 @@
 import { AuthService } from "../services/auth.service";
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 import dotenv from "dotenv"
-import { Users } from "../../models/Users";
 import axios from "axios";
 
 dotenv.config()
@@ -83,13 +80,13 @@ export class AuthController {
   getRefresh = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const refreshToken = req.headers["refresh"] as string | undefined;
-      const accessToken = req.headers["authorization"];
+      // const accessToken = req.headers["authorization"]; 
 
-      if (!refreshToken || !accessToken) {
+      if (!refreshToken) {
         throw new Error("토큰 입력이 안되었음.");
       }
 
-      const { newAccessToken, newRefreshToken } = await this.authService.refreshAccessToken(refreshToken, accessToken);
+      const { newAccessToken, newRefreshToken } = await this.authService.refreshAccessToken(refreshToken);
 
       return res.status(200).json({message: "토큰 재 발급.",data: { newAccessToken, newRefreshToken },});
     } catch (err) {

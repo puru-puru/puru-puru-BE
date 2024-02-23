@@ -5,6 +5,8 @@ import sequelize from "./models/index";
 import router from "./src/routes/index";
 import dotenv from 'dotenv'
 import cors from 'cors'
+import passport from "passport";
+import { configurePassport } from './passport';
 import { Users } from './models/Users' // 유저
 import { Boards } from "./models/Boards"; // 게시판
 import { Likes } from './models/likes' // 좋아요
@@ -27,7 +29,8 @@ const port = process.env.PORT
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors()) // 현재는 전부다 허용되어 있는데 수정 해야함.
+app.use(cors());
+
 app.use(
   expressSession({
     secret: process.env.MY_SECRET_KEY as string,
@@ -40,6 +43,10 @@ app.use(
   })
 );
 
+// Passport 설정
+configurePassport(passport);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/", router);
 
@@ -61,7 +68,6 @@ const createTemplelateDB = () => {
     Templelates.create(templelates);
   })
 }
-
 
 // createPlantDB(); 
 // createMissionDB(); 

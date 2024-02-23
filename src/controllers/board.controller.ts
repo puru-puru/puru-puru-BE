@@ -19,7 +19,7 @@ export class BoardController {
             return res.status(200).json({ data: boards, loginUser: user.nickname });
         } catch (err) {
             next(err);
-        } 
+        }
     }
 
     // 커뮤니티 게시글 작성
@@ -28,12 +28,12 @@ export class BoardController {
             const { title, content } = req.body;
             const imageUrl = (req.file as any)?.location;
             const user: any = req.user;
-    
+
             const boardPost = await this.boardService.boardPost(
                 title,
                 imageUrl,
                 content,
-                user.userId, 
+                user.userId,
             );
             return res.status(200).json({ message: " 등록 완료 ", data: boardPost });
         } catch (err) {
@@ -46,11 +46,11 @@ export class BoardController {
         try {
             const { boardId } = req.params;
             const board = await this.boardService.boardDetail(boardId);
-    
+
             if (!board) {
                 return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
             }
-    
+
             return res.status(200).json({ data: { board } });
         } catch (err) {
             next(err);
@@ -61,12 +61,11 @@ export class BoardController {
     boardPatch = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { boardId } = req.params;
-            const { title, image, content } = req.body;
+            const { title, content } = req.body;
+            const imageUrl = (req.file as any)?.location;
 
-            const patchedBoard = await this.boardService.boardPatch(boardId, title, image, content);
-            if (!patchedBoard) {
-                return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
-            }
+            const patchedBoard = await this.boardService.boardPatch(boardId, title, imageUrl, content);
+
             return res.status(200).json({ message: '게시글이 수정되었습니다.', data: patchedBoard });
         } catch (err) {
             next(err);

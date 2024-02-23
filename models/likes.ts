@@ -15,14 +15,14 @@ Likes.init(
         }
     },
     {
-    sequelize,
-    modelName: "Likes",
-    tableName: "tb_like",
-    freezeTableName: true,
-    timestamps: true,
-    paranoid: true,
-    underscored: false,
-  }
+        sequelize,
+        modelName: "Likes",
+        tableName: "tb_like",
+        freezeTableName: true,
+        timestamps: true,
+        paranoid: true,
+        underscored: false,
+    }
 )
 
 export { Likes }

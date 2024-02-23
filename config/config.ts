@@ -16,7 +16,7 @@ const config: {
     username: process.env.MYSQL_USERNAME || "",
     password: process.env.MYSQL_PASSWORD || "",
     // database: process.env.MYSQL_DATABASE || "",
-    database: process.env.MYSQL_TESTDB || "",
+    database: process.env.MYSQL_DHTESTDB2 || "",
     host: process.env.MYSQL_HOST || "",
     dialect: 'mysql'
   }

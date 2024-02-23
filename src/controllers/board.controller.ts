@@ -3,11 +3,17 @@ import { BoardService } from '../services/board.service'
 import { UserService } from '../services/user.service';
 import { Boards } from '../../models/Boards'
 import { where } from 'sequelize';
-
+import Joi from 'joi';
 
 export class BoardController {
     boardService = new BoardService();
     userService = new UserService()
+
+    // 유효성 검사
+    readonly checkcontent = Joi.object({
+        title: Joi.string().min(2).max(20).required(),
+        content: Joi.string().min(2).max(1000).required(),
+    })
 
     // 커뮤니티 게시글 전체 조회
     boardList = async (req: Request, res: Response, next: NextFunction) => {
@@ -26,6 +32,13 @@ export class BoardController {
     boardPost = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { title, content } = req.body;
+
+            // 유효성 검사
+            const validationResult = this.checkcontent.validate({ title, content });
+            if (validationResult.error) {
+                return res.status(400).json({ errormessage: "최소 2자 이상 입력하셔야 합니다." })
+            }
+
             const imageUrl = (req.file as any)?.location;
             const user: any = req.user;
 
@@ -62,6 +75,13 @@ export class BoardController {
         try {
             const { boardId } = req.params;
             const { title, content } = req.body;
+
+            // 유효성 검사
+            const validationResult = this.checkcontent.validate({ title, content });
+            if (validationResult.error) {
+                return res.status(400).json({ errormessage: "최소 2자 이상 입력하셔야 합니다." })
+            }
+
             const imageUrl = (req.file as any)?.location;
 
             const patchedBoard = await this.boardService.boardPatch(boardId, title, imageUrl, content);

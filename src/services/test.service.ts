@@ -17,7 +17,7 @@ export class TestService {
         }
     }
 
-    getTestResult = async (boardNum: number) => {
+    getTestResult = async (boardNum: any) => {
         try {
             const totalDB: any[] = await this.testRepository.getDB()
             

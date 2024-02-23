@@ -8,7 +8,7 @@ import Joi from "joi";
 // 식물 시작일자는 문자열로 yyyy-mm-dd로 입력만 받도록 함 
 const diarySchema = Joi.object({
     image: Joi.string(),
-    name: Joi.string().pattern(new RegExp("^[a-zA-Z0-9가-힣 ]{2,10}$")).required(),
+    name: Joi.string().pattern(new RegExp("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ ]{2,10}$")).required(),
     plantAt: Joi.string().regex(/^\d{4}-\d{2}-\d{2}$/).required(),
   });
 // 질문에 대한 답변은 5자이상 25자 이하로.
@@ -19,8 +19,8 @@ const answerSchema = Joi.object({
 // 식물 타입은 2자 이상 6자 이하로. 특수문자 허용 안함
 // 컨텐츠는 5자이상 25자 이하로.
 const newPlantSchema = Joi.object({
-    plantName: Joi.string().pattern(new RegExp("^[a-zA-Z0-9가-힣 ]{2,10}$")).required(),
-    type:Joi.string().pattern(new RegExp("^[a-zA-Z0-9가-힣 ]{2,6}$")).required(),
+    plantName: Joi.string().pattern(new RegExp("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ ]{2,10}$")).required(),
+    type:Joi.string().pattern(new RegExp("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ ]{2,6}$")).required(),
     content:Joi.string().pattern(new RegExp("^[\\s\\S]{5,25}$")).required(),
 })
 

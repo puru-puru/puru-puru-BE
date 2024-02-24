@@ -24,6 +24,7 @@ export class AuthController {
   // 회원가입
   signupUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.time("signupUser_controller----------------------------------")
       const { email, nickname, password, confirmPassword } =
         await userSchema.validateAsync(req.body);
 
@@ -36,6 +37,8 @@ export class AuthController {
       return res.status(200).json({ message: "회원 가입 성공", data: signUpUser });
     } catch (err) {
       next(err);
+    } finally {
+      console.timeEnd("signupUser_controller--------------------------------");
     }
   };
 

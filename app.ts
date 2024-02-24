@@ -78,7 +78,7 @@ const createTemplelateDB = () => {
 
 app.listen(port, async () => {
   console.log(`----- Server ${port} Start -----`);
-  await sequelize
+  sequelize
     .authenticate()
     .then(async () => {
       // await sequelize.sync(); // 이 부분 사용시에 모델 -> 부분에 테이블을 설정 할 때 마다 디비에 추가함.

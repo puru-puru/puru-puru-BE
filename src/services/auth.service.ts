@@ -27,26 +27,28 @@ export class AuthService {
       if (!email || !password) {
         throw { name: "ValidationError" };
       }
-
-      // 여기서 검증 부분을 처리 해야 하기에.. 디비 안에 있는 거 여기서 꺼내옴.
-      const isExistUser = await this.userRepository.findUser({ where: { email } });
+      // 여기서 검증 부분을 처리 해야 하기에.. 디비 안에 있는거 여기서 꺼내옴.
+      const isExistUser = await Users.findOne({
+        where: { email },
+      });
 
       if (isExistUser) {
         throw { name: "ExistUser" };
       }
-
       // 이후 에러 뚫고 오면 비밀 번호 해쉬화.
       const salt = bcrypt.genSaltSync(parseInt(hash));
       const hashPassword = bcrypt.hashSync(password, salt);
 
-      const newUser = await this.userRepository.createUser({
+      const signupUser = await this.userRepository.createUser({
         email,
         nickname,
         password: hashPassword,
       });
 
-      return newUser;
-    } catch (err) {
+      return {
+        signupUser,
+      };
+    } catch (err: any) {
       throw err;
     }
   };

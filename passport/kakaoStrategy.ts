@@ -1,10 +1,13 @@
-
 import dotenv from 'dotenv'
+import bcrypt from 'bcrypt'
 import { Strategy as KakaoStrategy } from 'passport-kakao';
 import { v4 as uuidv4 } from 'uuid';
 import { Users } from '../models/Users';
 
 dotenv.config()
+
+const hash: string = process.env.BCRYPT_SALT as string;
+const salt = bcrypt.genSaltSync(parseInt(hash));
 
 // 6. 전략 구성 시작.
 export const configureKakaoStrategy = (passport: any) => {
@@ -17,6 +20,9 @@ export const configureKakaoStrategy = (passport: any) => {
     },
     // 인증 후 사용자 프로필을 처리 하는 콜백 함수.
     async (accessToken, refreshToken, profile, done) => {
+      console.log('카카오 프로필', profile);
+      console.log(accessToken);
+      console.log(refreshToken);
       try {
         // 받아온 프로필 에서 정보 추출
         const { id, properties, kakao_account } = profile._json;
@@ -30,7 +36,7 @@ export const configureKakaoStrategy = (passport: any) => {
           if (existingUser) {
             return done(null, existingUser);
           }
-          
+          const hashedRefreshToken = bcrypt.hashSync(refreshToken, salt);
         // 여기서 존재 하지 않으면 여기서 생성. 두 번째 인수 콜백이 실행된다.
         const newUser = await Users.create({
           status: 'USER',
@@ -39,8 +45,8 @@ export const configureKakaoStrategy = (passport: any) => {
           snsId: id,
           provider: 'kakao',
           email: kakao_account?.email || null,
+          hashedRefreshToken: hashedRefreshToken,
         });
-
         // DONE...
         return done(null, newUser);
       } catch (error) {

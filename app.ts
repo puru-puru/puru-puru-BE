@@ -6,6 +6,7 @@ import router from "./src/routes/index";
 import dotenv from 'dotenv'
 import cors from 'cors'
 import passport from "passport";
+import socialRouter from './src/routes/social.router'
 import { configurePassport } from './passport';
 import { Users } from './models/Users' // 유저
 import { Boards } from "./models/Boards"; // 게시판
@@ -26,7 +27,6 @@ dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
-
 
 app.use(cors());
 
@@ -51,7 +51,7 @@ configurePassport(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/", router);
+app.use("/", router, socialRouter);
 
 // 여기는 시드 데이터를 삽입하는 메서드 입니다.
 const createPlantDB = () => {

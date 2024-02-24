@@ -44,17 +44,19 @@ export class AuthService {
       const hashPassword = bcrypt.hashSync(password, salt);
       console.timeEnd("bcrypt Service --------------------------------"); // 성능 측정 종료
 
-      console.time("createUser Service --------------------------------"); // 성능 측정 시작
-      const signupUser = await this.userRepository.createUser({
-        email,
-        nickname,
-        password: hashPassword,
-      });
-      console.timeEnd("createUser Service --------------------------------")
+      console.time("createUser_repository --------------------------------");
+    // 최적화된 createUser_repository 부분
+    const userInstance = Users.build({
+      email,
+      nickname,
+      password: hashPassword,
+    });
+    await userInstance.save();
+    console.timeEnd("createUser_repository --------------------------------");
 
-      return {
-        signupUser,
-      };
+    return {
+      signupUser: userInstance,
+    };
     } catch (err: any) {
       throw err;
     } finally {

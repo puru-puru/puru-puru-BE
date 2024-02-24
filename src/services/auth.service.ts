@@ -23,46 +23,36 @@ export class AuthService {
   //회원가입
   signupUser = async (email: string, nickname: string, password: string) => {
     try {
-      console.time("signupUser Service--------------------------------"); // 성능 측정 시작
       // 우선 에러 처리.
       if (!email || !password) {
         throw { name: "ValidationError" };
       }
-      console.time("findOne Service --------------------------------"); // 성능 측정 시작
       // 여기서 검증 부분을 처리 해야 하기에.. 디비 안에 있는거 여기서 꺼내옴.
       const isExistUser = await Users.findOne({
         where: { email },
       });
-      console.timeEnd("findOne Service --------------------------------"); // 성능 측정 종료
 
       if (isExistUser) {
         throw { name: "ExistUser" };
       }
       // 이후 에러 뚫고 오면 비밀 번호 해쉬화.
-      console.time("bcrypt Service --------------------------------"); // 성능 측정 시작
       const salt = bcrypt.genSaltSync(parseInt(hash));
       const hashPassword = bcrypt.hashSync(password, salt);
-      console.timeEnd("bcrypt Service --------------------------------"); // 성능 측정 종료
 
-      console.time("createUser_repository --------------------------------");
-    // 최적화된 createUser_repository 부분
     const userInstance = Users.build({
       email,
       nickname,
       password: hashPassword,
     });
     await userInstance.save();
-    console.timeEnd("createUser_repository --------------------------------");
 
     return {
       signupUser: userInstance,
     };
     } catch (err: any) {
       throw err;
-    } finally {
-      console.timeEnd("signupUser Service--------------------------------");
-    }
   };
+}
 
   // 로그인
   signinUser = async (email: string, password: string, user: any) => {

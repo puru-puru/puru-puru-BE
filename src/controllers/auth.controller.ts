@@ -1,11 +1,15 @@
 // 어플리케이션의 바깥 부분 , 요청/ 응답을 처리함.
 import { AuthService } from "../services/auth.service";
 import { Request, Response, NextFunction } from "express";
+import { Users } from "../../models/Users";
+import bcrypt from 'bcrypt'
 import Joi from "joi";
 import dotenv from "dotenv"
 import axios from "axios";
 
 dotenv.config()
+
+const hash: string = process.env.BCRYPT_SALT as string
 
 const userSchema = Joi.object({
   email: Joi.string().email({
@@ -23,15 +27,29 @@ export class AuthController {
   // 회원가입
   signupUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { email, nickname, password, confirmPassword } =
-        await userSchema.validateAsync(req.body);
-
+      const { email, nickname, password, confirmPassword } = await userSchema.validateAsync(req.body);
+  
+      if (!email || !password) {
+        throw { name: "ValidationError" };
+      }
+  
       if (!this.authService.confirmPassword(password, confirmPassword)) {
         throw { name: "PasswordMismatch" };
       }
-
-      await this.authService.signupUser(email, nickname, password);
-
+  
+      const isExistUser = await Users.findOne({
+        where: { email },
+      });
+  
+      if (isExistUser) {
+        throw { name: "ExistUser" };
+      }
+  
+      const salt = bcrypt.genSaltSync(parseInt(hash));
+      const hashPassword = bcrypt.hashSync(password, salt);
+  
+      const signupUser = await this.authService.signupUser(email, nickname, hashPassword);
+  
       return res.status(200).json({ message: "회원 가입 성공" });
     } catch (err) {
       next(err);

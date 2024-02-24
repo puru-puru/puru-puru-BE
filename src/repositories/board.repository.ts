@@ -47,7 +47,6 @@ export class BoardRepository {
         }
     }
 
-    
     // 커뮤니티 게시글 상세보기
     boardDetail = async (boardId: any) => {
         try {

@@ -22,8 +22,6 @@ router.patch('/boards/:boardId', upload.single("image"), authMiddleware, boardCo
 // 커뮤니티 글 삭제. ok
 router.delete('/boards/:boardId', authMiddleware, boardController.boardDelete)
 
-
-
 // 다 되었으나 지금 에러 핸들링이 많이 부족하고, 또한 작성자가 아니라 다른 사람도 게시물을 수정 하고 삭제 할 수 있음. ----------------------------------
 
 export default router

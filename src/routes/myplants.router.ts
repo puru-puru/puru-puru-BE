@@ -29,6 +29,7 @@ router.post('/plants/:plantsId/save', authMiddleware, myplantscontroller.savePla
 router.post('/newplants', authMiddleware, myplantscontroller.newPlants)
 
 
-
+// 관리자용 이미지 업로드
+router.post('/auth-image-uploader', authMiddleware, upload.single('image'), myplantscontroller.postImage )
 
 export default router

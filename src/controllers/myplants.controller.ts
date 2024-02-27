@@ -20,8 +20,8 @@ const answerSchema = Joi.object({
 // 컨텐츠는 5자이상 25자 이하로.
 const newPlantSchema = Joi.object({
     plantName: Joi.string().pattern(new RegExp("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ ]{2,10}$")).required(),
-    type:Joi.string().pattern(new RegExp("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ ]{2,6}$")).required(),
-    content:Joi.string().pattern(new RegExp("^[\\s\\S]{5,25}$")).required(),
+    type:Joi.string().pattern(new RegExp("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ ]{2,10}$")).required(),
+    content:Joi.string().pattern(new RegExp("^[\\s\\S]{5,50}$")).required(),
 })
 
 export class MyplantsController {
@@ -118,6 +118,18 @@ export class MyplantsController {
             );
 
             return res.status(200).json(newPlants) 
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    postImage = async (req: Request, res: Response, next: NextFunction) =>{
+        try {
+            const imageUrl = (req.file as any)?.location;
+            const postImage = await this.myplantsservice.postImage(
+                imageUrl
+            ); 
+            return res.status(200).json(postImage) 
         } catch (err) {
             next(err)
         }

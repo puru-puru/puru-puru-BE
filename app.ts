@@ -15,6 +15,7 @@ import { Comments } from './models/Comments' // 댓글
 import { Diaries } from './models/Diaries' // 다이어리
 import { UserPlant } from './models/UserPlant' // 다이어리와 연계되는 식물
 import { SavedTemplelates } from './models/SavedTemplelates' // 사용자가 저장한 질문과 답변
+import { Icons } from './models/Icons' // 사용자가 저장한 질문과 답변
 import { Galleries } from "./models/Galleries"; // 사용자의 반려 식물 중 사진첩.
 import { Templelates } from './models/Templelates' // 질문 템플릿
 import { Plants } from './models/plants' // 식물
@@ -22,6 +23,9 @@ import { plantsDB } from './src/seeders/plantsDB' // 식물 시드 데이터
 import { Missions } from './models/Missions' //미션
 import { missionsDB } from './src/seeders/missionsDB' // 미션 시드 데이터
 import { templelatesDB } from './src/seeders/templelatesDB' // 템플렛 시드 데이터
+
+import path from "path";
+import {fileURLToPath} from "url";
 
 dotenv.config();
 
@@ -75,7 +79,7 @@ const createTemplelateDB = () => {
 // createPlantDB(); 
 // createMissionDB(); 
 // createTemplelateDB();
-
+app.use(express.static(path.join(__dirname, "views")));
 app.listen(port, async () => {
   console.log(`----- Server ${port} Start -----`);
   sequelize
@@ -93,6 +97,7 @@ app.listen(port, async () => {
       // await Galleries.sync({ force: true })
       // await Templelates.sync({ force: true })
       // await SavedTemplelates.sync({ force: true })
+      // await Icons.sync({ force: true })
       console.log("------connected DB------");
     })
     .catch((e: Error) => {

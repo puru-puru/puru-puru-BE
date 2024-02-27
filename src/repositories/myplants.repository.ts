@@ -17,7 +17,7 @@ export class MyplantsRepository {
                 plantAt,
                 userId: user.userId,
                 image: imageUrl,
-                deletedAt: "temp"
+                deletedAt: Date()
             });
 
             const questions = await Templelates.findAll();
@@ -180,7 +180,7 @@ export class MyplantsRepository {
 
     deletePlants = async (diaryId: any) => {
         try {
-            await Diaries.update({ deletedAt: "per"}, {
+            await Diaries.update({ deletedAt: Date() }, {
                 where: { diaryId }
             })
 

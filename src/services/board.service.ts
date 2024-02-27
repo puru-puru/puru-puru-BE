@@ -9,8 +9,6 @@ import { combineTableNames } from 'sequelize/types/utils';
 export class BoardService {
     boardRepository = new BoardRepository();
     
-
-    
     // 커뮤니티 전체 게시글 조회
     boardList = async (user: any) => {
         try {

@@ -11,8 +11,8 @@ export class BoardController {
 
     // 유효성 검사
     readonly checkcontent = Joi.object({
-        title: Joi.string().min(2).max(20).required(),
-        content: Joi.string().min(2).max(1000).required(),
+        title: Joi.string().min(2).max(10).required(),
+        content: Joi.string().min(5).max(100).required(),
     })
 
     // 커뮤니티 게시글 전체 조회

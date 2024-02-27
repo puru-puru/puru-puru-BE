@@ -91,4 +91,18 @@ export class MyplantsService {
             throw err;
         }
     }
+
+    postImage = async ( imageUrl: string) => {
+        try {
+
+            const postImage = await this.myplantsrepository.postImage(
+                imageUrl
+            )
+
+            return postImage;
+
+        } catch (err) {
+            throw err;
+        }
+    }
 }

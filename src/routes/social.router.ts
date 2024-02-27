@@ -1,6 +1,7 @@
 import express from "express";
 import { Request, Response, NextFunction } from "express";
 import { Users } from "../../models/Users";
+import authMiddleware from "../middlewares/auth.middleware";
 import passport, { authenticate } from "passport";
 import bcrypt from "bcrypt";
 import dotenv from 'dotenv'
@@ -28,7 +29,7 @@ router.get("/api/auth/login/kakao", passport.authenticate("kakao"));
 router.get('/api/auth/login/kakao/return', passport.authenticate('kakao', {
   failureRedirect: '/',
 }),
-async (req: Request, res: Response) => {
+async (req: Request, res: Response,) => {
   try {
     // 여기서 Passport에서 전달한 사용자 정보를 가져옴
     const user = req.user as Users | undefined;
@@ -42,12 +43,14 @@ async (req: Request, res: Response) => {
       const accessToken = await tokenInstance.createAccessToken(user.email);
       const refreshToken = await tokenInstance.createRefreshToken(user.email);
 
-        // 프론트엔드에 토큰을 포함한 응답을 내기
-        const redirectUrl = `http://localhost:5173/Frontend?accessToken=${accessToken}&refreshToken=${refreshToken}&hasNickname=${!!user.nickname}`;
-        // 리다이렉트
-        res.redirect(redirectUrl);
+      // 토큰 디코드 예시
+      const decodedAccessToken = tokenInstance.decodedAccessToken(accessToken);
+      console.log('Decoded Access Token:----------------------------------------------', decodedAccessToken);
+
+        // 프론트엔드에 토큰을 포함한 응답을 보내기 
+        res.redirect(`http://localhost:3000/success?accessToken=${accessToken}&refreshToken=${refreshToken}&hasNickname=${!!user.nickname}&email=${user.email}`);
     } else {
-      // 사용자 정보가 없을 경우 에러 처리
+        // 사용자 정보가 없을 경우 에러 처리
       res.status(404).json({ message: '사용자 정보를 찾을 수 없습니다.' });
     }
   } catch (error) {
@@ -57,7 +60,7 @@ async (req: Request, res: Response) => {
   }
 });
 
-  // 소셜 로그인 때문에 앞으로 끌어옴 토큰 부분
+    // 소셜 로그인 때문에 앞으로 끌어옴 토큰 부분
   class Token {
   setCookies = async (res: Response, accessToken: string, refreshToken: string) => {
     res.cookie("refreshToken", `Bearer ${decodeURIComponent(String(refreshToken))}`);
@@ -93,10 +96,10 @@ async (req: Request, res: Response) => {
     }
   };
 
-  createAccessToken = async (user: any) => {
+  createAccessToken = async (email: any) => {
     try {
       const accessToken = jwt.sign(
-        { email: user.email },  // JWT 데이터
+        { email },  // JWT 데이터
         acc, // Access Token의 비밀 키
         { expiresIn: "5h" } // Access Token이 5h 뒤에 만료되도록 설정.
       );

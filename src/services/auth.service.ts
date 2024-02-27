@@ -2,6 +2,7 @@
 import { Request, Response, NextFunction } from "express";
 import { UserRepository } from "../repositories/user.repository";
 import { Users } from "../../models/Users";
+import { EmailUtils } from '../utils/email.utils'
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv"
@@ -15,12 +16,14 @@ const hash: string = process.env.BCRYPT_SALT || "default_salt_key";
 
 export class AuthService {
   userRepository = new UserRepository();
+  emailUtils = new EmailUtils();
 
+  // 비밀번호 확인 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   confirmPassword = (password: string, confirmPassword: string) => {
     return password === confirmPassword;
   };
 
-  //회원가입
+  //회원가입 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   signupUser = async (email: string, nickname: string, password: string) => {
     try {
       // 우선 에러 처리.
@@ -54,7 +57,7 @@ export class AuthService {
   };
 }
 
-  // 로그인
+  // 로그인 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   signinUser = async (email: string, password: string, user: any) => {
     try {
       // 사용자가 있는지 확인
@@ -93,7 +96,7 @@ export class AuthService {
     }
   };
 
-  // 로그아웃.
+  // 로그아웃. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   signOut = async (user: any) => {
     try {
       await this.userRepository.updateUser(
@@ -105,7 +108,7 @@ export class AuthService {
     }
   };
 
-  // 토큰 재 발급.
+  // 토큰 재 발급. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   refreshAccessToken = async (refreshToken: string) => {
     try {
       const decodedInfo = this.decodedAccessToken(refreshToken);
@@ -153,7 +156,7 @@ export class AuthService {
     }
   }
 
-  // 동의 약관 처리 부분.. 아직 테스트 진행 해보지 모했음.
+  // 동의 약관 처리 부분.. 아직 테스트 진행 해보지 모했음. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   agreedService = async (userId: any, agreedService: boolean) => {
     try {
       await this.userRepository.agreedService(userId, agreedService)
@@ -162,9 +165,42 @@ export class AuthService {
     }
   }
 
+  // test - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  createUser = async (email: string, name: string, password: string) => {
+    try {
+      const user = await this.userRepository.createUser({ email, name, password });
+      if (!user) {
+        throw new Error('유저 찾기 실패.');
+      }
+
+      return user;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+   findUserByEmail = async (email: string) => {
+    try {
+      const user = await this.userRepository.findUser({ where: { email } });
+      return user;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+    updateUserEmailVerification = async (email: string) => {
+    try {
+      await this.userRepository.updateUser({ isEmailValid: true }, { where: { email } });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+// test - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
   // 여기서 부터 토큰 옵션 설정 및 발급 해독 하는 곳.
-
   setCookies = async (res: Response, accessToken: string, refreshToken: string) => {
     res.cookie("refreshToken", `Bearer ${decodeURIComponent(String(refreshToken))}`);
     res.cookie("accessToken", `Bearer ${decodeURIComponent(String(accessToken))}`);

@@ -105,20 +105,6 @@ export const plantsDB = [
         tag: '#낭만적인#향기로운'
     },
     {
-        plantName: '커피나무',
-        type: '꼭두서니과',
-        image: 'https://i.namu.wiki/i/-hKYZjw4Ss2y0YPxy16ob7k6vvKWV6UoCFEpYUVqSk5gfR48BCKEWgpLE2RPfLWcMRSwhNWCWJoXkqR55TiTspDmTwFnKlLHz9EFcDI2u0kdQTeFhJHyAcCvn577s0fEFt_pbPy7-Dxx9-RTtFRKJA.webp',
-        content: '어느정도 그늘진 환경에서 잘 자라는 특징을 가지고 있다. 다 자라면 커피열매를 맺는다.',
-        tag: '#특별한 #향기로운 '
-    },
-    {
-        plantName: '몬스테라',
-        type: '천남성과',
-        image: 'https://i.namu.wiki/i/HRvzOAKbjGeI-Xk6u0zplAmYlPbedck4A2Svz_3NkijS-qzST4OACs0mQwaT7TRGcKZPtKwsFI7z7XXWj_QZl7L10jhDHEsfXjt2okV_M-xJfO4mIkJHJVghiRJBwsD0cK7OwQLpPtZ3e_hBXs7GiA.webp',
-        content: '키우기 쉽고 실내 인테리어로 제격인 식물.',
-        tag: '#다채로운 #낭만적인'
-    },
-    {
         plantName: '베고니아',
         type: '베고니아과',
         image: 'https://www.costco.co.kr/medias/sys_master/images/hfb/h4d/79192630385886.webp',
@@ -189,17 +175,157 @@ export const plantsDB = [
         tag: '#독특한'
     },
     {
-        plantName: '장미 허브',
-        type: '꿀풀과',
-        image: 'https://i.namu.wiki/i/Fv68rjglu6JtynNRF3kYoYpiXzLWQTATzl4DA39d8uBoyMdrGzZQLP53ivQiaT-yhFjAC9hFGTWhYobD402f2u9RTw9eDqWiO1Dz3Fhu6xmnBhEstSEfIRfzNLTFyaaR1gs6i2R0E4wGxt_vVkC6pw.webp',
-        content: '물을 많이 줄 필요 없이 잘 자라는 것이 특징. 과습주의! 흔들거나 살짝 만지면 좋은 향기가 난다.',
-        tag: '#수수한 #향기로'
+        plantName: '필로덴드론 스플렌디드',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1688369110054-c29086e0afa3?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTAyfHwlRUQlOTUlODQlRUIlQTElOUMlRUIlOEQlQjQlRUIlOTMlOUMlRUIlQTElQTB8ZW58MHx8MHx8fDA%3D',
+        content: '밝은 간접광이 좋습니다.! 일주일에 한번 정도 이지만 토양의 상태를 확인하고 물을 주는것 또한 좋습니다.',
+        tag: '#특별한 #수수한 #상쾌한'
     },
     {
-        plantName: '수련',
-        type: '수련과',
-        image: 'https://www.costco.co.kr/medias/sys_master/images/hfb/h4d/79192630385886.webp',
-        content: '키우기 어려운 편이며, 물의 온도와 깊이, 그리고 충분한 햇빛을 제공하는 것이 중요합니다. 꽃말은 순수',
-        tag: '#낭만적인#특별한'
+        plantName: '필로덴드론 레드 체리',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1608625559126-02dbc60ffb76?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8JUVEJTk1JTg0JUVCJUExJTlDJUVCJThEJUI0JUVCJTkzJTlDJUVCJUExJUEwfGVufDB8fDB8fHww',
+        content: '충분한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다.',
+        tag: '#특별한 #수수한'
+    },
+    {
+        plantName: '필로덴드론 핑크 프린세스',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1633789242210-902ff168f81f?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDF8fCVFRCU5NSU4NCVFQiVBMSU5QyVFQiU4RCVCNCVFQiU5MyU5QyVFQiVBMSVBMHxlbnwwfHwwfHx8MA%3D%3D',
+        content: '충분한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다.',
+        tag: '#특별한 #수수한'
+    },
+    {
+        plantName: '필로덴드론 마메이',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1688369831659-fc4aa95fb495?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTIwfHwlRUQlOTUlODQlRUIlQTElOUMlRUIlOEQlQjQlRUIlOTMlOUMlRUIlQTElQTB8ZW58MHx8MHx8fDA%3D',
+        content: '충분한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다.',
+        tag: '#수수한'
+    },
+    {
+        plantName: '필로덴드론 옥시카르디움 브라질',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1668438865491-f0eb2ed34080?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTQ2fHwlRUQlOTUlODQlRUIlQTElOUMlRUIlOEQlQjQlRUIlOTMlOUMlRUIlQTElQTB8ZW58MHx8MHx8fDA%3D',
+        content: '적당한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다.',
+        tag: '#수수한'
+    },
+    {
+        plantName: '칼라디움 화이트 크리스마스',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1641454664701-098a1dcf131a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8JUVDJUI5JUJDJUVCJTlEJUJDJUVCJTk0JTk0JUVDJTlCJTgwfGVufDB8fDB8fHww',
+        content: '적당한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다.',
+        tag: '#특별한'
+    },
+    {
+        plantName: '칼라디움 화이트퀸',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1656937970026-a7bfef03991b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8JUVDJUI5JUJDJUVCJTlEJUJDJUVCJTk0JTk0JUVDJTlCJTgwfGVufDB8fDB8fHww',
+        content: '적당한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다.',
+        tag: '#특별한'
+    },
+    {
+        plantName: '칼라디움 핑크스플레쉬',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1687849173281-f3de523d1b5e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fCVFQyVCOSVCQyVFQiU5RCVCQyVFQiU5NCU5NCVFQyU5QiU4MHxlbnwwfHwwfHx8MA%3D%3D',
+        content: '적당한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다. ',
+        tag: '#특별한'
+    },
+    {
+        plantName: '칼라디움 플로리다 앨리스',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1656937970026-a7bfef03991b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8JUVDJUI5JUJDJUVCJTlEJUJDJUVCJTk0JTk0JUVDJTlCJTgwfGVufDB8fDB8fHww',
+        content: '적당한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다. ',
+        tag: '#특별한'
+    },
+    {
+        plantName: '아펠란드라',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1610448989365-1d259276cbb5?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8JUVDJTk1JTg0JUVEJThFJUEwJUVCJTlFJTgwJUVCJTkzJTlDJUVCJTlEJUJDfGVufDB8fDB8fHww',
+        content: '적당한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다. ',
+        tag: '#수수한 #상쾌한'
+    },
+    {
+        plantName: '드라세나 마지나타',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1611264213923-c625a27ff966?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8JUVCJTkzJTlDJUVCJTlEJUJDJUVDJTg0JUI4JUVCJTgyJTk4JTIwJUVCJUE3JTg4JUVDJUE3JTgwJUVCJTgyJTk4JUVEJTgzJTgwfGVufDB8fDB8fHww',
+        content: '적당한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다. ',
+        tag: '#수수한'
+    },  
+    {
+        plantName: '필로덴드론 글로리오숨',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1630141999065-6e1205328332?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8JUVBJUI4JTgwJUVCJUExJTlDJUVCJUE2JUFDJUVDJTk4JUE0JUVDJTg4JUE4fGVufDB8fDB8fHww',
+        content: '적당한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다. ',
+        tag: '#수수한'
+    },
+    {
+        plantName: '안스리움',
+        type: '관엽식물',
+        image: 'https://plus.unsplash.com/premium_photo-1676654935634-a1439f460507?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fCVFQyU5NSU4OCVFQyU4QSVBNCVFQiVBNiVBQyVFQyU5QiU4MHxlbnwwfHwwfHx8MA%3D%3D',
+        content: '적당한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다. ',
+        tag: '#특별한'
+    },
+    {
+        plantName: '페페로미아 스칸데스',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1695952816190-4a2193e40b8d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fCVFRCU4RSU5OCVFRCU4RSU5OCVFQiVBMSU5QyVFQiVBRiVCOCVFQyU5NSU4NHxlbnwwfHwwfHx8MA%3D%3D',
+        content: '적당한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다. ',
+        tag: '#수수한'
+    },
+    {
+        plantName: '페페로미아 물방울',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1610630876605-97b3e670f56c?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8JUVEJThFJTk4JUVEJThFJTk4JUVCJUExJTlDJUVCJUFGJUI4JUVDJTk1JTg0fGVufDB8fDB8fHww',
+        content: '적당한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다. ',
+        tag: '#수수한'
+    },
+    {
+        plantName: '호말로메나 루베센스',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1684722938218-849f3fb5ddea?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8JUVEJTk4JUI4JUVCJUE3JTkwJUVCJUExJTlDJUVCJUE5JTk0JUVCJTgyJTk4fGVufDB8fDB8fHww',
+        content: '적당한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다. ',
+        tag: '#수수한'
+    },
+    {
+        plantName: '클루시아',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1682414270154-15ea28c62554?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8JUVEJTgxJUI0JUVCJUEzJUE4JUVDJThCJTlDJUVDJTk1JTg0fGVufDB8fDB8fHww',
+        content: '적당한 간접광이 좋습니다.! 일주일에 한번 정도 이지만 겉흙이 마른지 확인 후 물을 주는것 또한 좋습니다. ',
+        tag: '#수수한 #낭만적인'
+    },
+    {
+        plantName: '필레아 페페로미오이데스',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1614594805320-e6a5549d7f95?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8JUVEJTk1JTg0JUVCJUEwJTg4JUVDJTk1JTg0JTIwJUVEJThFJTk4JUVEJThFJTk4JUVCJUExJTlDJUVCJUFGJUI4JUVDJTk4JUE0JUVDJTlEJUI0JUVCJThEJUIwJUVDJThBJUE0fGVufDB8fDB8fHww',
+        content: '적당한 간접광이 좋습니다.! 일주일에 1~2회 정도 주시면 좋습니다 ! ',
+        tag: '#수수한 #특별한'
+    },
+    {
+        plantName: '포인세티아',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1576252137965-bfee510aaa6a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8JUVEJThGJUFDJUVDJTlEJUI4JUVDJTg0JUI4JUVEJThCJUIwJUVDJTk1JTg0fGVufDB8fDB8fHww',
+        content: '적당한 간접광이 좋습니다.! 과습을 싫어하는 편입니다. 건조에 강하기에 흙이 다 마르고 나서 물을 주셔야 합니다. ',
+        tag: '#특별한'
+    },
+    {
+        plantName: '극락조',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1579780330373-58df976bee9b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OTN8fCVFQSVCNyVCOSVFQiU5RCVCRCVFQyVBMSVCMHxlbnwwfHwwfHx8MA%3D%3D',
+        content: '빛을 많이 받아야 꽃을 피웁니다. 과습을 싫어하는 편입니다. 건조에 강하기에 흙이 다 마르고 나서 물을 주셔야 합니다. ',
+        tag: '#특별한#낭만적인'
+    },
+    {
+        plantName: '알로카시아 프라이덱',
+        type: '관엽식물',
+        image: 'https://images.unsplash.com/photo-1609765556432-9a9d65b2413b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8JUVDJTk1JThDJUVCJUExJTlDJUVDJUI5JUI0JUVDJThCJTlDJUVDJTk1JTg0fGVufDB8fDB8fHww',
+        content: '적당한 간접광이 좋습니다. 일주일에 1~2회 정도 물을 주시면 좋습니다 ! ',
+        tag: '#수수한'
+    },
+    {
+        plantName: '아디안텀',
+        type: '고사리과',
+        image: 'https://lamiltro.com/web/product/big/202105/bfe105938e8f585669ca143cff79c95b.jpg',
+        content: '밝은 녹색잎이 많이 달려 섬세한 느낌을 준다. 건조하지 않게만 자주 분무하면 된다.',
+        tag: '#수수한 #향기로운'
     },
 ]

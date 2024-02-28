@@ -82,7 +82,6 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
 router.post('/api/auth/login/google', async (req: Request, res: Response) => {
   try {
     const code: string = req.body.code;
-    console.log('Received authorization code:', code);
 
     // 토큰을 얻기 위한 요청 데이터를 구성합니다.
     const tokenData = {
@@ -92,7 +91,6 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
       redirect_uri: 'https://purupuru.store/api/auth/login/google/return',
       code: code,
     };
-    console.log('Token request data:', tokenData);
 
     // 토큰 및 사용자 정보를 얻습니다.
     const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', JSON.stringify(tokenData), {
@@ -100,7 +98,6 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
         'Content-Type': 'application/json'
       }
     });
-    console.log('Token response:', tokenResponse.data);
 
     const accessToken: string = tokenResponse.data.access_token;
 
@@ -109,11 +106,10 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
         Authorization: `Bearer ${accessToken}`
       }
     });
-    console.log('User info response:', userInfoResponse.data);
     const userInfo: any = userInfoResponse.data;
 
     // 데이터베이스에서 사용자를 찾거나 등록합니다.
-    let user: any = await Users.findOne({
+    let user = await Users.findOne({
       where: { email: userInfo.email }
     });
 
@@ -127,8 +123,8 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
     }
 
     // 새로운 액세스 및 리프레시 토큰을 생성합니다.
-    const newAccessToken: string = jwt.sign({ email: user.email }, 'YOUR_ACCESS_TOKEN_SECRET', { expiresIn: "5h" });
-    const newRefreshToken: string = jwt.sign({ email: user.email }, 'YOUR_REFRESH_TOKEN_SECRET', { expiresIn: "7d" });
+    const newAccessToken: string = jwt.sign({ email: user.email }, acc, { expiresIn: "5h" });
+    const newRefreshToken: string = jwt.sign({ email: user.email }, rcc, { expiresIn: "7d" });
 
     // 새로운 토큰으로 응답합니다.
     res.status(200).json({
@@ -143,16 +139,5 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
   }
 });
 
-
-// 구글 소셜 패스 포투 부분
-// router.get('/api/auth/login/google', passport.authenticate('google', { scope: [ 'email'] }));
-
-// router.get(
-//    '/api/auth/login/google/return',
-//    passport.authenticate('google', { failureRedirect: '/' }), 
-//    (req, res) => {
-//       res.redirect('/');
-//    },
-// );
 
 export default router;

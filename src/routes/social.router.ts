@@ -5,6 +5,7 @@ import { Users } from "../../models/Users";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from 'dotenv';
+import qs from "qs";
 
 dotenv.config();
 
@@ -18,13 +19,19 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
   try {
     const code = req.body.code;
     // 카카오로부터 인증 코드를 받고, 토큰을 요청하여 토큰을 발급받습니다.
-    const tokenResponse = await axios.post('https://kauth.kakao.com/oauth/token', {
+    const body = qs.stringify({
       grant_type: 'authorization_code',
       client_id: process.env.KAKAO_CLIENT_REST_ID,
+      client_secret: process.env.KAKAO_CLIENT_SECRET || 'IpefAzgT5iWTe9vXlvQBLH8svMeVOeeH',
       redirect_uri: 'http://localhost:5173/api/auth/login/kakao/return',
-      code: code,
-      client_secret: process.env.KAKAO_CLIENT_SECRET || 'IpefAzgT5iWTe9vXlvQBLH8svMeVOeeH'
-    });
+      code: code
+    })
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    };
+    const tokenResponse = await axios.post('https://kauth.kakao.com/oauth/token', body, config);
     const accessToken = tokenResponse.data.access_token;
     const userInfoResponse = await axios.get('https://kapi.kakao.com/v2/user/me', {
       headers: {

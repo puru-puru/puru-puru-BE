@@ -143,7 +143,7 @@ export class MyplantsRepository {
                     attributes: ['userplantId'],
                     include: [{
                         model: Plants,
-                        attributes: ['type', 'content']
+                        attributes: ['plantName','type', 'content']
                     }]
                 },
                 {

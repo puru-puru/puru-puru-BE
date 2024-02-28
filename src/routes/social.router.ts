@@ -18,7 +18,6 @@ const hash: string = process.env.BCRYPT_SALT || "default_salt_key";
 router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
   try {
     const code = req.body.code;
-    console.log("Step 1: Code Received ---------------------------------------------------------------------------", code);
     // 카카오로부터 인증 코드를 받고, 토큰을 요청하여 토큰을 발급받습니다.
     const body = qs.stringify({
       grant_type: 'authorization_code',
@@ -32,17 +31,16 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     };
-    console.log("Step 2: Requesting Access Token... ---------------------------------------------------------------------------");
     const tokenResponse = await axios.post('https://kauth.kakao.com/oauth/token', body, config);
+
     const accessToken = tokenResponse.data.access_token;
-    console.log("Step 3: Access Token Received  ----------------------------------------------------------------------------", accessToken);
-    console.log("Step 4: Requesting User Info... ---------------------------------------------------------------------------");
+
     const userInfoResponse = await axios.get('https://kapi.kakao.com/v2/user/me', {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
     });
-    console.log("Step 5: User Info Received - ---------------------------------------------------------------------------", userInfoResponse.data);
+
     // 카카오로부터 받은 사용자 정보를 확인하고, 해당 사용자를 DB에서 조회하여 유저 정보를 가져옵니다.
     const userInfo = userInfoResponse.data;
     
@@ -51,7 +49,6 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      console.log("Step 8: User Not Found - Creating a New User ---------------------------------------------------------------------------");
       // 사용자가 존재하지 않는 경우, 새로운 사용자로 등록
       user = await Users.create({
         email: userInfo.kakao_account.email,
@@ -61,11 +58,10 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
       });
     }
 
-    console.log("Step 6: User Found - ---------------------------------------------------------------------------", user);
     // 사용자가 이미 존재하는 경우에는 기존의 토큰을 갱신하거나 새로 발급할 수 있습니다.
     const newAccessToken = jwt.sign({ email: user.email }, acc, { expiresIn: "5h" });
     const newRefreshToken = jwt.sign({ email: user.email }, rcc, { expiresIn: "7d" });
-    console.log("Step 7: New Tokens Generated ---------------------------------------------------------------------------");
+
     // 응답으로 토큰을 보내줍니다.
     res.status(200).json({
       accessToken: newAccessToken,

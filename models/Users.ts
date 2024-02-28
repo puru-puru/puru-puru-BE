@@ -18,6 +18,7 @@ class Users extends Model {
   declare agreedService: boolean;
   declare snsId: number;
   declare provider: any;
+  declare kakao_id: string;
 }
 // 실제 디비에 들어갈 값
 Users.init(
@@ -68,7 +69,7 @@ Users.init(
     provider: {
       type: DataTypes.STRING,
       allowNull: true,
-    },
+    }
   },
   {
     sequelize,

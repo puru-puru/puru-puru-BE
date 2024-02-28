@@ -25,7 +25,7 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
     const body = qs.stringify({
       grant_type: 'authorization_code',
       client_id: process.env.KAKAO_CLIENT_REST_ID,
-      client_secret: process.env.KAKAO_CLIENT_SECRET || 'IpefAzgT5iWTe9vXlvQBLH8svMeVOeeH',
+      client_secret: process.env.KAKAO_CLIENT_SECRET,
       redirect_uri: 'http://localhost:5173/api/auth/login/kakao/return' || 'https://purupuru.store/api/auth/login/kakao/return',
       code: code
     })
@@ -86,9 +86,9 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
     // 토큰을 얻기 위한 요청 데이터를 구성합니다.
     const tokenData = {
       grant_type: 'authorization_code',
-      client_id: "214149105868-8h686c0pdnk0cvscof9qr24604t5rdh8.apps.googleusercontent.com",
-      client_secret: "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",
-      redirect_uri: 'https://purupuru.store/api/auth/login/google/return' || 'http://localhost:5173/api/auth/login/google/return',
+      client_id: process.env.GMAIL_OAUTH_CLIENT_ID,
+      client_secret: process.env.GMAIL_OAUTH_CLIENT_SECRET,
+      redirect_uri: 'http://localhost:5173/api/auth/login/google/return',
       code: code,
     };
 

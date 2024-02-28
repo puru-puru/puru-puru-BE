@@ -24,7 +24,7 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
       grant_type: 'authorization_code',
       client_id: process.env.KAKAO_CLIENT_REST_ID,
       client_secret: process.env.KAKAO_CLIENT_SECRET || 'IpefAzgT5iWTe9vXlvQBLH8svMeVOeeH',
-      redirect_uri: 'http://localhost:5173/api/auth/login/kakao/return' || 'https://purupuru.store/api/auth/login/kakao/return' ,
+      redirect_uri: 'http://localhost:5173/api/auth/login/kakao/return' || 'https://purupuru.store/api/auth/login/kakao/return',
       code: code
     })
     const config = {
@@ -45,32 +45,39 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
     console.log("Step 5: User Info Received - ---------------------------------------------------------------------------", userInfoResponse.data);
     // 카카오로부터 받은 사용자 정보를 확인하고, 해당 사용자를 DB에서 조회하여 유저 정보를 가져옵니다.
     const userInfo = userInfoResponse.data;
-    // 이후 사용자 정보를 DB에서 조회하여 유저 정보를 가져옵니다.
-    const user = await Users.findOne({
-      where: { snsId: userInfo.id } // 변경된 부분
+    
+    // 변경된 부분: snsId로 사용자를 찾아보고 없으면 새로 생성
+    let user = await Users.findOne({
+      where: { snsId: userInfo.id }
     });
-    if (user) {
-      console.log("Step 6: User Found - ---------------------------------------------------------------------------", user);
-      // 사용자가 이미 존재하는 경우에는 기존의 토큰을 갱신하거나 새로 발급할 수 있습니다.
-      const accessToken = jwt.sign({ email: user.email }, acc, { expiresIn: "5h" });
-      const refreshToken = jwt.sign({ email: user.email }, rcc, { expiresIn: "7d" });
-      console.log("Step 7: New Tokens Generated ---------------------------------------------------------------------------");
-      // 응답으로 토큰을 보내줍니다.
-      res.status(200).json({
-        accessToken,
-        refreshToken,
-        hasNickname: !!user.nickname,
-        email: user.email,
+
+    if (!user) {
+      console.log("Step 8: User Not Found - Creating a New User ---------------------------------------------------------------------------");
+      // 사용자가 존재하지 않는 경우, 새로운 사용자로 등록
+      user = await Users.create({
+        email: userInfo.kakao_account.email,
+        snsId: userInfo.id,
+        provider: "kakao"
+        // 다른 필드도 필요에 따라 추가
       });
-    } else {
-      console.log("Step 8: User Not Found ---------------------------------------------------------------------------");
-      // 사용자가 존재하지 않는 경우, 새로운 사용자로 등록할 수 있습니다.
-      // 이 부분은 해당 프로젝트의 사용자 등록 기능에 따라 달라집니다.
-      res.status(404).json({ message: '사용자 정보를 찾을 수 없습니다.' });
     }
+
+    console.log("Step 6: User Found - ---------------------------------------------------------------------------", user);
+    // 사용자가 이미 존재하는 경우에는 기존의 토큰을 갱신하거나 새로 발급할 수 있습니다.
+    const newAccessToken = jwt.sign({ email: user.email }, acc, { expiresIn: "5h" });
+    const newRefreshToken = jwt.sign({ email: user.email }, rcc, { expiresIn: "7d" });
+    console.log("Step 7: New Tokens Generated ---------------------------------------------------------------------------");
+    // 응답으로 토큰을 보내줍니다.
+    res.status(200).json({
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+      hasNickname: !!user.nickname,
+      email: user.email,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: '서버 오류' });
   }
 });
+
 export default router;

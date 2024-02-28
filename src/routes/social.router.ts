@@ -86,12 +86,11 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
     // 토큰을 얻기 위한 요청 데이터를 구성합니다.
     const tokenData = {
       grant_type: 'authorization_code',
-      client_id: process.env.GOOGLE_CLIENT_ID || "214149105868-8h686c0pdnk0cvscof9qr24604t5rdh8.apps.googleusercontent.com",
-      client_secret: process.env.GOOGLE_CLIENT_SECRET || "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",
+      client_id: "214149105868-8h686c0pdnk0cvscof9qr24604t5rdh8.apps.googleusercontent.com",
+      client_secret: "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",
       redirect_uri: 'http://localhost:5173/api/auth/login/google/return' || 'https://purupuru.store/api/auth/login/google/return',
       code: code
     };
-
     // 토큰 및 사용자 정보를 얻습니다.
     const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', qs.stringify(tokenData), {
       headers: {

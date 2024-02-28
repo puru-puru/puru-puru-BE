@@ -2,10 +2,10 @@ import express from "express";
 import { Request, Response } from "express";
 import { Users } from "../../models/Users";
 import axios from "axios";
-import passport from "passport";
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
 import qs from "qs";
+import passport from "passport";
 import bcrypt from "bcrypt";
 
 dotenv.config();
@@ -79,6 +79,7 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
 
 
 // 구글 부분 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 router.post('/api/auth/login/google', async (req: Request, res: Response) => {
   try {
     const code: string = req.body.code;
@@ -89,8 +90,9 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
       client_id: "214149105868-8h686c0pdnk0cvscof9qr24604t5rdh8.apps.googleusercontent.com",
       client_secret: "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",
       redirect_uri: 'http://localhost:5173/api/auth/login/google/return' || 'https://purupuru.store/api/auth/login/google/return',
-      code: code
+      code: code,
     };
+
     // 토큰 및 사용자 정보를 얻습니다.
     const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', qs.stringify(tokenData), {
       headers: {
@@ -122,8 +124,8 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
     }
 
     // 새로운 액세스 및 리프레시 토큰을 생성합니다.
-    const newAccessToken: string = jwt.sign({ email: user.email }, acc, { expiresIn: "5h" });
-    const newRefreshToken: string = jwt.sign({ email: user.email }, rcc, { expiresIn: "7d" });
+    const newAccessToken: string = jwt.sign({ email: user.email }, 'YOUR_ACCESS_TOKEN_SECRET', { expiresIn: "5h" });
+    const newRefreshToken: string = jwt.sign({ email: user.email }, 'YOUR_REFRESH_TOKEN_SECRET', { expiresIn: "7d" });
 
     // 새로운 토큰으로 응답합니다.
     res.status(200).json({

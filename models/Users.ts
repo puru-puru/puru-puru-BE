@@ -12,6 +12,7 @@ class Users extends Model {
   declare email: string;
   declare password: string;
   declare isEmailValid: boolean
+  declare sendemailed: boolean
   declare hashedRefreshToken: string;
   declare status: string;
   declare agreedService: boolean;
@@ -40,6 +41,10 @@ Users.init(
     isEmailValid: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    sendeMailed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     },
     hashedRefreshToken: {
       type: DataTypes.STRING

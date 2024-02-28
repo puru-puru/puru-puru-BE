@@ -6,7 +6,6 @@ import { EmailUtils } from '../utils/email.utils'
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv"
-import axios from "axios";
 
 dotenv.config()
 
@@ -18,46 +17,48 @@ export class AuthService {
   userRepository = new UserRepository();
   emailUtils = new EmailUtils();
 
-  // 비밀번호 확인 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  // 비밀번호 확인 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   confirmPassword = (password: string, confirmPassword: string) => {
     return password === confirmPassword;
   };
 
-  //회원가입 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  signupUser = async (email: string, nickname: string, password: string) => {
+  //테스트 회원가입 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  testsignupUser = async (email: string, password: string) => {
     try {
       // 우선 에러 처리.
       if (!email || !password) {
         throw { name: "ValidationError" };
       }
-      // 여기서 검증 부분을 처리 해야 하기에.. 디비 안에 있는거 여기서 꺼내옴.
+  
+      // 여기서 검증 부분을 처리 해야 하기에.. 디비 안에 있는 거 여기서 꺼내옴.
       const isExistUser = await Users.findOne({
-        where: { email },
+        where: { email, isEmailValid: true },
       });
-
-      if (isExistUser) {
-        throw { name: "ExistUser" };
+  
+      if (!isExistUser) {
+        throw { name: "NotExistValidUser" };
       }
+  
       // 이후 에러 뚫고 오면 비밀 번호 해쉬화.
       const salt = bcrypt.genSaltSync(parseInt(hash));
       const hashPassword = bcrypt.hashSync(password, salt);
-
-    const userInstance = Users.build({
-      email,
-      nickname,
-      password: hashPassword,
-    });
-    await userInstance.save();
-
-    return {
-      signupUser: userInstance,
-    };
+  
+      await Users.update(
+        { password: hashPassword },
+        { where: { email, isEmailValid: true } }
+      );
+  
+      // return 
     } catch (err: any) {
       throw err;
-  };
-}
+    };
+  }
+  
 
-  // 로그인 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  // 로그인 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   signinUser = async (email: string, password: string, user: any) => {
     try {
       // 사용자가 있는지 확인
@@ -96,7 +97,8 @@ export class AuthService {
     }
   };
 
-  // 로그아웃. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  // 로그아웃. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   signOut = async (user: any) => {
     try {
       await this.userRepository.updateUser(
@@ -108,7 +110,8 @@ export class AuthService {
     }
   };
 
-  // 토큰 재 발급. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  // 토큰 재 발급. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   refreshAccessToken = async (refreshToken: string) => {
     try {
       const decodedInfo = this.decodedAccessToken(refreshToken);
@@ -157,6 +160,7 @@ export class AuthService {
   }
 
   // 동의 약관 처리 부분.. 아직 테스트 진행 해보지 모했음. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
   agreedService = async (userId: any, agreedService: boolean) => {
     try {
       await this.userRepository.agreedService(userId, agreedService)
@@ -165,21 +169,9 @@ export class AuthService {
     }
   }
 
-  // test - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // 이메일 관련  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  createUser = async (email: string, name: string, password: string) => {
-    try {
-      const user = await this.userRepository.createUser({ email, name, password });
-      if (!user) {
-        throw new Error('유저 찾기 실패.');
-      }
-
-      return user;
-    } catch (err) {
-      throw err;
-    }
-  }
-
+  // 이메일 값 찾기
    findUserByEmail = async (email: string) => {
     try {
       const user = await this.userRepository.findUser({ where: { email } });
@@ -189,24 +181,94 @@ export class AuthService {
     }
   }
 
-    updateUserEmailVerification = async (email: string) => {
+  // 해당 이메일을 검증된 이메일로 바꾸어쥬ㅜㅁ
+  updateUserEmailVerification = async (email: string) => {
     try {
-      await this.userRepository.updateUser({ isEmailValid: true }, { where: { email } });
+      await this.userRepository.updateUser({ isEmailValid: true, sendeMailed: true }, { where: { email } });
     } catch (err) {
       throw err;
     }
   }
 
-// test - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // 이메일 인증을 보냄과 동시에 해당 이메일을 디비에 저장.....
+  sendEmailAndRegister = async (email: string) => {
+    try {
+        const isExistUser = await Users.findOne({
+          where: { email }
+        })
+        if (isExistUser) {
+          throw { name : "ExistUser"}
+        }
+        const userInstance = Users.build({
+          email,
+        });
+
+        await userInstance.save();
+
+        return {sendEmailAndRegister : userInstance }
+    } catch (err) {
+      throw err;
+    }
+  }
+  // 이메일이 인증된 이메일 인지 확인.
+  isEmailValid = async (email: string ) => {
+    try {
+      const user = await this.userRepository.findUser({ where: { email } });
+  
+      if (!user) {
+        // 사용자를 찾을 수 없음
+        return false;
+      }
+  
+      // 이메일이 확인되었는지 확인합니다.
+      return user.isEmailValid || false;
+  
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  // 기존 회원가입 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  signupUser = async (email: string, nickname: string, password: string) => {
+        try {
+          // 우선 에러 처리.
+          if (!email || !password) {
+            throw { name: "ValidationError" };
+          }
+          // 여기서 검증 부분을 처리 해야 하기에.. 디비 안에 있는거 여기서 꺼내옴.
+          const isExistUser = await Users.findOne({
+            where: { email },
+          });
+    
+          if (isExistUser) {
+            throw { name: "ExistUser" };
+          }
+          // 이후 에러 뚫고 오면 비밀 번호 해쉬화.
+          const salt = bcrypt.genSaltSync(parseInt(hash));
+          const hashPassword = bcrypt.hashSync(password, salt);
+    
+          const signupUser = await this.userRepository.createUser({
+            email,
+            nickname,
+            password: hashPassword,
+          });
+    
+          return {
+            signupUser,
+          };
+        } catch (err: any) {
+          throw err;
+        }
+      };
 
 
-  // 여기서 부터 토큰 옵션 설정 및 발급 해독 하는 곳.
+  // 여기서 부터 토큰 옵션 설정 및 발급 해독 하는 곳.  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
   setCookies = async (res: Response, accessToken: string, refreshToken: string) => {
     res.cookie("refreshToken", `Bearer ${decodeURIComponent(String(refreshToken))}`);
     res.cookie("accessToken", `Bearer ${decodeURIComponent(String(accessToken))}`);
   }
 
-  // 토큰 값 해독 부분 잠깐 컨트롤러로 옮겨 왔음
   decodedAccessToken = (accessToken: string) => {
     try {
       const [tokenType, token] = accessToken.split(" ");
@@ -216,7 +278,7 @@ export class AuthService {
     }
   };
 
-  // 리프레쉬 토큰도 잠깐 옮겨왔음.
+
   validateRefreshToken = async (refreshToken: string,hashedRefreshToken: string,) => {
     try {
       const [tokenType, token] = refreshToken.split(" ");

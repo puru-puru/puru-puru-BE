@@ -53,6 +53,9 @@ export default function (err: any, req: Request, res: Response, next: NextFuncti
 
             case err.name === "UnFitFrom":
                 return res.status(400).json({ errorMessage: "이메일 형식에 맞지 않습니다." });
+            
+            case err.name === "ExistName":
+                return res.status(409).json({ errorMessage: " 중복된 닉네임 입니다. " })
 
             default:
                 console.error('Unhandled error:', err);

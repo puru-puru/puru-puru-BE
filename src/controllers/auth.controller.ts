@@ -1,7 +1,6 @@
 // 어플리케이션의 바깥 부분 , 요청/ 응답을 처리함.
 import { AuthService } from "../services/auth.service";
 import { EmailUtils } from '../utils/email.utils'
-import { GoogleEmailUtils } from '../utils/email.utils'
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
 import dotenv from "dotenv"
@@ -21,7 +20,6 @@ const userSchema = Joi.object({
     }
     return value;
   }),
-  nickname: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{5,15}$")),
   password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9!@#$%^&*()_+\\-=\\[\\]{};':\",./<>?|\\\\ ]{5,20}$")),
   confirmPassword: Joi.string().valid(Joi.ref("password"))
   }).options({ abortEarly: false }); 
@@ -31,36 +29,36 @@ const userSchema = Joi.object({
 export class AuthController {
   authService = new AuthService();
   emailUtils = new EmailUtils();
-  googleEmailUtils = new GoogleEmailUtils()
 
-
-  // 네이버 인증 메일 발송 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // 인증 메일 발송 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   emailVerification = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email } = req.body;
-
+  
       // email 유효성 검사
       const { error } = userSchema.validate({ email });
       if (error) {
         return res.status(400).json({ message: error.message });
       }
-
+  
+      const isGoogleEmail = email.endsWith('@gmail.com');
+  
       const result = await this.authService.sendEmailAndRegister(email);
-
-    // 인증 메일 보내기
-    // const url = `http://localhost:3000/api/test/auth/verify-email?email=${email}`;
-    // await this.emailUtils.sendVerificationEmail(email, url);
-
-    // 배포 환경.
-    const url = `https://purupuru.store/api/test/auth/verify-email?email=${email}`;
-    await this.emailUtils.sendVerificationEmail(email, url);
-
-    return res.status(200).json({ message: "이메일 인증 메일이 발송되었습니다.", data: { result } });
-  } catch (err) {
-    next(err);
+  
+      // 인증 메일 보내기
+      // const url = `http://localhost:3000/api/test/auth/verify-email?email=${email}`;
+      // await this.emailUtils.sendVerificationEmail(email, url, isGoogleEmail);
+  
+      // // 배포 환경.
+      const url = `https://purupuru.store/api/test/auth/verify-email?email=${email}`;
+      await this.emailUtils.sendVerificationEmail(email, url, isGoogleEmail);
+  
+      return res.status(200).json({ message: "이메일 인증 메일이 발송되었습니다.", data: { result } });
+    } catch (err) {
+      next(err);
+    }
   }
-}
 
 // 이메일 인증 회원가입 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -115,34 +113,8 @@ verifyEmail = async (req: Request, res: Response) => {
   }
 };
 
-  // 구글 이메일 인증 메일 발송  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-googleEmailVerification = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { email } = req.body;
-
-    // email 유효성 검사
-    const { error } = userSchema.validate({ email });
-    if (error) {
-      return res.status(400).json({ message: error.message });
-    }
-
-    const result = await this.authService.sendEmailAndRegister(email);
-
-    // 인증 메일 보내기 로컬
-    // const url = `http://localhost:3000/api/google/auth/verify-email?email=${email}`;
-    // await this.googleEmailUtils.sendVerificationEmail(email, url);
-
-    // // 배포용
-    const url = `https://purupuru.store/api/google/auth/verify-email?email=${email}`;
-    await this.googleEmailUtils.sendVerificationEmail(email, url);
-
-    return res.status(200).json({ message: '구글 이메일 인증 메일이 발송되었습니다.', data: { result } });
-  } catch (err) {
-    next(err);
-  }
-};
-
 // 구글 이메일 인증 확인  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 verifyGoogleEmail = async (req: Request, res: Response) => {
   try {
     const email: string = req.query.email as string;

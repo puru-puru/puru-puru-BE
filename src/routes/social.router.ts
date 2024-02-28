@@ -83,7 +83,7 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
 router.post('/api/auth/login/google', async (req: Request, res: Response) => {
   try {
     const code: string = req.body.code;
-    console.log('Received authorization code: ----------------------------------------------------------------------------------------------------------------', code);
+    console.log('Received authorization code:', code);
 
     // 토큰을 얻기 위한 요청 데이터를 구성합니다.
     const tokenData = {
@@ -93,7 +93,7 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
       redirect_uri: 'https://purupuru.store/api/auth/login/google/return',
       code: code,
     };
-    console.log('Token request data:  ----------------------------------------------------------------------------------------------------------------', tokenData);
+    console.log('Token request data:', tokenData);
 
     // 토큰 및 사용자 정보를 얻습니다.
     const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', qs.stringify(tokenData), {
@@ -101,7 +101,7 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     });
-    console.log('Token response: ----------------------------------------------------------------------------------------------------------------', tokenResponse.data);
+    console.log('Token response:', tokenResponse.data);
 
     const accessToken: string = tokenResponse.data.access_token;
 
@@ -110,7 +110,7 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
         Authorization: `Bearer ${accessToken}`
       }
     });
-    console.log('User info response:  ----------------------------------------------------------------------------------------------------------------', userInfoResponse.data);
+    console.log('User info response:', userInfoResponse.data);
     const userInfo: any = userInfoResponse.data;
 
     // 데이터베이스에서 사용자를 찾거나 등록합니다.
@@ -139,7 +139,7 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
       email: user.email,
     });
   } catch (error) {
-    console.error("외 에러들:  ----------------------------------------------------------------------------------------------------------------",error);
+    console.error("외 에러들:",error);
     res.status(500).json({ message: '서버 오류' });
   }
 });

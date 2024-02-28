@@ -22,7 +22,8 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
       grant_type: 'authorization_code',
       client_id: process.env.KAKAO_CLIENT_REST_ID,
       redirect_uri: 'http://localhost:5173/api/auth/login/kakao/return',
-      code: code
+      code: code,
+      client_secret: process.env.KAKAO_CLIENT_SECRET || 'IpefAzgT5iWTe9vXlvQBLH8svMeVOeeH'
     });
     const accessToken = tokenResponse.data.access_token;
     const userInfoResponse = await axios.get('https://kapi.kakao.com/v2/user/me', {

@@ -43,12 +43,12 @@ async (req: Request, res: Response,) => {
       const accessToken = await tokenInstance.createAccessToken(user.email);
       const refreshToken = await tokenInstance.createRefreshToken(user.email);
 
-      // 토큰 디코드 예시
-      const decodedAccessToken = tokenInstance.decodedAccessToken(accessToken);
-      console.log('Decoded Access Token:----------------------------------------------', decodedAccessToken);
+      // // 토큰 디코드 예시
+      // const decodedAccessToken = tokenInstance.decodedAccessToken(accessToken);
+      // console.log('Decoded Access Token:----------------------------------------------', decodedAccessToken);
 
         // 프론트엔드에 토큰을 포함한 응답을 보내기 
-        res.redirect(`http://localhost:3000/success?accessToken=${accessToken}&refreshToken=${refreshToken}&hasNickname=${!!user.nickname}&email=${user.email}`);
+        res.redirect(`http://localhost:5173/success?accessToken=${accessToken}&refreshToken=${refreshToken}&hasNickname=${!!user.nickname}&email=${user.email}`);
     } else {
         // 사용자 정보가 없을 경우 에러 처리
       res.status(404).json({ message: '사용자 정보를 찾을 수 없습니다.' });

@@ -31,5 +31,4 @@ router.get("/refresh", authController.getRefresh);
 router.post("/auth/services", authMiddleware, authController.agreedService)
 
 
-
 export default router;

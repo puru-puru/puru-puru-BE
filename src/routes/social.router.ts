@@ -88,7 +88,7 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
       grant_type: 'authorization_code',
       client_id: "214149105868-8h686c0pdnk0cvscof9qr24604t5rdh8.apps.googleusercontent.com",
       client_secret: "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",
-      redirect_uri: 'https://purupuru.store/api/auth/login/google/return',
+      redirect_uri: 'https://purupuru.store/api/auth/login/google/return' || 'http://localhost:5173/api/auth/login/google/return',
       code: code,
     };
 

@@ -79,7 +79,6 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
 
 
 // 구글 부분 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 router.post('/api/auth/login/google', async (req: Request, res: Response) => {
   try {
     const code: string = req.body.code;
@@ -96,9 +95,9 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
     console.log('Token request data:', tokenData);
 
     // 토큰 및 사용자 정보를 얻습니다.
-    const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', qs.stringify(tokenData), {
+    const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', JSON.stringify(tokenData), {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json'
       }
     });
     console.log('Token response:', tokenResponse.data);
@@ -139,7 +138,7 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
       email: user.email,
     });
   } catch (error) {
-    console.error("외 에러들:",error);
+    console.error("외 에러들:", error);
     res.status(500).json({ message: '서버 오류' });
   }
 });

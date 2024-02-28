@@ -26,35 +26,30 @@ router.get("/api/auth/login/kakao", passport.authenticate("kakao"));
 // 5. 이 라우터는 카카오 전략을 실행한다. 
 // 카카오 서버가 인증을 완료 한 뒤 인증 결과를 보내는 리다이렉트 URI API
 // 소셜 로그인 후의 처리
+
 router.get('/api/auth/login/kakao/return', passport.authenticate('kakao', {
   failureRedirect: '/',
 }),
 async (req: Request, res: Response,) => {
   try {
-    // 여기서 Passport에서 전달한 사용자 정보를 가져옴
     const user = req.user as Users | undefined;
 
-    // 사용자 정보가 존재하는지 확인
     if (user) {
-        // Token 클래스의 인스턴스 생성 이
       const tokenInstance = new Token();
-
-        // 사용자 정보를 이용하여 토큰을 생성
       const accessToken = await tokenInstance.createAccessToken(user.email);
       const refreshToken = await tokenInstance.createRefreshToken(user.email);
 
-      // // 토큰 디코드 예시
-      // const decodedAccessToken = tokenInstance.decodedAccessToken(accessToken);
-      // console.log('Decoded Access Token:----------------------------------------------', decodedAccessToken);
-
-        // 프론트엔드에 토큰을 포함한 응답을 보내기 
-        res.redirect(`http://localhost:5173/success?accessToken=${accessToken}&refreshToken=${refreshToken}&hasNickname=${!!user.nickname}&email=${user.email}`);
+      // 응답으로 토큰 및 사용자 정보 전달
+      res.status(200).json({
+        accessToken,
+        refreshToken,
+        hasNickname: !!user.nickname,
+        email: user.email,
+      });
     } else {
-        // 사용자 정보가 없을 경우 에러 처리
       res.status(404).json({ message: '사용자 정보를 찾을 수 없습니다.' });
     }
   } catch (error) {
-    // 오류 처리
     console.error(error);
     res.status(500).json({ message: '서버 오류' });
   }

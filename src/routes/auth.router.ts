@@ -18,6 +18,12 @@ router.post('/test/auth/send-email', authController.emailVerification)
 // 이메일 인증 부분 처리 
 router.post("/test/auth/verify-email", authController.verifyEmail);
 
+// 구글 이메일 전송 및 해당 이메일 디비에 추가
+router.post('/google/auth/send-email', authController.googleEmailVerification);
+
+// 구글 이메일 인증 부분 처리
+router.get('/google/auth/verify-email', authController.verifyGoogleEmail);
+
 // 회원 로그인
 router.post("/auth/sign-in", authController.signinUser);
 

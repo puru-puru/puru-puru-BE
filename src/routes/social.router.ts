@@ -46,9 +46,8 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
     // 카카오로부터 받은 사용자 정보를 확인하고, 해당 사용자를 DB에서 조회하여 유저 정보를 가져옵니다.
     const userInfo = userInfoResponse.data;
     
-    // 변경된 부분: snsId로 사용자를 찾아보고 없으면 새로 생성
     let user = await Users.findOne({
-      where: { snsId: userInfo.id }
+      where: { email: userInfo.kakao_account.email }
     });
 
     if (!user) {
@@ -79,5 +78,6 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
     res.status(500).json({ message: '서버 오류' });
   }
 });
+
 
 export default router;

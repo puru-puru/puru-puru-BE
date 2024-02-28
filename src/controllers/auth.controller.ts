@@ -4,9 +4,6 @@ import { EmailUtils } from '../utils/email.utils'
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
 import dotenv from "dotenv"
-import { Users } from "../../models/Users";
-import axios from "axios";
-
 
 dotenv.config()
 
@@ -18,16 +15,14 @@ const userSchema = Joi.object({
   }).custom((value, helpers) => {
     const validDomains = ['gmail.com', 'naver.com', 'daum.net', 'kakao.com', 'nate.com', 'hanmail.com'];
     const domain = value.split('@')[1];
-
     if (!validDomains.includes(domain)) {
       return helpers.error('string.email');
     }
-
     return value;
   }),
   nickname: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{5,15}$")),
-  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9!@#$%^&*()_+\\-=\\[\\]{};':\",./<>?|\\\\ ]{5,20}$")).required(),
-  confirmPassword: Joi.string().valid(Joi.ref("password")).required()
+  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9!@#$%^&*()_+\\-=\\[\\]{};':\",./<>?|\\\\ ]{5,20}$")),
+  confirmPassword: Joi.string().valid(Joi.ref("password"))
   }).options({ abortEarly: false }); 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -36,16 +31,49 @@ export class AuthController {
   authService = new AuthService();
   emailUtils = new EmailUtils();
 
-// 회원가입 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-signupUser = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { email, nickname, password, confirmPassword } = await userSchema.validateAsync(req.body);
 
-    const signUpUser = await this.authService.signupUser(email, nickname, password);
+  // 인증 메일 발송 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    // 이메일 보내기
-    const url = `http://localhost:3000/api/auth/verify-email?email=${email}`;
+  emailVerification = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email } = req.body;
+
+      // email 유효성 검사
+      const { error } = userSchema.validate({ email });
+      if (error) {
+        return res.status(400).json({ message: error.message });
+      }
+
+      const result = await this.authService.sendEmailAndRegister(email);
+
+    // 인증 메일 보내기
+    // const url = `http://localhost:3000/api/test/auth/verify-email?email=${email}`;
+    // await this.emailUtils.sendVerificationEmail(email, url);
+
+    // 배포 환경.
+    const url = `https://purupuru.store/api/test/auth/verify-email?email=${email}`;
     await this.emailUtils.sendVerificationEmail(email, url);
+
+    return res.status(200).json({ message: "이메일 인증 메일이 발송되었습니다.", data: { result } });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// 테스트 회원가입 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+testsignupUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email, password, confirmPassword } = await userSchema.validateAsync(req.body);
+
+    // 이메일이 인증되었는지 확인
+    const isEmailValid = await this.authService.isEmailValid(email);
+    if (!isEmailValid) {
+      return res.status(400).json({ message: "이메일이 인증되지 않았습니다." });
+    }
+
+    // 회원 가입 
+    const signUpUser = await this.authService.testsignupUser(email, password);
 
     return res.status(200).json({ message: "회원 가입 성공", data: signUpUser });
 
@@ -53,7 +81,10 @@ signupUser = async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   };
 }
-// 이메일 유효 한지 확인 하는 부분 !!!
+
+
+  // 인증 메일 확인. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 verifyEmail = async (req: Request, res: Response) => {
   try {
     
@@ -82,7 +113,9 @@ verifyEmail = async (req: Request, res: Response) => {
   }
 };
 
+
   // 로그인 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   signinUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body;
@@ -110,6 +143,7 @@ verifyEmail = async (req: Request, res: Response) => {
   };
 
   // 로그아웃 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   signOut = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user: any = req.user;
@@ -126,6 +160,7 @@ verifyEmail = async (req: Request, res: Response) => {
   };
 
   // 토큰 재 발급 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   getRefresh = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const refreshToken = req.headers["refresh"] as string | undefined;
@@ -146,6 +181,7 @@ verifyEmail = async (req: Request, res: Response) => {
 
 
   // 사용자 약관 동의 부분인데 아직 잘 모르겠음.. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
   agreedService = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user: any = req.user;
@@ -162,9 +198,25 @@ verifyEmail = async (req: Request, res: Response) => {
     }
   }
 
-  // test - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // 기존 회원 가입 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  // console.log("hello World!")
+  signupUser = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+          const { email, nickname, password, confirmPassword } =
+            await userSchema.validateAsync(req.body);
+    
+          if (!this.authService.confirmPassword(password, confirmPassword)) {
+            throw { name: "PasswordMismatch" };
+          }
+    
+          await this.authService.signupUser(email, nickname, password);
+    
+          return res.status(200).json({ message: "회원 가입 성공" });
+        } catch (err) {
+          next(err);
+        }
+      };
+  
 
   // test - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 

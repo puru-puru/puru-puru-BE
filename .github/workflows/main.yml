@@ -1,0 +1,32 @@
+name: Auto Deploy TEST
+
+on:
+  push:
+    branches:
+      - 'main'
+
+permissions: write-all
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: SSH into Deployment Server
+      run: |
+        ssh -i ${{ secrets.SSH_PRIVATE_KEY }} \
+          -p ${{ secrets.DEPLOY_SERVER_PORT }} \
+          ${{ secrets.DEPLOY_SERVER_USER }}@${{ secrets.DEPLOY_SERVER_HOST }} \
+          'cd /path/to/puru-puru-BE/ && \
+          git pull && \
+          tsc -w & sleep 5 && \
+          pkill -f "tsc -w" && \
+          pm2 restart 0'

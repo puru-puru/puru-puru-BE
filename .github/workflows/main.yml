@@ -30,7 +30,8 @@ jobs:
         script: |
           ls
           cd puru-puru-BE/
-          git pull
+          git stash
+          git pull origin main
           npm install
           tsc -w & sleep 15
           pkill -f "tsc -w"

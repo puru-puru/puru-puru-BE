@@ -95,7 +95,7 @@ Users.hasMany(Comments, { foreignKey: 'userId', as: 'comments' })
 Comments.belongsTo(Users, { foreignKey: "userId", as: 'user' })
 
 // 좋아요 와의 관계
-Users.hasMany(Likes, { foreignKey: "userId" })
-Likes.belongsTo(Users, { foreignKey: "userId" })
+Users.hasMany(Likes, { foreignKey: 'userId' });
+Likes.belongsTo(Users, { foreignKey: 'userId' });
 
 export { Users };

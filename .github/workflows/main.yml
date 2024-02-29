@@ -26,7 +26,7 @@ jobs:
         host: ${{ secrets.DEPLOY_SERVER_HOST }}
         username: ${{ secrets.DEPLOY_SERVER_USER }}
         password: ${{ secrets.DEPLOY_SERVER_PASSWORD }}
-        port: ${{ secrets.DEPLOY_SERVER_PORT }}
+        port: 22
         script: |
           cd /path/to/puru-puru-BE/
           git pull

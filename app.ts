@@ -76,9 +76,9 @@ const createTemplelateDB = () => {
   })
 }
 
-// createPlantDB(); 
-// createMissionDB(); 
-// createTemplelateDB();
+createPlantDB(); 
+createMissionDB(); 
+createTemplelateDB();
 
 app.use(express.static(path.join(__dirname, "views")));
 app.listen(port, async () => {

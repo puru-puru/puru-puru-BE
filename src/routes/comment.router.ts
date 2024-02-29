@@ -17,6 +17,8 @@ router.patch('/boards/:boardId/comments/:commentId', authMiddleware, commentCont
 // 해당 글의 댓글 삭제
 router.patch('/boards/:boardId/comments/:commentId/delete', authMiddleware, commentController.deleteComment)
 
+// 해당 글의 댓글의 대댓글
+router.post('/boards/:boardId/comments/:commentId/childCommentIds', authMiddleware, commentController.postComment2)
 
 
 

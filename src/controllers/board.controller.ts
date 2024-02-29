@@ -30,6 +30,7 @@ export class BoardController {
         }
     }
 
+
     
     // 커뮤니티 게시글 작성
     boardPost = async (req: Request, res: Response, next: NextFunction) => {

@@ -33,8 +33,7 @@ jobs:
           git stash
           git pull origin main
           npm install
-          tsc -w > tsc.log 2>&1 & sleep 15
-          pkill -f "tsc -w"
+          tsc > tsc.log 2>&1
           cd ..
           cd puru-puru-BE/
           pm2 delete 0

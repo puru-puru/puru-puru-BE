@@ -29,7 +29,7 @@ jobs:
         port: 22
         script: |
           ls
-          cd puru-puru-BE/
+          cd /path/to/puru-puru-BE/
           git pull
           npm install
           tsc -w & sleep 15

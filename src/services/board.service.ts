@@ -36,11 +36,10 @@ export class BoardService {
         }
     }
 
-    // 커뮤니티 게시글 상세보기
-    boardDetail = async (boardId: string) => {
+    // 게시물 상세 보기 
+    boardDetailWithLikeCount = async (boardId: any) => {
         try {
-            const board = await this.boardRepository.boardDetail(boardId);
-            return board;
+            return await this.boardRepository.boardDetailWithLikeCount(boardId);
         } catch (err) {
             throw err;
         }
@@ -81,5 +80,6 @@ export class BoardService {
             throw err;
         }
     }
+
     // 테스트 ------------------------------------------------------------------------------------------
     }

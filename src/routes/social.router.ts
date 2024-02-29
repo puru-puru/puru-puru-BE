@@ -62,7 +62,7 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
 
     // 사용자가 이미 존재하는 경우에는 기존의 토큰을 갱신하거나 새로 발급할 수 있습니다.
     const newAccessToken = jwt.sign({ email: user.email }, acc, { expiresIn: "5h" });
-    const newRefreshToken = jwt.sign({ email: user.email }, rcc, { expiresIn: "7d" });
+    const newRefreshToken = await hashedRefreshToken(user.email);
 
     // 응답으로 토큰을 보내줍니다.
     res.status(200).json({
@@ -124,7 +124,7 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
 
     // 새로운 액세스 및 리프레시 토큰을 생성합니다.
     const newAccessToken: string = jwt.sign({ email: user.email }, acc, { expiresIn: "5h" });
-    const newRefreshToken: string = jwt.sign({ email: user.email }, rcc, { expiresIn: "7d" });
+    const newRefreshToken = await hashedRefreshToken(user.email);
 
     // 새로운 토큰으로 응답합니다.
     res.status(200).json({
@@ -139,5 +139,17 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
   }
 });
 
+
+async function hashedRefreshToken(email: string): Promise<string> {
+  const newRefreshToken = jwt.sign({ email }, rcc, { expiresIn: "7d" });
+  const salt = bcrypt.genSaltSync(parseInt(hash));
+  const hashedRefreshToken = bcrypt.hashSync(newRefreshToken, salt);
+  
+  await Users.update(
+    { hashedRefreshToken },
+    { where: { email } }
+  );
+  return hashedRefreshToken;
+}
 
 export default router;

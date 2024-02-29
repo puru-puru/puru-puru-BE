@@ -1,6 +1,7 @@
 import { Boards } from "../../models/Boards";
 import { Users } from "../../models/Users";
 import { Comments } from "../../models/Comments";
+import { Likes } from "../../models/likes";
 
 export class BoardRepository {
 
@@ -133,4 +134,61 @@ export class BoardRepository {
         }
     }
 
+
+    // 테스트 ------------------------------------------------------------------------------------------
+      // 게시물의 좋아요 개수 가져오기
+      getLikeCount = async (boardId: any) => {
+        try {
+            const likeCount = await Likes.count({
+                where: {
+                    boardId,
+                    deletedAt: null
+                }
+            });
+
+            return likeCount;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+     // 로그인 한 사용자의 정보와 함께 좋아요 개수를 가져옴
+     getBoardDataWithLikeCount = async (user: any) => {
+        try {
+            const boards = await Boards.findAll({
+                where: {
+                    deletedAt: null
+                },
+                include: [
+                    {
+                        model: Users,
+                        attributes: ['nickname'],
+                        as: 'author'
+                    },
+                ],
+                attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
+                order: [['createdAt', 'DESC']],
+            });
+
+            // 좋아요 개수를 조회하여 각 게시물 데이터에 추가
+            const boardData = await Promise.all(boards.map(async (board) => {
+                const boardInfo: any = board.toJSON();
+
+                // 좋아요 개수 조회
+                const likeCount = await this.getLikeCount(boardInfo.boardId);
+
+                // 좋아요 개수를 데이터에 추가
+                boardInfo.likeCount = likeCount;
+
+                return boardInfo;
+            }));
+
+            return boardData;
+        } catch (err) {
+            throw err;
+        }
+    }
+    
 }
+    // 테스트 ------------------------------------------------------------------------------------------
+

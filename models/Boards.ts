@@ -47,6 +47,7 @@ Boards.init(
 Boards.hasMany(Comments, { foreignKey: "boardId" });
 Comments.belongsTo(Boards, { foreignKey: "boardId" });
 
-Boards.hasMany
+Boards.hasMany(Likes, { foreignKey: 'boardId' });
+Likes.belongsTo(Boards, { foreignKey: 'boardId' });
 
 export { Boards };

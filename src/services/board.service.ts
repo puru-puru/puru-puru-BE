@@ -20,7 +20,6 @@ export class BoardService {
         }
     }
 
-
     // 커뮤니티 게시글 작성하기
     boardPost = async (title: string, imageUrl: any, content: string, user: any) => {
         try {
@@ -72,4 +71,15 @@ export class BoardService {
         }
     }
 
-}
+    // 테스트 ------------------------------------------------------------------------------------------
+
+    // 로그인 한 사용자의 정보와 함께 좋아요 개수를 가져옴
+    boardListWithLikeCount = async (user: any) => {
+        try {
+            return await this.boardRepository.getBoardDataWithLikeCount(user);
+        } catch (err) {
+            throw err;
+        }
+    }
+    // 테스트 ------------------------------------------------------------------------------------------
+    }

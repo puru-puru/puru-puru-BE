@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./index";
 import { Comments } from "./Comments";
+import { Likes } from "./likes";
 
 class Boards extends Model {
   declare boardId: number;
@@ -45,5 +46,7 @@ Boards.init(
 // 보드와 댓글 관의 관계
 Boards.hasMany(Comments, { foreignKey: "boardId" });
 Comments.belongsTo(Boards, { foreignKey: "boardId" });
+
+Boards.hasMany
 
 export { Boards };

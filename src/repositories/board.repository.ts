@@ -19,6 +19,7 @@ export class BoardRepository {
                     },
                 ],
                 attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
+                order: [['createdAt', 'DESC']],
             });
             // 로그인 한 사용자의 정보를 가져옴. 
             const boardData = boards.map(board => {

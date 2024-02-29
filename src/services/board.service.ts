@@ -20,17 +20,6 @@ export class BoardService {
         }
     }
 
-    // 커뮤니티 전체 게시글 조회2
-    // boardList = async (user: any) => {
-    //     try {
-    //         // 데이터베이스에서 게시글을 가져오는 로직
-    //         const boards = await this.boardRepository.boardList({ order: [['createdAt', 'DESC']] });
-
-    //         return boards;
-    //     } catch (err) {
-    //         throw err;
-    //     }
-    // }
 
     // 커뮤니티 게시글 작성하기
     boardPost = async (title: string, imageUrl: any, content: string, user: any) => {

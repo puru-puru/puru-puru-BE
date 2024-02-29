@@ -20,13 +20,17 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: SSH into Deployment Server
-      run: |
-        ssh -i ${{ secrets.SSH_PRIVATE_KEY }} \
-          -p ${{ secrets.DEPLOY_SERVER_PORT }} \
-          ${{ secrets.DEPLOY_SERVER_USER }}@${{ secrets.DEPLOY_SERVER_HOST }} \
-          'cd /path/to/puru-puru-BE/ && \
-          git pull && \
-          tsc -w & sleep 5 && \
-          pkill -f "tsc -w" && \
-          pm2 restart 0'
+    - name: SSH into Deployment Server (alternative)
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DEPLOY_SERVER_HOST }}
+        username: ${{ secrets.DEPLOY_SERVER_USER }}
+        password: ${{ secrets.DEPLOY_SERVER_PASSWORD }}
+        port: ${{ secrets.DEPLOY_SERVER_PORT }}
+        script: |
+          cd /path/to/puru-puru-BE/
+          git pull
+          npm install
+          tsc -w & sleep 5
+          pkill -f "tsc -w"
+          pm2 restart 0

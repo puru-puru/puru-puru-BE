@@ -62,11 +62,11 @@ export class BoardController {
         }
     }
 
-    //  커뮤니티 게시글 상세보기
+    // 커뮤니티 게시글 상세보기
     boardDetail = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { boardId } = req.params;
-            const board = await this.boardService.boardDetail(boardId);
+            const board = await this.boardService.boardDetailWithLikeCount(boardId);
 
             if (!board) {
                 return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });

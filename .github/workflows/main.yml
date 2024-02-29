@@ -28,7 +28,7 @@ jobs:
         password: ${{ secrets.DEPLOY_SERVER_PASSWORD }}
         port: 22
         script: |
-          cd /path/to/puru-puru-BE/
+          cd puru-puru-BE/
           git pull
           npm install
           tsc -w & sleep 5

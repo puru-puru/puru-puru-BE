@@ -20,18 +20,6 @@ export class BoardService {
         }
     }
 
-    // 커뮤니티 전체 게시글 조회2
-    // boardList = async (user: any) => {
-    //     try {
-    //         // 데이터베이스에서 게시글을 가져오는 로직
-    //         const boards = await this.boardRepository.boardList({ order: [['createdAt', 'DESC']] });
-
-    //         return boards;
-    //     } catch (err) {
-    //         throw err;
-    //     }
-    // }
-
     // 커뮤니티 게시글 작성하기
     boardPost = async (title: string, imageUrl: any, content: string, user: any) => {
         try {
@@ -83,4 +71,15 @@ export class BoardService {
         }
     }
 
-}
+    // 테스트 ------------------------------------------------------------------------------------------
+
+    // 로그인 한 사용자의 정보와 함께 좋아요 개수를 가져옴
+    boardListWithLikeCount = async (user: any) => {
+        try {
+            return await this.boardRepository.getBoardDataWithLikeCount(user);
+        } catch (err) {
+            throw err;
+        }
+    }
+    // 테스트 ------------------------------------------------------------------------------------------
+    }

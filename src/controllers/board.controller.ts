@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { BoardService } from '../services/board.service'
 import { UserService } from '../services/user.service';
+import { LikeController } from './like.controller';
 import { Boards } from '../../models/Boards'
 import { where } from 'sequelize';
 import Joi from 'joi';
@@ -8,35 +9,20 @@ import Joi from 'joi';
 export class BoardController {
     boardService = new BoardService();
     userService = new UserService()
+    likeController = new LikeController();
 
     // 유효성 검사
     readonly checkcontent = Joi.object({
-        // title: Joi.string().min(2).max(10).pattern(/^[a-zA-Z0-9가-힣!@#$%^&*()-_=+[{\]}|;:'",.<>?]+$/).required(),
-        // content: Joi.string().min(5).max(100).pattern(/^[a-zA-Z0-9가-힣!@#$%^&*()-_=+[{\]}|;:'",.<>?]+$/).required(),
-        title: Joi.string().pattern(new RegExp("^[a-zA-Z0-9가-힣!@#$%^&*()_+\\-=\\[\\]{};':\",./<>?|\\\\ ]{2,20}$")).required(),
-        content: Joi.string().pattern(new RegExp("^[a-zA-Z0-9가-힣!@#$%^&*()_+\\-=\\[\\]{};':\",./<>?|\\\\ ]{5,100}$")).required(),
-
+        title: Joi.string().pattern(new RegExp("^[a-zA-Z0-9ㄱ-ㅎ가-힣!@#$%^&*()_+\\-=\\[\\]{};':\",./<>?|\\\\ \n\r]{2,20}$")).required(),
+        content: Joi.string().pattern(new RegExp("^[a-zA-Z0-9ㄱ-ㅎ가-힣!@#$%^&*()_+\\-=\\[\\]{};':\",./<>?|\\\\ \n\r]{2,100}$")).required(),
     })
 
     // 커뮤니티 게시글 전체 조회
-    // boardList = async (req: Request, res: Response, next: NextFunction) => {
-    //     try {
-    //         const user: any = req.user;
-
-    //         const boards = await this.boardService.boardList(user);
-
-    //         return res.status(200).json({ data: boards, loginUser: user.nickname });
-    //     } catch (err) {
-    //         next(err);
-    //     }
-    // }
-
-    // 커뮤니티 게시글 전체 조회2
     boardList = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const user: any = req.user;
 
-            const boards = await this.boardService.boardList(user);
+            const boards = await this.boardService.boardListWithLikeCount(user);
 
             return res.status(200).json({ data: boards, loginUser: user.nickname });
         } catch (err) {
@@ -50,12 +36,16 @@ export class BoardController {
         try {
             const { title, content } = req.body;
 
+            console.log("Title:", title);
+            console.log("Content:", content);
+            console.log("Content before validation:", req.body.content);
+
             // 유효성 검사
             const validationResult = this.checkcontent.validate({ title, content });
-            if (validationResult.error) {
-                return res.status(400).json({ errormessage: "최소 2자 이상 입력하셔야 합니다." })
-            }
-
+        if (validationResult.error) {
+    console.error(validationResult.error);
+    return res.status(400).json({ errormessage: "최소 2자 이상 입력하셔야 합니다." })
+}
             const imageUrl = (req.file as any)?.location;
             const user: any = req.user;
 

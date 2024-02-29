@@ -49,8 +49,8 @@ export class BoardRepository {
         }
     }
 
-    // 커뮤니티 게시글 상세보기
-    boardDetail = async (boardId: any) => {
+    // 게시물 상세보기 - 좋아요 개수 포함
+    boardDetailWithLikeCount = async (boardId: any) => {
         try {
             const board = await Boards.findByPk(boardId, {
                 include: [
@@ -72,11 +72,18 @@ export class BoardRepository {
                     },
                 ]
             });
+
             if (!board) {
                 return null;
             }
 
-            return board
+            // 좋아요 개수 조회
+            const likeCount = await this.getLikeCount(boardId);
+
+            // 좋아요 개수를 데이터에 추가
+            board.setDataValue('likeCount', likeCount);
+
+            return board;
         } catch (err) {
             throw err;
         }
@@ -188,7 +195,7 @@ export class BoardRepository {
             throw err;
         }
     }
-    
+
 }
     // 테스트 ------------------------------------------------------------------------------------------
 

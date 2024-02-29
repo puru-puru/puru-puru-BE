@@ -12,15 +12,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: 깃 허브 체크아웃
       uses: actions/checkout@v2
 
-    - name: Set up SSH
+    - name: 서버 세팅
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: SSH into Deployment Server (alternative)
+    - name: 서버 접속 및 배포.
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.DEPLOY_SERVER_HOST }}
@@ -29,9 +29,12 @@ jobs:
         port: 22
         script: |
           ls
-          cd /path/to/puru-puru-BE/
+          cd puru-puru-BE/
           git pull
           npm install
           tsc -w & sleep 15
           pkill -f "tsc -w"
-          pm2 restart 0
+          cd ..
+          cd puru-puru-BE/
+          pm2 delete 0
+          pm2 start app.js

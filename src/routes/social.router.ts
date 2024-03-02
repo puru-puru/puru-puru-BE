@@ -17,41 +17,31 @@ const rcc: string = process.env.JWT_REFRESH_SECRET_KEY || "default_refresh_secre
 const hash: string = process.env.BCRYPT_SALT || "default_salt_key";
 
 // 토큰 부여 부분 .. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const generateTokens = async (email: string) => {
+const createAccessToken = async (email: string) => {
   try {
     const accessToken = jwt.sign(
-      { email },
-      acc,
-      { expiresIn: "5h" }
+      { email }, // JWT 데이터
+      acc, // Access Token의 비밀 키
+      { expiresIn: "5h" } // Access Token이 5h 뒤에 만료되도록 설정.
     );
-
-    const refreshToken = await hashedRefreshToken(email);
-
-    return { accessToken, refreshToken };
+    return accessToken;
   } catch (err) {
     throw err;
   }
 };
 
-const hashedRefreshToken = async (email: string) => {
-
-  const newRefreshToken = jwt.sign({ email }, rcc, { expiresIn: "7d" });
-
-  const salt = bcrypt.genSaltSync(parseInt(hash));
-
-  const hashedRefreshToken = bcrypt.hashSync(
-    newRefreshToken || "default-token" ,
-    salt
-  );
-  
-  await Users.update(
-    { hashedRefreshToken },
-    { where: { email } }
-  );
-  return hashedRefreshToken;
+const createRefreshToken = async (email: string) => {
+  try {
+    const refreshToken = jwt.sign(
+      { email }, // JWT 데이터
+      rcc, // Refresh Token의 비밀 키
+      { expiresIn: "7d" } // Refresh Token이 7일 뒤에 만료되도록 설정.
+    );
+    return refreshToken;
+  } catch (err) {
+    throw err;
+  }
 }
-
-
 
 // 카카오 소셜 로그인  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
@@ -97,7 +87,8 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
     }
 
     // 사용자가 이미 존재하는 경우에는 기존의 토큰을 갱신하거나 새로 발급할 수 있습니다.
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await generateTokens(user.email);
+    const newAccessToken = await createAccessToken(userInfo.kakao_account.email);
+    const newRefreshToken = await createRefreshToken(userInfo.kakao_account.email);
 
     // 토큰
     res.status(200).json({
@@ -158,7 +149,8 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
     }
 
     // 새로운 액세스 및 리프레시 토큰을 생성합니다.
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await generateTokens(user.email);
+    const newAccessToken: string = jwt.sign({ email: user.email }, acc, { expiresIn: "5h" });
+    const newRefreshToken = await hashedRefreshToken(user.email);
 
     // 보내주기
     res.status(200).json({
@@ -173,6 +165,24 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
   }
 });
 
+
+async function hashedRefreshToken(email: string): Promise<string> {
+
+  const newRefreshToken = jwt.sign({ email }, rcc, { expiresIn: "7d" });
+
+  const salt = bcrypt.genSaltSync(parseInt(hash));
+
+  const hashedRefreshToken = bcrypt.hashSync(
+    newRefreshToken || "default-token" ,
+    salt
+  );
+  
+  await Users.update(
+    { hashedRefreshToken },
+    { where: { email } }
+  );
+  return hashedRefreshToken;
+}
 
 
 export default router;

@@ -57,7 +57,7 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
       grant_type: 'authorization_code',
       client_id: process.env.KAKAO_CLIENT_REST_ID,
       client_secret: process.env.KAKAO_CLIENT_SECRET,
-      redirect_uri: 'http://localhost:5173/api/auth/login/kakao/return' || 'https://purupuru.store/api/auth/login/kakao/return',
+      redirect_uri: process.env.KAKAO_CALLBACKURL,
       code: code
     })
     const config = {
@@ -132,7 +132,7 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
       grant_type: 'authorization_code',
       client_id: process.env.GMAIL_OAUTH_CLIENT_ID,
       client_secret: process.env.GMAIL_OAUTH_CLIENT_SECRET,
-      redirect_uri: 'http://localhost:5173/api/auth/login/google/return',
+      redirect_uri: process.env.GMAIL_OAUTH_CALLBACK_URL,
       code: code,
     };
 

@@ -41,7 +41,7 @@ Plants.init(
     },
     tag: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       unique: false,
     },
   },

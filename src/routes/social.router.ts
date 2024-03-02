@@ -43,6 +43,11 @@ const createRefreshToken = async (email: string) => {
   }
 }
 
+const setCookies = async (res: Response, accessToken: string, refreshToken: string) => {
+  res.cookie("accessToken", `Bearer ${decodeURIComponent(String(accessToken))}`);
+  res.cookie("refreshToken", `Bearer ${decodeURIComponent(String(refreshToken))}`);
+}
+
 // 카카오 소셜 로그인  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
   try {
@@ -89,6 +94,19 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
     // 사용자가 이미 존재하는 경우에는 기존의 토큰을 갱신하거나 새로 발급할 수 있습니다.
     const newAccessToken = await createAccessToken(userInfo.kakao_account.email);
     const newRefreshToken = await createRefreshToken(userInfo.kakao_account.email);
+
+    setCookies(res, newAccessToken, newRefreshToken);
+
+    const salt = bcrypt.genSaltSync(parseInt(hash))
+    const hashedRefreshToken = bcrypt.hashSync(
+      newRefreshToken || "default-token",
+      salt
+    )
+
+    await Users.update(
+      { hashedRefreshToken },
+      { where: { userId: user.userId }}
+    )
 
     // 토큰
     res.status(200).json({

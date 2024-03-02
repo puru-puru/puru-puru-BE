@@ -92,8 +92,8 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
     }
 
     // 사용자가 이미 존재하는 경우에는 기존의 토큰을 갱신하거나 새로 발급할 수 있습니다.
-    const newAccessToken = await createAccessToken(userInfo.kakao_account.email);
-    const newRefreshToken = await createRefreshToken(userInfo.kakao_account.email);
+    const newAccessToken = await createAccessToken(user.email);
+    const newRefreshToken = await createRefreshToken(user.email);
 
     setCookies(res, newAccessToken, newRefreshToken);
 
@@ -167,8 +167,21 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
     }
 
     // 새로운 액세스 및 리프레시 토큰을 생성합니다.
-    const newAccessToken: string = jwt.sign({ email: user.email }, acc, { expiresIn: "5h" });
-    const newRefreshToken = await hashedRefreshToken(user.email);
+    const newAccessToken = await createAccessToken(user.email);
+    const newRefreshToken = await createRefreshToken(user.email);
+
+    setCookies(res, newAccessToken, newRefreshToken);
+
+    const salt = bcrypt.genSaltSync(parseInt(hash))
+    const hashedRefreshToken = bcrypt.hashSync(
+      newRefreshToken || "default-token",
+      salt
+    )
+
+    await Users.update(
+      { hashedRefreshToken },
+      { where: { userId: user.userId }}
+    )
 
     // 보내주기
     res.status(200).json({
@@ -182,25 +195,6 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
     res.status(500).json({ message: '서버 오류' });
   }
 });
-
-
-async function hashedRefreshToken(email: string): Promise<string> {
-
-  const newRefreshToken = jwt.sign({ email }, rcc, { expiresIn: "7d" });
-
-  const salt = bcrypt.genSaltSync(parseInt(hash));
-
-  const hashedRefreshToken = bcrypt.hashSync(
-    newRefreshToken || "default-token" ,
-    salt
-  );
-  
-  await Users.update(
-    { hashedRefreshToken },
-    { where: { email } }
-  );
-  return hashedRefreshToken;
-}
 
 
 export default router;

@@ -8,6 +8,11 @@ import { Icons } from "../../models/Icons";
 import sequelize from "../../models";
 import { Transaction } from "sequelize";
 
+
+interface tagData{
+    [tag: string]: string;
+}
+
 export class MyplantsRepository {
 
     postMyPlant = async (name: string, plantAt: string, user: any, imageUrl: string) => {
@@ -129,7 +134,8 @@ export class MyplantsRepository {
     }
 
     showMyPlants = async (user: any) => {
-        try {
+        try {     
+
             const MyPlants = await Diaries.findAll({
                 where: {
                     deletedAt: null,
@@ -162,8 +168,9 @@ export class MyplantsRepository {
             throw err;
         }
     }
+    
 
-    answering = async (user: any, diaryId: any, templateId: any, answer: any) => {
+    answering = async (user: any, diaryId: any, templateId: any, answer: any) => { 
         try {
             await SavedTemplelates.update({ answer: answer },
                 {
@@ -171,11 +178,11 @@ export class MyplantsRepository {
                         id: templateId
                     }
                 });
-
+    
             return { "Message": "답변이 등록되었습니다" }
         } catch (err) {
             throw err;
-        }
+        }       
     }
 
     deletePlants = async (diaryId: any) => {

@@ -43,7 +43,7 @@ export class TestService {
                 6: "감미로운 향기를 뿜어내는 식물들이 있어요. 향기로운 일상을 만끽해보세요."
             }
 
-            const sellectQuotes = tags[boardNum];
+            const selectQuotes = tags[boardNum];
 
             const value = boards[boardNum]
             const filteredDB = totalDB.filter(plant =>{
@@ -60,7 +60,7 @@ export class TestService {
             
             const shuffledDB = shuffelArray(filteredDB);
             const slicedDB = shuffledDB.slice(0,3);
-            return {sellectQuotes, slicedDB};
+            return {selectQuotes, slicedDB};
         } catch (err) {
             throw err;
         }

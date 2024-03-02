@@ -80,13 +80,15 @@ const createTemplelateDB = () => {
 // createMissionDB(); 
 // createTemplelateDB();
 
+
+
 app.use(express.static(path.join(__dirname, "views")));
 app.listen(port, async () => {
   console.log(`----- Server ${port} Start -----`);
   sequelize
     .authenticate()
     .then(async () => {
-      // await sequelize.sync(); // 이 부분 사용시에 모델 -> 부분에 테이블을 설정 할 때 마다 디비에 추가함.
+      await sequelize.sync(); // 이 부분 사용시에 모델 -> 부분에 테이블을 설정 할 때 마다 디비에 추가함.
       // await Users.sync({force: true})
       // await Boards.sync({force: true})
       // await Diaries.sync({force: true})

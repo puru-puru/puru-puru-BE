@@ -1,31 +1,31 @@
 import express, { Express, Request, Response, NextFunction } from "express";
-import cookieParser from 'cookie-parser'
-import expressSession from 'express-session'
+import cookieParser from "cookie-parser";
+import expressSession from "express-session";
 import sequelize from "./models/index";
 import router from "./src/routes/index";
-import dotenv from 'dotenv'
-import cors from 'cors'
+import dotenv from "dotenv";
+import cors from "cors";
 import passport from "passport";
-import socialRouter from './src/routes/social.router'
-import { configurePassport } from './passport';
-import { Users } from './models/Users' // 유저
+import socialRouter from "./src/routes/social.router";
+import { configurePassport } from "./passport";
+import { Users } from "./models/Users"; // 유저
 import { Boards } from "./models/Boards"; // 게시판
-import { Likes } from './models/likes' // 좋아요
-import { Comments } from './models/Comments' // 댓글
-import { Diaries } from './models/Diaries' // 다이어리
-import { UserPlant } from './models/UserPlant' // 다이어리와 연계되는 식물
-import { SavedTemplelates } from './models/SavedTemplelates' // 사용자가 저장한 질문과 답변
-import { Icons } from './models/Icons' // 사용자가 저장한 질문과 답변
+import { Likes } from "./models/likes"; // 좋아요
+import { Comments } from "./models/Comments"; // 댓글
+import { Diaries } from "./models/Diaries"; // 다이어리
+import { UserPlant } from "./models/UserPlant"; // 다이어리와 연계되는 식물
+import { SavedTemplelates } from "./models/SavedTemplelates"; // 사용자가 저장한 질문과 답변
+import { Icons } from "./models/Icons"; // 사용자가 저장한 질문과 답변
 import { Galleries } from "./models/Galleries"; // 사용자의 반려 식물 중 사진첩.
-import { Templelates } from './models/Templelates' // 질문 템플릿
-import { Plants } from './models/plants' // 식물
-import { plantsDB } from './src/seeders/plantsDB' // 식물 시드 데이터
-import { Missions } from './models/Missions' //미션
-import { missionsDB } from './src/seeders/missionsDB' // 미션 시드 데이터
-import { templelatesDB } from './src/seeders/templelatesDB' // 템플렛 시드 데이터
+import { Templelates } from "./models/Templelates"; // 질문 템플릿
+import { Plants } from "./models/plants"; // 식물
+import { plantsDB } from "./src/seeders/plantsDB"; // 식물 시드 데이터
+import { Missions } from "./models/Missions"; //미션
+import { missionsDB } from "./src/seeders/missionsDB"; // 미션 시드 데이터
+import { templelatesDB } from "./src/seeders/templelatesDB"; // 템플렛 시드 데이터
 
 import path from "path";
-import {fileURLToPath} from "url";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -57,27 +57,31 @@ app.use(passport.session());
 
 app.use("/", router, socialRouter);
 
+app.get("/", (req, res) => {
+  res.json({ message: "first_server" });
+});
+
 // 여기는 시드 데이터를 삽입하는 메서드 입니다.
 const createPlantDB = () => {
-  plantsDB.map(plants => {
+  plantsDB.map((plants) => {
     Plants.create(plants);
-  })
-}
+  });
+};
 
 const createMissionDB = () => {
-  missionsDB.map(missions => {
+  missionsDB.map((missions) => {
     Missions.create(missions);
-  })
-}
+  });
+};
 
 const createTemplelateDB = () => {
-  templelatesDB.map(templelates => {
+  templelatesDB.map((templelates) => {
     Templelates.create(templelates);
-  })
-}
+  });
+};
 
-// createPlantDB(); 
-// createMissionDB(); 
+// createPlantDB();
+// createMissionDB();
 // createTemplelateDB();
 
 app.use(express.static(path.join(__dirname, "views")));
@@ -105,4 +109,3 @@ app.listen(port, async () => {
       console.log(e);
     });
 });
-

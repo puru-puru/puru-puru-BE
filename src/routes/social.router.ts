@@ -132,7 +132,7 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
       grant_type: 'authorization_code',
       client_id: process.env.GMAIL_OAUTH_CLIENT_ID,
       client_secret: process.env.GMAIL_OAUTH_CLIENT_SECRET,
-      redirect_uri: process.env.GMAIL_OAUTH_CALLBACK_URL,
+      redirect_uri: 'https://puru-puru.vercel.app/api/auth/login/google/return',
       code: code,
     };
 

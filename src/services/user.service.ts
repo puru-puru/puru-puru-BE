@@ -5,6 +5,7 @@ import { UserRepository } from "../repositories/user.repository";
 export class UserService {
   userRepository = new UserRepository();
 
+  // 닉네임 설정 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   setName = async (nickname: string, user: any) => {
     try {
       const isExistName = await Users.findOne({
@@ -23,6 +24,7 @@ export class UserService {
     }
   };
 
+  // 내 정보 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   userInfo = async (userId: number) => {
     try {
       const userInfo = await this.userRepository.findPkUser(userId);
@@ -43,9 +45,14 @@ export class UserService {
     }
   };
   
-}
-// if(!user) {
-//   return res.status(404).json({ message: "사용자 정보를 찾을 수 없습니다." })
-// }
+  // 회원 탈퇴 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  deleteUser = async (userId: any) => {
+    try {
+        const deleteUser = await Users.destroy({ where: { userId } });
 
-// const userData = await this.userService.userInfo(user.userId)
+        return deleteUser
+    } catch (err) {
+        throw err;
+    }
+}
+}

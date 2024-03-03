@@ -40,6 +40,7 @@ jobs:
           pm2 start app.js > pm2.log
 
   deploy-sub:
+    needs: deploy
     runs-on: ubuntu-latest
 
     steps:

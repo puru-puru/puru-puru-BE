@@ -1,6 +1,6 @@
 import { CreatedAt } from "sequelize-typescript";
 import { Missions } from "../../models/Missions";
-import { Plants } from "../../models/plants";
+import { RecommendPlants } from "../../models/RecommendPlants";
 import {Op} from "sequelize";
 
 export class MainRepository {
@@ -18,12 +18,7 @@ export class MainRepository {
 
     getSelectedDB = async () => {
         try {
-            const plants = await Plants.findAll({
-                where: {
-                    tag: {
-                        [Op.notLike]: '%#신규식물'
-                    }
-                },
+            const plants = await RecommendPlants.findAll({
                 attributes: {exclude: ['createdAt','updatedAt', 'deletedAt']}
             });
             return plants

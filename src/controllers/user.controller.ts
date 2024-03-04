@@ -59,4 +59,18 @@ export class UserController {
             next(err);
         }
     }
+
+        // 닉네임 변경 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        changeName = async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const { nickname } = await userSchema.validateAsync(req.body)
+                const user: any = req.user;
+
+                const change = await this.userService.changeName(nickname, user)
+
+                return res.status(200).json({ message: "닉네임 변경 완료"})
+            } catch (err) {
+                next (err);
+            }
+        }
 }

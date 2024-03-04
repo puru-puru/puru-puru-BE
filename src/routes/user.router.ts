@@ -15,4 +15,7 @@ router.get('/users', authMiddleware, userController.getUser)
 // 회원 탈퇴 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 router.delete('/users/delete-user', authMiddleware, userController.deleteUser)
 
+// 낙내암 변경 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+router.put('/users/change-name', authMiddleware, userController.changeName)
+
 export default router

@@ -2,7 +2,7 @@ import { Boards } from "../../models/Boards";
 import { Users } from "../../models/Users";
 import { Comments } from "../../models/Comments";
 import { Likes } from "../../models/likes";
-// import sequelize from "./index";
+
 
 export class BoardRepository {
 
@@ -113,8 +113,6 @@ export class BoardRepository {
         }
     }
 
-
-    // 테스트 ------------------------------------------------------------------------------------------
     // 여기서 부터 하단 까지가 전체 메인페이지 
     getLikeCount = async (boardId: any) => {
         try {
@@ -214,7 +212,7 @@ export class BoardRepository {
             const myPosts = await Boards.findAll({
                 where: {
                     deletedAt: null,
-                    userId: user.userId, // 현재 로그인 한 사용자 ID를 기반으로 찾습니다. 테스트코드
+                    userId: user.userId, // 현재 로그인 한 사용자 ID를 기반으로 찾습니다.
                 },
                 include: [
                     {
@@ -227,14 +225,49 @@ export class BoardRepository {
                 order: [['createdAt', 'DESC']],
 
             });
-            console.log(user);
-            console.log('myPosts:', myPosts); // 내가 쓴글 내용 확인용
             return myPosts;
         } catch (err) {
             throw err;
         }
     }
 
+    // 내가 작성한 댓글 목록 불러오기
+    boardMyCommentsList = async (user: any) => {
+        try {
+            const myComments = await Comments.findAll({
+                where: {
+                    deletedAt: null,
+                    userId: user.userId, // 현재 로그인 한 사용자 ID를 기반으로 찾습니다. 테스트코드
+                },
+                include: [
+                    {
+                        model: Users,
+                        attributes: ['userId', 'nickname'],
+                        as: 'user'
+                    },
+                ],
+                attributes: ['content', 'createdAt'],
+                order: [['createdAt', 'DESC']],
+
+            });
+            return myComments;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    // 글 검색하기
+    boardSearch = async (Keyword: string) => {
+        try {
+            const posts = await Boards.findAll()
+            const searchPosts = posts.filter(write => {
+                return write.title.includes(Keyword) || write.content.includes(Keyword)
+            });
+            return searchPosts;
+        } catch (err) {
+            throw err;
+        }
+    }
 
 }
 

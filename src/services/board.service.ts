@@ -88,4 +88,24 @@ export class BoardService {
         }
     }
 
+    // 내가 작성한 댓글 불러오기
+    boardMyCommentsList = async (user: any) => {
+        try {
+            return await this.boardRepository.boardMyCommentsList(user);
+
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    // 글 검색하기
+    boardSearch = async (keyword: string) => {
+        try {
+            const posts = await this.boardRepository.boardSearch(keyword);
+            return posts;
+        } catch (err) {
+            throw err;
+        }
+    }
+
 }

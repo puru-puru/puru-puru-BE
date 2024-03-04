@@ -134,4 +134,28 @@ export class BoardController {
         }
     }
 
+    // 내가 작성한 댓글 불러오기
+    boardMyCommentsList = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const user: any = req.user;
+            const myComments = await this.boardService.boardMyCommentsList(user);
+
+            res.status(200).json({ data: myComments });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    // 글 검색하기
+    boardSearch = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { keyword } = req.params;
+            const postSearch = await this.boardService.boardSearch( keyword );
+
+            res.status(200).json({ data: postSearch });
+        } catch (err) {
+            next(err);
+        }
+    }
+
 }

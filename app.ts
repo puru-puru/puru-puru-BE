@@ -32,7 +32,12 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT;
 
-app.use(cors());
+const corsOptions = {
+  origin: ["http://localhost:3000", "http://localhost:5173", "https://purupuru.store", "https://www.purupuru.store", "https://puru-puru.vercel.app/"],
+  credentials: true
+}
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
@@ -45,6 +50,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,
+      httpOnly: true,
       secure: true, // https 일때 도 값이 잘 들어갈 수 있도록 배포시에 주석풀기.
     },
   })

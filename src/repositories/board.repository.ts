@@ -6,36 +6,6 @@ import { Likes } from "../../models/likes";
 
 export class BoardRepository {
 
-
-    // // 커뮤니티 (인기순 조회 = 좋아요 수가 높을 경우)
-    // boardListLike = async (user: any) => {
-    //     try {
-    //         const boards = await Boards.findAll({
-    //             where: {
-    //                 deletedAt: null
-    //             },
-    //             include: [
-    //                 {
-    //                     model: Users,
-    //                     attributes: ['nickname'],
-    //                     as: 'author'
-    //                 },
-    //             ],
-    //             attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
-    //             order: [['likeCount', 'DESC']],
-    //         });
-    //         // 로그인 한 사용자의 정보를 가져옴. 
-    //         const boardData = boards.map(board => {
-    //             const boardInfo: any = board
-    //             return boardInfo;
-    //         });
-
-    //         return boardData;
-    //     } catch (err) {
-    //         throw err;
-    //     }
-    // }
-
     // 커뮤니티 게시글 작성하기
     boardPost = async (title: string, imageUrl: any, content: string, userId: any) => {
         try {
@@ -199,10 +169,9 @@ export class BoardRepository {
     }
 
 
-    // 얘는 테스트 -----------------------------------------------------------------------------------------
+    // 인기순으로 게시글 목록 불러오기
     boardListLikee = async (user: any) => {
         try {
-            console.log("레포 들옴 ------------------------------- ")
             const boards = await Boards.findAll({
                 where: {
                     deletedAt: null
@@ -232,10 +201,6 @@ export class BoardRepository {
             }));
 
             boardData.sort((a, b) => b.likeCount - a.likeCount) // 많은 순으로 정렬해준다 외워라
-            console.log("래포 중간 ------------------------------- ")
-
-
-
 
             return boardData;
         } catch (err) {
@@ -243,6 +208,34 @@ export class BoardRepository {
         }
     }
 
+    // 내가 작성한 글 목록 불러오기
+    boardMyPostsList = async (user: any) => {
+        try {
+            const myPosts = await Boards.findAll({
+                where: {
+                    deletedAt: null,
+                    userId: user.userId, // 현재 로그인 한 사용자 ID를 기반으로 찾습니다. 테스트코드
+                },
+                include: [
+                    {
+                        model: Users,
+                        attributes: ['userId', 'nickname'],
+                        as: 'author'
+                    },
+                ],
+                attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
+                order: [['createdAt', 'DESC']],
+
+            });
+            console.log(user);
+            console.log('myPosts:', myPosts); // 내가 쓴글 내용 확인용
+            return myPosts;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
 }
-// 테스트 ------------------------------------------------------------------------------------------
+
 

@@ -9,17 +9,6 @@ import { combineTableNames } from 'sequelize/types/utils';
 export class BoardService {
     boardRepository = new BoardRepository();
 
-    // // 커뮤니티 전체 게시글 조회 (좋아요 순으로)
-    // testboardListLike = async (user: any) => {
-    //     try {
-    //         const boards = await this.boardRepository.boardListLike(user);
-
-    //         return boards;
-    //     } catch (err) {
-    //         throw err;
-    //     }
-    // }
-
     // 커뮤니티 게시글 작성하기
     boardPost = async (title: string, imageUrl: any, content: string, user: any) => {
         try {
@@ -39,7 +28,6 @@ export class BoardService {
     // 게시물 상세 보기 
     boardDetailWithLikeCount = async (boardId: any) => {
         try {
-            console.log("여기로 서비스 들어와 버림 ----------------------------------")
             return await this.boardRepository.boardDetailWithLikeCount(boardId);
         } catch (err) {
             throw err;
@@ -71,9 +59,7 @@ export class BoardService {
         }
     }
 
-    // 테스트 ------------------------------------------------------------------------------------------
-
-    // 로그인 한 사용자의 정보와 함께 좋아요 개수를 가져옴
+    // 최신순으로 목록정렬, 로그인 한 사용자의 정보와 함께 좋아요 개수를 가져옴
     boardListWithLikeCount = async (user: any) => {
         try {
             return await this.boardRepository.getBoardDataWithLikeCount(user);
@@ -82,15 +68,24 @@ export class BoardService {
         }
 
     }
-    // 테스트 ------------------------------------------------------------------------------------------
 
+    // 인기순으로 목록정렬
     boardListPopular = async (user: any) => {
         try {
-            console.log("서브스 들옴 ------------------------------- ")
             return await this.boardRepository.boardListLikee(user);
-            console.log("서브스 나감 ------------------------------- ")
         } catch (err) {
             throw err;
         }
     }
+
+    // 내가 작성한 글을 불러오기
+    boardMyPostsList = async (user: any) => {
+        try {
+            return await this.boardRepository.boardMyPostsList(user);
+
+        } catch (err) {
+            throw err;
+        }
+    }
+
 }

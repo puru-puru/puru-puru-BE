@@ -8,7 +8,6 @@ import { Icons } from "../../models/Icons";
 import sequelize from "../../models";
 import { Transaction } from "sequelize";
 
-
 interface tagData{
     [tag: string]: string;
 }

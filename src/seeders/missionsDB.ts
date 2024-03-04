@@ -20,4 +20,7 @@ export const missionsDB = [
    {
       content: "식집사가 되기 위해 꼼꼼한 스캐줄 짜기, 한번 해볼까요?"
    },
+   {
+      content: "오늘은 반려식물을 위해서 어떤 케어를 하셨나요?"
+   },
 ]

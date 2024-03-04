@@ -15,11 +15,9 @@ export class MainService {
             const plants: any[] = await this.mainRepository.getSelectedDB();
 
             const shuffleMission = this.shuffelArray(missions);
-            const shuffelPlants = this.shuffelArray(plants);
-            const randomPlants = shuffelPlants.slice(0,3);
             const randomMission = shuffleMission.slice(0,3);
 
-            return { mission: randomMission, plant: randomPlants, loginUser }
+            return { mission: randomMission, plant: plants, loginUser }
         } catch (err) {
             throw err;
         }

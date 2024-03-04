@@ -55,4 +55,23 @@ export class UserService {
         throw err;
     }
 }
+
+  // 닉네임 변경 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  changeName = async (nickname: string, user: any) => {
+    try {
+      const isExistName = await Users.findOne({
+        where: {nickname},
+      })
+      if(isExistName) {
+        throw { name: "ExistName" }
+      }
+      const change = await this.userRepository.updateUser(
+        { nickname },
+        { where: { userId: user.userId } }
+      );
+      return { change };
+    } catch (err) {
+      throw err;
+    }
+  }
 }

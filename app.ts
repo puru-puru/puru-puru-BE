@@ -33,7 +33,7 @@ const app: Express = express();
 const port = process.env.PORT;
 
 const corsOptions = {
-  origin: ["http://localhost:3000", "http://localhost:5173", "https://purupuru.store", "https://www.purupuru.store", "https://puru-puru.vercel.app/"],
+  origin: ["http://localhost:3000", "http://localhost:5173", "https://purupuru.store", "https://www.purupuru.store", "https://puru-puru.vercel.app"],
   credentials: true
 }
 

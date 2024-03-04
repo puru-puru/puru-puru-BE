@@ -13,10 +13,10 @@ const likeController = new LikeController();
 router.get('/boards', authMiddleware, boardController.boardList)
 
 // 게시물 인기순으로 불러오기
-router.get('/boards/sortBy/likes', authMiddleware, boardController.boardListPopular);/// 여기
+router.get('/boards/sortBy/likes', authMiddleware, boardController.boardListPopular)
 
-// 커뮤니티 전체조회. 좋아요 순으로
-// router.get('/boards/popular', authMiddleware, boardController.boardListLike)
+// 커뮤니티 내가 작성한 글 불러오기
+router.get('/boards/myposts', authMiddleware, boardController.boardMyPostsList)
 
 // 커뮤니티 글 작성 ok
 router.post('/boards', upload.single("image"), authMiddleware, boardController.boardPost)
@@ -35,6 +35,7 @@ router.post('/boards/:boardId/like', authMiddleware, likeController.likePost);
 
 // 게시물에 좋아요 취소
 router.delete('/boards/:boardId/like', authMiddleware, likeController.removeLike);
+
 
 
 

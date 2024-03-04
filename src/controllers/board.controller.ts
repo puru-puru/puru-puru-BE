@@ -29,22 +29,6 @@ export class BoardController {
             next(err);
         }
     }
-
-    // // 커뮤니티 게시글 전체 조회 (좋아요 순으로)
-    // boardListLike = async (req: Request, res: Response, next: NextFunction) => {
-    //     try {
-    //         const user: any = req.user;
-
-    //         const boards = await this.boardService.testboardListLike(user); // 이름 바꿈
-
-    //         console.log('testestest-------------------------------------------------');
-
-    //         return res.status(200).json({ data: boards, loginUser: user.nickname });
-    //     } catch (err) {
-    //         next(err);
-    //     }
-    // }
-
     
     // 커뮤니티 게시글 작성
     boardPost = async (req: Request, res: Response, next: NextFunction) => {
@@ -79,15 +63,12 @@ export class BoardController {
     // 커뮤니티 게시글 상세보기
     boardDetail = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log("여기로 들어와 버림 ----------------------------------")
             const { boardId } = req.params;
             const board = await this.boardService.boardDetailWithLikeCount(boardId);
 
             if (!board) {
                 return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
             }
-
-            console.log("여기로 들어와 나가버리 ----------------------------------")
             return res.status(200).json({ data: { board } });
         } catch (err) {
             next(err);
@@ -128,21 +109,29 @@ export class BoardController {
             next(err);
         }
     }
-
-    // -------------------------------------------- test
+    
+    // 인기순으로 불러오기
     boardListPopular = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log("컨트롤러 ---------------------------------------")
             const user: any = req.user;
-
             const boards = await this.boardService.boardListPopular(user);
-
-            console.log("컨트롤러 나감 ---------------------------------------")
 
             return res.status(200).json({ data: boards, loginUser: user.nickname });
         } catch (err) {
             next(err);
         }
     }
-    // -------------
+
+    // 내가 작성한 글 불러오기
+    boardMyPostsList = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const user: any = req.user;
+            const myPosts = await this.boardService.boardMyPostsList(user);
+
+            res.status(200).json({ data: myPosts });
+        } catch (err) {
+            next(err);
+        }
+    }
+
 }

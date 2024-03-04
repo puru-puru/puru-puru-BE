@@ -21,6 +21,9 @@ router.get('/boards/myposts', authMiddleware, boardController.boardMyPostsList)
 // 커뮤니티 내가 작성한 댓글 불러오기
 router.get('/boards/mycomments', authMiddleware, boardController.boardMyCommentsList)
 
+// 커뮤니티 글 검색하기
+router.get('/boards/search/:keyword', authMiddleware, boardController.boardSearch)
+
 // 커뮤니티 글 작성 ok
 router.post('/boards', upload.single("image"), authMiddleware, boardController.boardPost)
 

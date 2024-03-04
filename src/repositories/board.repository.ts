@@ -2,7 +2,7 @@ import { Boards } from "../../models/Boards";
 import { Users } from "../../models/Users";
 import { Comments } from "../../models/Comments";
 import { Likes } from "../../models/likes";
-// import sequelize from "./index";
+
 
 export class BoardRepository {
 
@@ -113,8 +113,6 @@ export class BoardRepository {
         }
     }
 
-
-    // 테스트 ------------------------------------------------------------------------------------------
     // 여기서 부터 하단 까지가 전체 메인페이지 
     getLikeCount = async (boardId: any) => {
         try {
@@ -253,6 +251,19 @@ export class BoardRepository {
 
             });
             return myComments;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    // 글 검색하기
+    boardSearch = async (Keyword: string) => {
+        try {
+            const posts = await Boards.findAll()
+            const searchPosts = posts.filter(write => {
+                return write.title.includes(Keyword) || write.content.includes(Keyword)
+            });
+            return searchPosts;
         } catch (err) {
             throw err;
         }

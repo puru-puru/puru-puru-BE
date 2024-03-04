@@ -98,4 +98,14 @@ export class BoardService {
         }
     }
 
+    // 글 검색하기
+    boardSearch = async (keyword: string) => {
+        try {
+            const posts = await this.boardRepository.boardSearch(keyword);
+            return posts;
+        } catch (err) {
+            throw err;
+        }
+    }
+
 }

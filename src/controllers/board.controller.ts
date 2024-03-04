@@ -146,4 +146,16 @@ export class BoardController {
         }
     }
 
+    // 글 검색하기
+    boardSearch = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { keyword } = req.params;
+            const postSearch = await this.boardService.boardSearch( keyword );
+
+            res.status(200).json({ data: postSearch });
+        } catch (err) {
+            next(err);
+        }
+    }
+
 }

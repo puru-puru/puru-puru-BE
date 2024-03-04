@@ -1,8 +1,12 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "./index";
 import { Comments } from "./Comments";
+import { Likes } from "./likes";
 
 class Boards extends Model {
+  static find(arg0: { where: { deletedAt: null; }; include: { model: typeof import("./Users").Users; attributes: string[]; as: string; }[]; }) {
+      throw new Error("Method not implemented.");
+  }
   declare boardId: number;
   declare title: string;
   declare image?: string;
@@ -45,5 +49,8 @@ Boards.init(
 // 보드와 댓글 관의 관계
 Boards.hasMany(Comments, { foreignKey: "boardId" });
 Comments.belongsTo(Boards, { foreignKey: "boardId" });
+
+Boards.hasMany(Likes, { foreignKey: 'boardId' });
+Likes.belongsTo(Boards, { foreignKey: 'boardId' });
 
 export { Boards };

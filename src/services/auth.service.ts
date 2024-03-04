@@ -283,10 +283,16 @@ export class AuthService {
     try {
       const [tokenType, token] = refreshToken.split(" ");
 
+      console.log('tokenType:', tokenType);
+      console.log('token:', token);
+      console.log('hashedRefreshToken:', hashedRefreshToken);
+
       if (tokenType !== "Bearer")
         throw new Error(" 로그인이 필요한 서비스 입니다. ");
 
       const checkRefreshToken = await bcrypt.compare(token, hashedRefreshToken);
+
+      console.log('checkRefreshToken:', checkRefreshToken);
 
       if (!checkRefreshToken) {
         throw new Error("잘못된 접근입니다.");

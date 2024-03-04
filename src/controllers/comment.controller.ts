@@ -11,13 +11,13 @@ export class CommentController {
 
     postComment = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const {content} =req.body;
-            const {boardId} =req.params
+            const { content } = req.body;
+            const { boardId } = req.params
             const user: any = req.user;
             const comment = await this.commentService.postComment(
                 content, boardId, user
-            ); 
-            return res.status(200).json(comment) 
+            );
+            return res.status(200).json(comment)
         } catch (err) {
 
             next(err)
@@ -26,13 +26,13 @@ export class CommentController {
 
     updateComment = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const {content} =req.body;
-            const {commentId, boardId} =req.params
+            const { content } = req.body;
+            const { commentId, boardId } = req.params
             const user: any = req.user;
             const comment = await this.commentService.updateComment(
                 content, commentId, boardId, user
-            ); 
-            return res.status(200).json(comment) 
+            );
+            return res.status(200).json(comment)
         } catch (err) {
 
             next(err)
@@ -41,19 +41,36 @@ export class CommentController {
 
     deleteComment = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const {content} =req.body;
-            const {commentId, boardId} =req.params
+            const { content } = req.body;
+            const { commentId, boardId } = req.params
             const user: any = req.user;
             const comment = await this.commentService.deleteComment(
                 content, commentId, boardId, user
-            ); 
-            return res.status(200).json(comment) 
+            );
+            return res.status(200).json(comment)
         } catch (err) {
 
             next(err)
         }
     }
 
+    postComment2 = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { content } = req.body;
+            const { boardId, commentId } = req.params; // postComment2 를 라우터에서 params로 받아옵니다.
+            const user: any = req.user;
 
+            // 대댓글을 등록하는 메서드를 호출합니다. commentId2를 추가로 전달합니다.
+            const comment = await this.commentService.postComment2(
+                content, boardId, user, commentId,
+                // childCommentIds,
+                
+            );
+
+            return res.status(200).json(comment);
+        } catch (err) {
+            next(err)
+        }
+
+    }
 }
-

@@ -1,36 +1,10 @@
 import { Boards } from "../../models/Boards";
 import { Users } from "../../models/Users";
 import { Comments } from "../../models/Comments";
+import { Likes } from "../../models/likes";
+// import sequelize from "./index";
 
 export class BoardRepository {
-
-    // 커뮤니티 게시글 전체 조회 및 메인 페이지
-    boardList = async (user: any) => {
-        try {
-            const boards = await Boards.findAll({
-                where: {
-                    deletedAt: null
-                },
-                include: [
-                    {
-                        model: Users,
-                        attributes: ['nickname'],
-                        as: 'author'
-                    },
-                ],
-                attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
-            });
-            // 로그인 한 사용자의 정보를 가져옴. 
-            const boardData = boards.map(board => {
-                const boardInfo: any = board
-                return boardInfo;
-            });
-
-            return boardData;
-        } catch (err) {
-            throw err;
-        }
-    }
 
     // 커뮤니티 게시글 작성하기
     boardPost = async (title: string, imageUrl: any, content: string, userId: any) => {
@@ -47,8 +21,8 @@ export class BoardRepository {
         }
     }
 
-    // 커뮤니티 게시글 상세보기
-    boardDetail = async (boardId: any) => {
+    // 게시물 상세보기 - 좋아요 개수 포함
+    boardDetailWithLikeCount = async (boardId: any) => {
         try {
             const board = await Boards.findByPk(boardId, {
                 include: [
@@ -70,11 +44,18 @@ export class BoardRepository {
                     },
                 ]
             });
+
             if (!board) {
                 return null;
             }
 
-            return board
+            // 좋아요 개수 조회
+            const likeCount = await this.getLikeCount(boardId);
+
+            // 좋아요 개수를 데이터에 추가
+            board.setDataValue('likeCount', likeCount);
+
+            return board;
         } catch (err) {
             throw err;
         }
@@ -95,9 +76,9 @@ export class BoardRepository {
             board.title = title;
             board.image = imageUrl;
             board.content = content;
-            
+
             // 위에서 넣어준 값을 시퀄라이즈는 아래 처럼 세이브 를 통해서 말그대로 저장 할 수 있음
-            await board.save(); // 여기서 쓰이는구나 ㅆㅂ
+            await board.save(); // 여기서 쓰이는구나 
 
             return {// 이거는 이제 값을 넘겨준다. 
                 title: board.title,
@@ -132,4 +113,129 @@ export class BoardRepository {
         }
     }
 
+
+    // 테스트 ------------------------------------------------------------------------------------------
+    // 여기서 부터 하단 까지가 전체 메인페이지 
+    getLikeCount = async (boardId: any) => {
+        try {
+            const likeCount = await Likes.count({
+                where: {
+                    boardId,
+                    deletedAt: null
+                }
+            });
+
+            return likeCount;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    // 게시물 전체 조회 (메인 페이지)
+    getBoardDataWithLikeCount = async (user: any) => {
+        try {
+            const boards = await Boards.findAll({
+                where: {
+                    deletedAt: null
+                },
+                include: [
+                    {
+                        model: Users,
+                        attributes: ['nickname'],
+                        as: 'author'
+                    },
+                ],
+                attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
+                order: [['createdAt', 'DESC']],
+            });
+
+            // 좋아요 개수를 조회하여 각 게시물 데이터에 추가
+            const boardData = await Promise.all(boards.map(async (board) => {
+                const boardInfo: any = board.toJSON();
+
+                // 좋아요 개수 조회
+                const likeCount = await this.getLikeCount(boardInfo.boardId);
+
+                // 좋아요 개수를 데이터에 추가
+                boardInfo.likeCount = likeCount;
+
+                return boardInfo;
+            }));
+
+            return boardData;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
+    // 인기순으로 게시글 목록 불러오기
+    boardListLikee = async (user: any) => {
+        try {
+            const boards = await Boards.findAll({
+                where: {
+                    deletedAt: null
+                },
+                include: [
+                    {
+                        model: Users,
+                        attributes: ['nickname'],
+                        as: 'author'
+                    },
+                ],
+                attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
+                order: [['createdAt', 'DESC']],
+            });
+
+            // 좋아요 개수를 조회하여 각 게시물 데이터에 추가
+            const boardData = await Promise.all(boards.map(async (board) => {
+                const boardInfo: any = board.toJSON();
+
+                // 좋아요 개수 조회
+                const likeCount = await this.getLikeCount(boardInfo.boardId);
+
+                // 좋아요 개수를 데이터에 추가
+                boardInfo.likeCount = likeCount;
+
+                return boardInfo;
+            }));
+
+            boardData.sort((a, b) => b.likeCount - a.likeCount) // 많은 순으로 정렬해준다 외워라
+
+            return boardData;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    // 내가 작성한 글 목록 불러오기
+    boardMyPostsList = async (user: any) => {
+        try {
+            const myPosts = await Boards.findAll({
+                where: {
+                    deletedAt: null,
+                    userId: user.userId, // 현재 로그인 한 사용자 ID를 기반으로 찾습니다. 테스트코드
+                },
+                include: [
+                    {
+                        model: Users,
+                        attributes: ['userId', 'nickname'],
+                        as: 'author'
+                    },
+                ],
+                attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
+                order: [['createdAt', 'DESC']],
+
+            });
+            console.log(user);
+            console.log('myPosts:', myPosts); // 내가 쓴글 내용 확인용
+            return myPosts;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
 }
+
+

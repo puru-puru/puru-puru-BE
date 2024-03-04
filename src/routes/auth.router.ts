@@ -7,11 +7,11 @@ const router = express.Router();
 
 const authController = new AuthController();
 
-// 테스트 회원 가입
-router.post("/test/auth/sign-up", authController.testsignupUser);
-
 // 기존 회원 가입
 router.post("/auth/sign-up", authController.signupUser);
+
+// 테스트 회원 가입
+router.post("/test/auth/sign-up", authController.testsignupUser);
 
 // 이메일 전송 및 해당 이메일 디비에 추가.
 router.post('/test/auth/send-email', authController.emailVerification)

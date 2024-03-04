@@ -77,11 +77,11 @@ nginx소유한 ngnix 프로세스에서 생성된 로그 파일을 볼 수 있�
        <li>1-3 : 앞에 sudo 를 붙여 권한을 변경 함으로 해당 문제 해결.</li>
        <li><img width="682" alt="첫 문제 해결" src="https://github.com/puru-puru/puru-puru-BE/assets/152770526/db502d6c-772a-441c-9e35-23ec02733717">
 </li>
-       <li>1-4 : 다음 에러로는 nginx: [alert] could not open error log file: open() "/var/log/nginx/error.log" failed (13: Permission denied) ← 다음으로 엔지닉스에 대해서 어떠한 요청을 하더라도 계속해서 요청이 거부됨. ( sudo 를 붙여서 시도를 해 보아도 지속된 오류.. ) → </li>
+       <li>1-4 : 이후 진행을 해보려 했을때 지속 되는 nginx -t 테스트 명령어 실패, 및 권한 오류 발생 → </li>
        <li>1-5 : 구글링 결과 ( 스택 오버 플로우 )→ <br><br> 1. 구성에서 가져온 파일 내부에 오타가 있을 수 있습니다. <br><br>
 2. 공식 Nginx CookBook의 최신 버전에 따르면, 우리는 내부에서 어떤 구성도 생성할 필요가 없습니다. `/etc/nginx/sites-enabled/`이것은 이전 관행이었으며 현재는 더 이상 사용되지 않습니다. <br><br>
 3. nginx.conf 파일 내부중 내용을 
-`include /etc/nginx/conf.d/includes-optional/cpanel-proxy-vendors/*.conf;` 으로 교체 <br> </li>
+`include /etc/nginx/conf.d/includes-optional/cpanel-proxy-vendors/*.conf;` 으로 교체 하여도 지속된 오류 발생 <br> </li>
        <li>1-6 : 많은 과정을 거쳤으나. 도출된 결과는 기본적으로 NGNIX 초기 세팅 부분에서 잘못되었고 → 이후 다시 NGINX 초기 세팅 마무리 후.→ </li>
       ``` 
       

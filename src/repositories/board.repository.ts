@@ -142,29 +142,59 @@ export class BoardRepository {
                         attributes: ['nickname'],
                         as: 'author'
                     },
+                    {
+                        model: Likes,
+                        attributes: [], // 좋아요 테이블에서 id만 필요
+                        where: {
+                        deletedAt: null,
+                        },
+                        required: false, // LEFT JOIN으로 설정
+                    },
+                    {
+                        model: Comments,
+                        attributes: [], // 댓글 테이블에서는 특정 컬럼을 필요로하지 않으므로 빈 배열을 사용
+                        where: {
+                        deletedAt: null,
+                        },
+                        required: false, // LEFT JOIN으로 설정
+                    },
                 ],
                 attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
                 order: [['createdAt', 'DESC']],
             });
 
-            // 좋아요 개수를 조회하여 각 게시물 데이터에 추가
-            const boardData = await Promise.all(boards.map(async (board) => {
-                const boardInfo: any = board.toJSON();
+             // 좋아요 및 댓글 개수를 조회하여 각 게시물 데이터에 추가
+        const boardData = await Promise.all(boards.map(async (board) => {
+            const boardInfo: any = board.toJSON();
 
-                // 좋아요 개수 조회
-                const likeCount = await this.getLikeCount(boardInfo.boardId);
+            // 좋아요 개수 조회
+            const likeCount = await Likes.count({
+                where: {
+                    boardId: boardInfo.boardId,
+                    deletedAt: null,
+                },
+            });
 
-                // 좋아요 개수를 데이터에 추가
-                boardInfo.likeCount = likeCount;
+            // 댓글 개수 조회
+            const commentCount = await Comments.count({
+                where: {
+                    boardId: boardInfo.boardId,
+                    deletedAt: null,
+                },
+            });
 
-                return boardInfo;
-            }));
+            // 좋아요 및 댓글 개수를 데이터에 추가
+            boardInfo.likeCount = likeCount;
+            boardInfo.commentCount = commentCount;
 
-            return boardData;
-        } catch (err) {
-            throw err;
-        }
+            return boardInfo;
+        }));
+
+        return boardData;
+    } catch (err) {
+        throw err;
     }
+}
 
 
     // 인기순으로 게시글 목록 불러오기
@@ -206,30 +236,70 @@ export class BoardRepository {
         }
     }
 
-    // 내가 작성한 글 목록 불러오기
-    boardMyPostsList = async (user: any) => {
-        try {
-            const myPosts = await Boards.findAll({
-                where: {
-                    deletedAt: null,
-                    userId: user.userId, // 현재 로그인 한 사용자 ID를 기반으로 찾습니다.
-                },
-                include: [
-                    {
-                        model: Users,
-                        attributes: ['userId', 'nickname'],
-                        as: 'author'
-                    },
-                ],
-                attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
-                order: [['createdAt', 'DESC']],
 
-            });
-            return myPosts;
-        } catch (err) {
-            throw err;
-        }
+/// 내가 작성한 글 목록 불러오기
+boardMyPostsList = async (user: any) => {
+    try {
+        // 내가 작성한 모든 게시물 가져오기
+        const myPosts = await Boards.findAll({
+            where: {
+                deletedAt: null,
+                userId: user.userId,
+            },
+            include: [
+                {
+                    model: Users,
+                    attributes: ['userId', 'nickname'],
+                    as: 'author',
+                },
+                {
+                    model: Likes,
+                    attributes: [], // 좋아요 테이블에서 id만 필요
+                    where: {
+                        deletedAt: null,
+                    },
+                    required: false, // LEFT JOIN으로 설정
+                },
+                {
+                    model: Comments,
+                    attributes: [], // 댓글 테이블에서는 특정 컬럼을 필요로하지 않으므로 빈 배열을 사용
+                    where: {
+                        deletedAt: null,
+                    },
+                    required: false, // LEFT JOIN으로 설정
+                },
+            ],
+            attributes: ['boardId', 'title', 'image', 'content', 'createdAt'],
+            order: [['createdAt', 'DESC']],
+        });
+        // 좋아요 개수 및 댓글 개수를 추가
+    const myPostsData = myPosts.map(async (post) => {
+        const postData: any = post.toJSON();
+  
+        return postData;
+      });
+  
+        // 모든 게시물에 대한 좋아요 총 갯수 계산
+      const totalLikesCount = await this.getTotalLikesCount(user.userId);
+  
+        // 모든 게시물에 대한 댓글 총 갯수 계산
+      const totalCommentsCount = await this.getTotalCommentsCount(user.userId);
+  
+        // 좋아요 및 댓글 총 갯수를 리스폰스
+      const responseData = {
+        data: await Promise.all(myPostsData),
+        loginUser: user.nickname,
+        totalLikesCount,
+        totalCommentsCount,
+      };
+  
+      return responseData;
+    } catch (err) {
+      throw err;
     }
+  };
+
+
 
     // 내가 작성한 댓글 목록 불러오기
     boardMyCommentsList = async (user: any) => {
@@ -268,6 +338,36 @@ export class BoardRepository {
             throw err;
         }
     }
+
+    // 전체 좋아요 수 
+    getTotalLikesCount = async (userId: number) => {
+        try {
+          const totalLikesCount = await Likes.count({
+            where: {
+              userId,
+            },
+          });
+      
+          return totalLikesCount;
+        } catch (err) {
+          throw err;
+        }
+      };
+
+    // 댓글 수
+    getTotalCommentsCount = async (userId: number) => {
+        try {
+          const totalCommentsCount = await Comments.count({
+            where: {
+              userId,
+            },
+          });
+      
+          return totalCommentsCount;
+        } catch (err) {
+          throw err;
+        }
+      };
 
 }
 

@@ -4,6 +4,7 @@ import sequelize from "./index";
 class Comments extends Model {
   declare id: number;
   declare content: string;
+  declare boardId: number; 
 }
 
 Comments.init(
@@ -18,6 +19,16 @@ Comments.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    boardId: { // boardId 추가
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+          model: 'tb_board', // 게시물 테이블에 따라 수정
+          key: 'boardId',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+  },
   },
   {
     sequelize,

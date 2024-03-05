@@ -4,6 +4,8 @@ import { Comments } from "./Comments";
 import { Likes } from "./likes";
 
 class Boards extends Model {
+  Likes: any;
+    Comments: any;
   static find(arg0: { where: { deletedAt: null; }; include: { model: typeof import("./Users").Users; attributes: string[]; as: string; }[]; }) {
       throw new Error("Method not implemented.");
   }

@@ -6,6 +6,7 @@ class Likes extends Model {
     declare id: number;
     declare userId: number; 
     declare user: Users;
+    declare boardId: number;
 }
 
 Likes.init(
@@ -25,6 +26,16 @@ Likes.init(
             },
             onUpdate: 'CASCADE',
             onDelete: 'CASCADE', // 필요에 따라 수정 가능
+        },
+        boardId: { // boardId 추가
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'tb_board', // 게시물 테이블에 따라 수정
+                key: 'boardId',
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE',
         },
     },
     {

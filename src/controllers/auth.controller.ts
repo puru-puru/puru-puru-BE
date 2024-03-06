@@ -20,7 +20,7 @@ const userSchema = Joi.object({
     }
     return value;
   }),
-  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9!@#$%^&*()_+\\-=\\[\\]{};':\",./<>?|\\\\ ]{5,20}$")),
+  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9!@#$%^&*()_+\\-=\\[\\]{};':\",./<>?|\\\\~` ]{5,20}$")),
   confirmPassword: Joi.string().valid(Joi.ref("password"))
   }).options({ abortEarly: false }); 
 

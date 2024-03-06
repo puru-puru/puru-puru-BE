@@ -62,4 +62,21 @@ export class CommentRepository {
         }
     }
 
+    postComment2 = async (content: string, boardId: any, user: any, commentId: any) => {
+        try {
+            await Comments.create({
+                boardId,
+                content,
+                userId: user.userId,
+                commentId  // 새로운 댓글을 상위 댓글에 연결하기 위해 commentId를 추가합니다
+            });
+
+            return { "Message": "댓글을 작성했습니다" }
+        } catch (err) {
+            throw err;
+        } 
+    }
+
+    
+
 }

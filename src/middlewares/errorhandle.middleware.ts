@@ -2,30 +2,30 @@ import { NextFunction, Request, Response } from "express";
 import { ValidationError } from 'joi';
 
 // 조이 밸리데이션 에러.. 처리 하는 부분.
-function handleValidationError(err: ValidationError, res: Response) {
-    if (err.details && err.details.length > 0) {
-        const emailError = err.details.find(error => error.type === 'string.email');
-        if (emailError) {
-            return res.status(400).json({ errorMessage: "이메일 형식에 맞지 않습니다." });
-        }
-        const firstError = err.details[0];
-        if (firstError.type === 'any.only' && firstError.path && firstError.path.length > 0) {
-            const fieldName = firstError.path[0];
-            if (fieldName === 'confirmPassword') {
-                return res.status(400).json({ errorMessage: "두 비밀번호가 일치하지 않습니다." });
-            } else if (fieldName === 'email') {
+function joiValidationError(err: ValidationError, res: Response) {
+    if (err.details && err.details.length > 0) { // 를 통해서 배열이 존재 하고 비어 있지 않은 경우를 확인.
+        const JoiError = err.details[0];// 배열의 첫번째 오류를 뽑아옴.
+        switch (JoiError.type) { // 조이에러의 타입에 따라서 다른 처리 진행.
+            case 'string.email': // 과 같은 오류 라면 하단 출력.
                 return res.status(409).json({ errorMessage: "이메일 형식에 맞지 않습니다." });
-            }
+            case 'any.only': // 과 같으면서.
+                const fieldName = JoiError.path?.[0]; 
+                if (fieldName === 'confirmPassword') { // 필드 이름이 이것과 같다면 아래 출력 !
+                    return res.status(400).json({ errorMessage: "두 비밀번호가 일치하지 않습니다." });
+                }
+                break;
         }
     }
-    return res.status(400).json({ errorMessage: "데이터 형식이 올바르지 않습니다." });
 }
 // 에러 핸들링 미들웨어
 export default function (err: any, req: Request, res: Response, next: NextFunction) {
     try {
         switch (true) {
             case err instanceof ValidationError:
-                return handleValidationError(err, res);
+                return joiValidationError(err, res);
+
+            case err.name === "ValidationError":
+                return res.status(400).json({ errorMessage: " 데이터 형식이 올바르지 않습니다. " })
 
             case err.name === "ExistUser":
                 return res.status(409).json({ errorMessage: "이미 사용 중인 이메일입니다." });
@@ -58,7 +58,7 @@ export default function (err: any, req: Request, res: Response, next: NextFuncti
                 return res.status(409).json({ errorMessage: " 중복된 닉네임 입니다. " })
 
             default:
-                console.error('Unhandled error:', err);
+                console.error('-----------에러----------:', err);
                 return res.status(500).json({ errorMessage: "예기치 모른 에러 발생.." });
         }
     } catch (err) {

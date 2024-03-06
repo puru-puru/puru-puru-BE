@@ -12,7 +12,7 @@ export class CommentService {
         try {
             return await this.commentRepository.postComment(
                 content, boardId, user
-            ) 
+            )
         } catch (err) {
 
             throw err;
@@ -24,7 +24,7 @@ export class CommentService {
         try {
             return await this.commentRepository.updateComment(
                 content, commentId, boardId, user
-            ) 
+            )
         } catch (err) {
 
             throw err;
@@ -36,11 +36,23 @@ export class CommentService {
         try {
             return await this.commentRepository.deleteComment(
                 content, commentId, boardId, user
-            ) 
+            )
         } catch (err) {
 
             throw err;
         }
     }
+
+    postComment2 = async (content: string, boardId: any, user: any, commentId: any) => {
+        try {
+            return await this.commentRepository.postComment2(
+                content, boardId, user, commentId
+            );
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    
 
 }

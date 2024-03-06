@@ -30,7 +30,7 @@ export const plantsDB = [
     {
         plantName: '란타나',
         type: '마편초과',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/%EB%9E%80%ED%83%80%EB%82%98-%280%29.jpg/300px-%EB%9E%80%ED%83%80%EB%82%98-%280%29.jpg',
+        image: 'https://www.treeinfo.net/data/file/ti_gallery/thumb-877941103_f902f9cf_DSCF6721_700x468.jpg',
         content: '꽃을 끊임없이 피우며, 매번 그 색깔이 바뀌는 특별한 식물. 양지식물이기 때문에 햇빛이 잘 드는 곳에서 키워야 한다.',
         tag: '#다채로운'
     },

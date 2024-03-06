@@ -22,7 +22,7 @@ export class BoardController {
         try {
             const user: any = req.user;
 
-            const boards = await this.boardService.boardListWithLikeCount(user); // 이름 바꿈 
+            const boards = await this.boardService.boardListWithLikeCount(user);
 
             return res.status(200).json({ data: boards, loginUser: user.nickname });
         } catch (err) {
@@ -41,10 +41,11 @@ export class BoardController {
 
             // 유효성 검사
             const validationResult = this.checkcontent.validate({ title, content });
-        if (validationResult.error) {
-    console.error(validationResult.error);
-    return res.status(400).json({ errormessage: "최소 2자 이상 입력하셔야 합니다." })
-}
+                if (validationResult.error) {
+                    console.error(validationResult.error);
+                    return res.status(400).json({ errormessage: "최소 2자 이상 입력하셔야 합니다." })
+        }
+        
             const imageUrl = (req.file as any)?.location;
             const user: any = req.user;
 
@@ -127,7 +128,6 @@ export class BoardController {
         try {
             const user: any = req.user;
             const myPosts = await this.boardService.boardMyPostsList(user);
-
             res.status(200).json({ data: myPosts });
         } catch (err) {
             next(err);

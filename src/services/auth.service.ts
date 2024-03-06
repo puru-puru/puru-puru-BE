@@ -68,13 +68,14 @@ export class AuthService {
         throw { name: "UserNotFound" };
       }
 
-      const hasNickname = findUser.nickname !== null;
+      const hasNickname = findUser.nickname !== null; // 프론트에게 전달 해줄 닉네임 값.
 
-      const checkPassword = await bcrypt.compare(password, findUser.password);
+      const checkPassword = await bcrypt.compare(password, findUser.password); // 비밀번호 일치 하는지 검사.
       if (!checkPassword) {
         throw { name: "WorngPassword" };
       }
 
+      // 토큰 부여
       const accessToken = await this.createAccessToken(findUser.email);
       const refreshToken = await this.createRefreshToken(findUser.email);
 
@@ -101,7 +102,7 @@ export class AuthService {
 
   signOut = async (user: any) => {
     try {
-      await this.userRepository.updateUser(
+      await this.userRepository.updateUser( // 로그아웃 요청이 오면 리프레쉬 토큰을 null 값으로 바꾼다.
         { hashedRefreshToken: null },
         { where: { email: user.email }}
       ); 
@@ -114,16 +115,16 @@ export class AuthService {
 
   refreshAccessToken = async (refreshToken: string) => {
     try {
-      const decodedInfo = this.decodedAccessToken(refreshToken);
+      const decodedInfo = this.decodedAccessToken(refreshToken); // 하단에 토큰을 디코드 하는 함수.
   
-      const user = await Users.findOne({
+      const user = await Users.findOne({ // 디코드 했을때 
         where: { email: decodedInfo.email },
       });
-      if (!user) {
+      if (!user) { // 없으면 에러 처리
         throw new Error("유저 정보가 없습니다.");
       }
   
-      const verifyRefreshToken = await this.validateRefreshToken(
+      const verifyRefreshToken = await this.validateRefreshToken( // 유효 한지 검사 하고. 하단으로 에러처리 뚫고 가면
         refreshToken,
         user.hashedRefreshToken,
       );
@@ -143,7 +144,7 @@ export class AuthService {
         throw new Error("로그인이 필요한 서비스입니다.");
       }
   
-      const newAccessToken = await this.createAccessToken(user.email);
+      const newAccessToken = await this.createAccessToken(user.email); // 새로은 토큰 부여.
       const newRefreshToken = await this.createRefreshToken(user.email);
   
       const salt = bcrypt.genSaltSync(parseInt(hash));

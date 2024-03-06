@@ -17,6 +17,7 @@ export class TestRepository {
             const plants = await Plants.findAll({
                 attributes: {exclude: ['createdAt','updatedAt', 'deletedAt']}
             });
+
             return plants
         } catch (err) {
             throw err;

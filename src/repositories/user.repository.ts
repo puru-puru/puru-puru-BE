@@ -1,6 +1,7 @@
 import { Users } from "../../models/Users";
 
 export class UserRepository {
+  // 재 사용성을 고려해서 이름을 이렇게 잘 해왔으나... 나중에는 잘 활용 하지 못했음... ㅠㅠㅠ
 
   setName = async (nickname: string, user: any) => {
     try {

@@ -11,11 +11,11 @@ dotenv.config()
 const userSchema = Joi.object({
   email: Joi.string().email({
     minDomainSegments: 2,
-    tlds: { allow: ["com", "net"] },
+    tlds: { allow: ["com", "net"] }, // 아래 하단은 도메인 검사 유효성 부분.
   }).custom((value, helpers) => {
     const validDomains = ['gmail.com', 'naver.com', 'daum.net', 'kakao.com', 'nate.com', 'hanmail.com'];
-    const domain = value.split('@')[1];
-    if (!validDomains.includes(domain)) {
+    const domain = value.split('@')[1]; // 알겠지만. @를 기준으로 잘라서
+    if (!validDomains.includes(domain)) { // 해당 도메인과 일치 하는지 검사.
       return helpers.error('string.email');
     }
     return value;
@@ -146,21 +146,21 @@ verifyGoogleEmail = async (req: Request, res: Response) => {
 
   signinUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { email, password } = req.body;
+      const { email, password } = req.body; // 바디로 값을 받아서.
 
       const user: any = req.user;
 
-      const signinUser = await this.authService.signinUser(email, password, user);
+      const signinUser = await this.authService.signinUser(email, password, user); // 서비스 단으로 넘긴다.
 
       if (!signinUser) {
         return res.status(400).json({ message: "로그인 실패" });
       }
 
-      const { accessToken, refreshToken, hasNickname } = signinUser;
+      const { accessToken, refreshToken, hasNickname } = signinUser; // 서비스에서 받아온 값.
 
       this.setCookies(res, accessToken, refreshToken);
 
-      return res.status(200).json({
+      return res.status(200).json({ // 여기서 리스폰스 해준다.
         message: "로그인 성공",
         data: { accessToken, refreshToken, hasNickname },
       });
@@ -191,16 +191,16 @@ verifyGoogleEmail = async (req: Request, res: Response) => {
 
   getRefresh = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const refreshToken = req.headers["refresh"] as string | undefined;
+      const refreshToken = req.headers["refresh"] as string | undefined; // 토큰을 받아.
       // const accessToken = req.headers["authorization"]; 
 
       if (!refreshToken) {
         throw new Error("토큰 입력이 안되었음.");
       }
 
-      const { newAccessToken, newRefreshToken } = await this.authService.refreshAccessToken(refreshToken);
+      const { newAccessToken, newRefreshToken } = await this.authService.refreshAccessToken(refreshToken); // 서비스 단으로 넘기고 받아옴.
 
-      return res.status(200).json({message: "토큰 재 발급.",data: { newAccessToken, newRefreshToken },});
+      return res.status(200).json({message: "토큰 재 발급.",data: { newAccessToken, newRefreshToken },}); // 리스폰스
       
     } catch (err) {
       next(err);
@@ -231,11 +231,11 @@ verifyGoogleEmail = async (req: Request, res: Response) => {
   signupUser = async (req: Request, res: Response, next: NextFunction) => {
         try {
           const { email, nickname, password, confirmPassword } =
-            await userSchema.validateAsync(req.body);
+            await userSchema.validateAsync(req.body); // 받은 값을 조이로 검사.
     
           if (!this.authService.confirmPassword(password, confirmPassword)) {
             throw { name: "PasswordMismatch" };
-          }
+          } // 서비스 부분에 있는 컨펌 패스워드와 일치 하지 않는다면, 에러.
     
           await this.authService.signupUser(email, nickname, password);
     

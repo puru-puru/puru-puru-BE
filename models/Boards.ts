@@ -4,8 +4,8 @@ import { Comments } from "./Comments";
 import { Likes } from "./likes";
 
 class Boards extends Model {
-  Likes: any;
-    Comments: any;
+    Likes: any; // 보드 부분에서 좋아요, 카운트 하는 부분을 불러올때 타입 에러가 발생 해서 넣어 주었음.
+    Comments: any; // 댓글, 전과동.
   static find(arg0: { where: { deletedAt: null; }; include: { model: typeof import("./Users").Users; attributes: string[]; as: string; }[]; }) {
       throw new Error("Method not implemented.");
   }

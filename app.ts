@@ -35,7 +35,7 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT;
 
-const corsOptions = {
+const corsOptions = { // 코스 옵션 부분. 해당 도메인을 허용한다.
   origin: ["http://localhost:3000", "http://localhost:5173", "https://purupuru.store", "https://www.purupuru.store", "https://puru-puru.vercel.app"],
   credentials: true
 }

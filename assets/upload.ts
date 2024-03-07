@@ -4,6 +4,8 @@ import { S3Client } from '@aws-sdk/client-s3';
 import dotenv from 'dotenv'
 import path from 'path';
 
+// S3, 뮬터 설정 부분. ( 미들웨어 느낌. ) - - - - - - - - - - - - - - - - - - - - - -
+
 dotenv.config()
 
 const s3 = new S3Client({
@@ -22,11 +24,11 @@ const upload = multer({
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file: Express.MulterS3.File, cb) => {
       const extension = path.extname(file.originalname);
-      const generatedKey = `test/${Date.now()}${extension}`;
+      const generatedKey = `test/${Date.now()}${extension}`; // 이 부분 하고 바로 위. 가 파일 명 및 저장 할 곳 설정.
       cb(null, generatedKey);
     },
   }),
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 5 * 1024 * 1024 }, // 말 그대로 파일 사이즈.. 제한.
   fileFilter: (_req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
       cb(null, true);

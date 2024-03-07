@@ -17,7 +17,7 @@ function joiValidationError(err: ValidationError, res: Response) {
         }
     }
 }
-// 에러 핸들링 미들웨어
+// 에러 핸들링 미들웨어 기존 방식.
 export default function (err: any, req: Request, res: Response, next: NextFunction) {
     try {
         switch (true) {

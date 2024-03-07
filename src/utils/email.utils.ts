@@ -33,8 +33,9 @@ export class EmailUtils {
         });
       }
 
+      // 하단의 이 부분이 사용자 에게 보여지는 부분임. 
       const mailOptions: nodemailer.SendMailOptions = {
-        from: isGoogle ? 'ujins8201@gmail.com' : 'dnwls70000@naver.com', // 삼. 항. 연. 산. 자. ㅋㅋㅋㅋㅋ 사용.
+        from: isGoogle ? 'ujins8201@gmail.com' : 'dnwls70000@naver.com', // 삼. 항. 연. 산. 자.  사용.
         to: email,
         subject: '푸릇푸릇 인증 메일 서비스 입니다 !!!',
         html: `<form action="${url}" method="POST">

@@ -1,3 +1,4 @@
+// 이 부분은 서브 서버 구동.
 import express, { Express, Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import expressSession from "express-session";
@@ -90,9 +91,6 @@ const createTemplelateDB = () => {
 // createMissionDB();
 // createTemplelateDB();
 
-
-
-app.use(express.static(path.join(__dirname, "views")));
 app.listen(port, async () => {
   console.log(`----- Server ${port} Start -----`);
   sequelize

@@ -7,11 +7,36 @@
 
 ***
 
-## 🌱 Puru Puru 링크
-- **도메인** - https://puru-puru.vercel.app/
-- **FE Github** - https://github.com/puru-puru/puru-puru-FE.git
-- **팀 브로슈어** - https://plum-robe-ea9.notion.site/eb76b2175c254486b52a353174d37d8a?pvs=4
-- **Figma**
+## **🌱 푸릇 푸릇**
+
+<table width="80%;">
+  <tr align="center">
+    <td><strong>구분</strong></td>
+    <td><strong>링크</strong></td>
+    <td><strong>구분</strong></td>
+    <td><strong>링크</strong></td>
+  </tr>
+  <tr align="center">
+    <td><img src="https://velog.velcdn.com/images/eorb0717/post/6682ca3c-bf5c-4fa9-b0c4-06dc58e26a60/image.svg" alt="푸릇푸릇 아이콘" style="width: 25px;"></td>
+    <td><a target="_blank" rel="noopener noreferrer nofollow" href="https://puru-puru.vercel.app/">Puru-Puru</a></td>
+    <td><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Notion-logo.svg/1024px-Notion-logo.svg.png" alt="노션 아이콘" style="width: 20px;"></td>
+    <td><a target="_blank" rel="noopener noreferrer nofollow" href="https://teamsparta.notion.site/99-18-2934bad8f617480f8deb299a64c6b5f2?p=940d44d40b864247b8c400646e5c8d9a&pm=c">브로슈어</a></td>
+  </tr>
+  <tr align="center">
+    <td><img src="https://user-images.githubusercontent.com/389021/165723723-c93929a5-01d9-49e1-907b-43669d8089e6.png" alt="리액트 아이콘" style="width: 25px;"></td>
+    <td><a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/puru-puru/puru-puru-FE">FE Github</a></td>
+    <td><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Notion-logo.svg/1024px-Notion-logo.svg.png" alt="노션 아이콘" style="width: 20px;"></td>
+    <td><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.notion.so/91b7d59443d148179ded8245e0955e73?v=0df2dc36063a456280a629049691d5af">팀 SA</a></td>
+  </tr>
+  <tr align="center">
+    <td><img src="https://static-00.iconduck.com/assets.00/node-js-icon-454x512-nztofx17.png" alt="노드js 아이콘" style="width: 20px;"></td>
+    <td><a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/puru-puru/puru-puru-BE">BE Github</a></td>
+    <td><img src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png" alt="피그마 아이콘" style="width: 20px;"></td>
+    <td><a target="_blank" rel="noopener noreferrer nofollow" href="https://www.figma.com/file/MpRPSQs04dB82pUN4HvOf0/%5B%ED%91%B8%EB%A6%87%ED%91%B8%EB%A6%87%5D_v2_0215_HI?type=design&node-id=2-2&mode=design&t=kPdyiXOJzqpCPn6h-0">Figma</a></td>
+  </tr>
+</table>
+
+</br>
 
 ***
 

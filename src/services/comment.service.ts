@@ -8,6 +8,7 @@ export class CommentService {
     commentRepository = new CommentRepository();
 
 
+    // 댓글 작성
     postComment = async (content: string, boardId: any, user: any) => {
         try {
             return await this.commentRepository.postComment(
@@ -19,7 +20,7 @@ export class CommentService {
         }
     }
 
-
+// 댓글 수정
     updateComment = async (content: string, commentId: any, boardId: any, user: any) => {
         try {
             return await this.commentRepository.updateComment(
@@ -31,7 +32,7 @@ export class CommentService {
         }
     }
 
-
+    // 댓글 삭제
     deleteComment = async (content: string, commentId: any, boardId: any, user: any) => {
         try {
             return await this.commentRepository.deleteComment(
@@ -43,6 +44,7 @@ export class CommentService {
         }
     }
 
+    // 대댓글 작성
     postComment2 = async (content: string, boardId: any, user: any, commentId: any) => {
         try {
             return await this.commentRepository.postComment2(

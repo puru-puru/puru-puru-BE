@@ -12,7 +12,7 @@ export class BoardService {
     // 커뮤니티 게시글 작성하기
     boardPost = async (title: string, imageUrl: any, content: string, user: any) => {
         try {
-
+            // 리포지토리의 boardPost 메소드를 호출해서 게시글 쓰고 결과를 반환한다~
             const boardPost = await this.boardRepository.boardPost(
                 title,
                 imageUrl,
@@ -25,7 +25,7 @@ export class BoardService {
         }
     }
 
-    // 게시물 상세 보기 
+    // 게시물 상세 보기 (에 더 나아가 좋아요개수까지 곁들인)
     boardDetailWithLikeCount = async (boardId: any) => {
         try {
             return await this.boardRepository.boardDetailWithLikeCount(boardId);
@@ -59,7 +59,7 @@ export class BoardService {
         }
     }
 
-    // 최신순으로 목록정렬, 로그인 한 사용자의 정보와 함께 좋아요 개수를 가져옴
+    // 최신순으로 목록을 정렬, (에 더 나아가 로그인 한 사용자의 정보, 좋아요개수를 가져옴)
     boardListWithLikeCount = async (user: any) => {
         try {
             return await this.boardRepository.getBoardDataWithLikeCount(user);
@@ -69,7 +69,7 @@ export class BoardService {
 
     }
 
-    // 인기순으로 목록정렬
+    // 인기순으로 목록을 정렬
     boardListPopular = async (user: any) => {
         try {
             return await this.boardRepository.boardListLikee(user);

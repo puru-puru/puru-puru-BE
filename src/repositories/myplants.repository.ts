@@ -150,17 +150,24 @@ export class MyplantsRepository {
         }
     }
 
+    // 나의 식물 일지 메인 화면을 보여주는 메서드 입니다
     showMyPlants = async (user: any) => {
         try {     
-
+            // 먼저 나의 식물 일지 db내에서 모든 일지를 가져오는데,
+            // 해당 작성자 id에 일치한다는 조건, 삭제처리가 되지 않았다는 조건
+            // 이 둘을 걸어 일지를 가져옵니다
             const MyPlants = await Diaries.findAll({
                 where: {
                     deletedAt: null,
                     userId: user.userId
                 },
+                // 일지의 모든 정보를 가져오는 것이 아닌,
+                // 생성일, 업데이트 일, 삭제 여부, id 값은 배제하고 가져옵니다
                 attributes: {
                     exclude: ['createdAt', 'updatedAt', 'deletedAt', 'id']
                 },
+                // 테이블을 join 하여 가져오는데, 먼저 일지와 연동된
+                // 나의 식물을 가져옵니다. 이는 userplantId를 통해 찾습니다.
                 include: [{
                     model: UserPlant,
                     attributes: ['userplantId'],
@@ -169,6 +176,9 @@ export class MyplantsRepository {
                         attributes: ['plantName','type', 'content']
                     }]
                 },
+                // 추가로 연동된 테이블을 join해서 가져오는데, 이는 일지와 연결된
+                // 질문과 답변입니다.
+                // Templelates에서 질문을 가져오고 SavedTemplelates에서 답변을 가져옵니다.
                 {
                     model: SavedTemplelates,
                     attributes: ['id', 'answer'],
@@ -186,11 +196,15 @@ export class MyplantsRepository {
         }
     }
     
-
+    // 질문에 답변을 등록하는 메서드 입니다.
     answering = async (user: any, diaryId: any, templateId: any, answer: any) => { 
         try {
+            // 업데이트 하는 방식으로 답변을 등록을 합니다.
+            // 맨 처음에는 답변이 공백 상태로 등록되어 있기 때문입니다.
             await SavedTemplelates.update({ answer: answer },
                 {
+                    // 각 질문지는 고유 id 값이 있는데,
+                    // 이를 프론트에서 id 값에 맞게 불러와서 수정합니다.
                     where: {
                         id: templateId
                     }
@@ -202,8 +216,13 @@ export class MyplantsRepository {
         }       
     }
 
+    // 식물을 삭제하는 메서드 입니다.
     deletePlants = async (diaryId: any) => {
         try {
+            // 모든 테이블을 삭제처리할 필요는 없으며,
+            // 나의 식물 일지의 특정 데이터를 삭제처리를 하면,
+            // 이와 연동된 데이터도 함께 불러오지 못해, 사용자 화면에는
+            // 뿌져지지 않습니다.
             await Diaries.update({ deletedAt: Date() }, {
                 where: { diaryId }
             })
@@ -214,7 +233,7 @@ export class MyplantsRepository {
         }
     }
 
-
+    // 개발자 전용 메서드로, 아이콘 이미지를 등록하기 위해 사용되었습니다.
     postImage = async (imageUrl: string) => {
         try {
             await Icons.create({

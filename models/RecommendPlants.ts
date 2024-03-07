@@ -3,7 +3,7 @@ import sequelize from "./index";
 import {UserPlant} from "./UserPlant";
 
 // 식물 추천 모델 지정.
-class Plants extends Model {
+class RecommendPlants extends Model {
   declare plantsId: number;
   declare plantName: string;
   declare type: string;
@@ -11,7 +11,7 @@ class Plants extends Model {
   declare content: string;
 }
 // 실제 디비에 들어갈 값
-Plants.init(
+RecommendPlants.init(
   {
     plantsId: {
       type: DataTypes.INTEGER,
@@ -47,8 +47,8 @@ Plants.init(
   },
   {
     sequelize,
-    modelName: "Plants",
-    tableName: "tb_plant",
+    modelName: "RecoPlants",
+    tableName: "tb_recoplant",
     freezeTableName: true,
     timestamps: true,
     paranoid: true,
@@ -56,8 +56,4 @@ Plants.init(
   }
 );
 
-// UserPlant와의 관계
-Plants.hasMany(UserPlant, { foreignKey: 'plantsId' });
-UserPlant.belongsTo(Plants, { foreignKey: 'plantsId' });
-
-export { Plants };
+export { RecommendPlants };

@@ -5,11 +5,11 @@ import { OAuth2Client } from 'google-auth-library';
 dotenv.config();
 
 export class EmailUtils {
-  sendVerificationEmail = async (email: string, url: string, isGoogle: boolean) => {
+  sendVerificationEmail = async (email: string, url: string, isGoogle: boolean) => { // 이름 만 보아도 알겠지만 이메일 보내는 곳.
     try {
       let transporter;
 
-      if (isGoogle) {
+      if (isGoogle) { // if 문을 통해서 구길, 혹은 네이버 인지 ..
         transporter = createTransport({
           service: process.env.GMAIL_SERVICE || 'gmail',
           auth: {
@@ -33,8 +33,9 @@ export class EmailUtils {
         });
       }
 
+      // 하단의 이 부분이 사용자 에게 보여지는 부분임. 
       const mailOptions: nodemailer.SendMailOptions = {
-        from: isGoogle ? 'ujins8201@gmail.com' : 'dnwls70000@naver.com',
+        from: isGoogle ? 'ujins8201@gmail.com' : 'dnwls70000@naver.com', // 삼. 항. 연. 산. 자.  사용.
         to: email,
         subject: '푸릇푸릇 인증 메일 서비스 입니다 !!!',
         html: `<form action="${url}" method="POST">

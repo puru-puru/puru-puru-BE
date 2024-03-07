@@ -16,6 +16,37 @@ const acc: string = process.env.JWT_ACCESS_SECRET_KEY || "default_access_secret_
 const rcc: string = process.env.JWT_REFRESH_SECRET_KEY || "default_refresh_secret_key";
 const hash: string = process.env.BCRYPT_SALT || "default_salt_key";
 
+// 토큰 부여 부분 .. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const createAccessToken = async (email: string) => {
+  try {
+    const accessToken = jwt.sign(
+      { email }, // JWT 데이터
+      acc, // Access Token의 비밀 키
+      { expiresIn: "5h" } // Access Token이 5h 뒤에 만료되도록 설정.
+    );
+    return accessToken;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const createRefreshToken = async (email: string) => {
+  try {
+    const refreshToken = jwt.sign(
+      { email }, // JWT 데이터
+      rcc, // Refresh Token의 비밀 키
+      { expiresIn: "7d" } // Refresh Token이 7일 뒤에 만료되도록 설정.
+    );
+    return refreshToken;
+  } catch (err) {
+    throw err;
+  }
+}
+
+const setCookies = async (res: Response, accessToken: string, refreshToken: string) => {
+  res.cookie("accessToken", `Bearer ${decodeURIComponent(String(accessToken))}`);
+  res.cookie("refreshToken", `Bearer ${decodeURIComponent(String(refreshToken))}`);
+}
 
 // 카카오 소셜 로그인  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
@@ -26,7 +57,7 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
       grant_type: 'authorization_code',
       client_id: process.env.KAKAO_CLIENT_REST_ID,
       client_secret: process.env.KAKAO_CLIENT_SECRET,
-      redirect_uri: 'http://localhost:5173/api/auth/login/kakao/return' || 'https://purupuru.store/api/auth/login/kakao/return',
+      redirect_uri: process.env.KAKAO_CALLBACKURL,
       code: code
     })
     const config = {
@@ -61,10 +92,23 @@ router.post('/api/auth/login/kakao', async (req: Request, res: Response) => {
     }
 
     // 사용자가 이미 존재하는 경우에는 기존의 토큰을 갱신하거나 새로 발급할 수 있습니다.
-    const newAccessToken = jwt.sign({ email: user.email }, acc, { expiresIn: "5h" });
-    const newRefreshToken = jwt.sign({ email: user.email }, rcc, { expiresIn: "7d" });
+    const newAccessToken = await createAccessToken(user.email);
+    const newRefreshToken = await createRefreshToken(user.email);
 
-    // 응답으로 토큰을 보내줍니다.
+    setCookies(res, newAccessToken, newRefreshToken);
+
+    const salt = bcrypt.genSaltSync(parseInt(hash))
+    const hashedRefreshToken = bcrypt.hashSync(
+      newRefreshToken || "default-token",
+      salt
+    )
+
+    await Users.update(
+      { hashedRefreshToken },
+      { where: { userId: user.userId }}
+    )
+
+    // 토큰
     res.status(200).json({
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
@@ -88,7 +132,7 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
       grant_type: 'authorization_code',
       client_id: process.env.GMAIL_OAUTH_CLIENT_ID,
       client_secret: process.env.GMAIL_OAUTH_CLIENT_SECRET,
-      redirect_uri: 'http://localhost:5173/api/auth/login/google/return',
+      redirect_uri: 'https://puru-puru.vercel.app/api/auth/login/google/return',
       code: code,
     };
 
@@ -123,10 +167,23 @@ router.post('/api/auth/login/google', async (req: Request, res: Response) => {
     }
 
     // 새로운 액세스 및 리프레시 토큰을 생성합니다.
-    const newAccessToken: string = jwt.sign({ email: user.email }, acc, { expiresIn: "5h" });
-    const newRefreshToken: string = jwt.sign({ email: user.email }, rcc, { expiresIn: "7d" });
+    const newAccessToken = await createAccessToken(user.email);
+    const newRefreshToken = await createRefreshToken(user.email);
 
-    // 새로운 토큰으로 응답합니다.
+    setCookies(res, newAccessToken, newRefreshToken);
+
+    const salt = bcrypt.genSaltSync(parseInt(hash))
+    const hashedRefreshToken = bcrypt.hashSync(
+      newRefreshToken || "default-token",
+      salt
+    )
+
+    await Users.update(
+      { hashedRefreshToken },
+      { where: { userId: user.userId }}
+    )
+
+    // 보내주기
     res.status(200).json({
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,

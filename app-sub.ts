@@ -1,3 +1,4 @@
+// 이 부분은 서브 서버 구동.
 import express, { Express, Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import expressSession from "express-session";
@@ -17,25 +18,22 @@ import { UserPlant } from "./models/UserPlant"; // 다이어리와 연계되는 
 import { SavedTemplelates } from "./models/SavedTemplelates"; // 사용자가 저장한 질문과 답변
 import { Icons } from "./models/Icons"; // 사용자가 저장한 질문과 답변
 import { Galleries } from "./models/Galleries"; // 사용자의 반려 식물 중 사진첩.
-import { Templelates } from './models/Templelates' // 질문 템플릿
-import { Plants } from './models/plants' // 식물
-import { RecommendPlants } from './models/RecommendPlants' // 식물
-import { plantsDB } from './src/seeders/plantsDB' // 식물 시드 데이터
-import { Missions } from './models/Missions' //미션
-import { missionsDB } from './src/seeders/missionsDB' // 미션 시드 데이터
-import { templelatesDB } from './src/seeders/templelatesDB' // 템플렛 시드 데이터
+import { Templelates } from "./models/Templelates"; // 질문 템플릿
+import { Plants } from "./models/plants"; // 식물
+import { plantsDB } from "./src/seeders/plantsDB"; // 식물 시드 데이터
+import { Missions } from "./models/Missions"; //미션
+import { missionsDB } from "./src/seeders/missionsDB"; // 미션 시드 데이터
+import { templelatesDB } from "./src/seeders/templelatesDB"; // 템플렛 시드 데이터
 
 import path from "path";
-import {fileURLToPath} from "url";
-import { initializeCronJob, initializeCronRecomendation } from "./src/cronjob/cron.data"
-
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
 
-const corsOptions = { // 코스 옵션 부분. 해당 도메인을 허용한다.
+const corsOptions = {
   origin: ["http://localhost:3000", "http://localhost:5173", "https://purupuru.store", "https://www.purupuru.store", "https://puru-puru.vercel.app"],
   credentials: true
 }
@@ -67,7 +65,7 @@ app.use(passport.session());
 app.use("/", router, socialRouter);
 
 app.get("/", (req, res) => {
-  res.json({ message: "first_server" });
+  res.json({ message: "second_server" });
 });
 
 // 여기는 시드 데이터를 삽입하는 메서드 입니다.
@@ -93,11 +91,6 @@ const createTemplelateDB = () => {
 // createMissionDB();
 // createTemplelateDB();
 
-// 미션 자동 업데이트
-//initializeCronJob();
-initializeCronRecomendation();
-
-app.use(express.static(path.join(__dirname, "views")));
 app.listen(port, async () => {
   console.log(`----- Server ${port} Start -----`);
   sequelize
@@ -111,7 +104,6 @@ app.listen(port, async () => {
       // await Comments.sync({force: true})
       // await Missions.sync({force: true})
       // await Plants.sync({force: true})
-      // await RecommendPlants.sync({force: true})
       // await UserPlant.sync({force: true})
       // await Galleries.sync({force: true})
       // await Templelates.sync({force: true})

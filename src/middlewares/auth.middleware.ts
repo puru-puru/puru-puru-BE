@@ -12,39 +12,39 @@ export default async function (req: Request, res: Response, next: NextFunction) 
   try {
     const accessToken = req.headers.authorization
 
+    // 여기서 부터 토큰에 대해서 오류에 대한 경우의 수를 기재함. 
+    // 말 그대로 토큰이 없는 경우.
     if (!accessToken) {
-      console.error("로그인이 필요한 서비스입니다.");
       throw new Error(" 로그인이 필요한 서비스 입니다. ")
     }
 
+    // 말 그대로 토큰 인증에 실패 할 경우.
     const verifyAccessToken = validateAccessToken(accessToken);
     if (verifyAccessToken === "invalid token") {
-      console.error("토큰 인증 실패: invalid token");
       return res.status(401).json({ message: "토큰 인즈 실패" })
     }
 
+    // 토큰이 만료 되었을 경우.
     if(verifyAccessToken === "jwt expired") {
-      console.error("토큰 만료됨: jwt expired");
       return res.status(401).json({ message: "토큰이 만료 되었습니다." });
     }
 
+    // 토큰 인증이 되었다면.
     const email = verifyAccessToken!.email
-    console.log("user nemail", email)
     const user = await Users.findOne({
       where: { email }
     })
 
     if(!user) {
-      console.error("토큰 사용자 찾을 수 없음");
       throw new Error (" 토큰 사용자 없음 ")
     }
 
+    // 사용자의 정보를 이런식으로 담아서 다른 서비스 에서 사용 할 수 있게 넘김.
     req.user = user
     
     next()
 
   } catch (error:any) {
-    console.error("미들웨어 오류",error)
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
     switch (error.name) {

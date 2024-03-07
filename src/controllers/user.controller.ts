@@ -12,9 +12,10 @@ export class UserController {
     // 닉네임 설정 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     setName = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            // 낙네임을 바디 값으로 . 조이 밸리데이션 통과 해서 받아옴.
             const { nickname } = await userSchema.validateAsync(req.body)
             const user: any = req.user;
-            const setName = await this.userService.setName(nickname, user)
+            const setName = await this.userService.setName(nickname, user) // 서비스 로 넘기고. 받아옴.
 
             return res.status(200).json({ message: "닉네임 설정이 완료 되었움"})
         } catch (err: any) {
@@ -31,6 +32,7 @@ export class UserController {
                 throw { name: "UserNotFound" }
             }
 
+            // 서비스 부분으로 넘김. 
             const userData = await this.userService.userInfo(user.userId);
 
             return res.status(200).json({ data: userData })

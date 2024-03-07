@@ -263,13 +263,15 @@ export class AuthService {
       };
 
 
-  // 여기서 부터 토큰 옵션 설정 및 발급 해독 하는 곳.  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  // 여기서 부터 토큰 옵션 설정 및 발급 해독 하는 곳 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
+  // 쿠키 부여.
   setCookies = async (res: Response, accessToken: string, refreshToken: string) => {
     res.cookie("refreshToken", `Bearer ${decodeURIComponent(String(refreshToken))}`);
     res.cookie("accessToken", `Bearer ${decodeURIComponent(String(accessToken))}`);
   }
 
+  // 토큰 값 해독.
   decodedAccessToken = (accessToken: string) => {
     try {
       const [tokenType, token] = accessToken.split(" ");
@@ -279,14 +281,10 @@ export class AuthService {
     }
   };
 
-
+  // 토큰이 유효한지 검사 하는 곳.
   validateRefreshToken = async (refreshToken: string,hashedRefreshToken: string,) => {
     try {
       const [tokenType, token] = refreshToken.split(" ");
-
-      console.log('tokenType:', tokenType);
-      console.log('token:', token);
-      console.log('hashedRefreshToken:', hashedRefreshToken);
 
       if (tokenType !== "Bearer")
         throw new Error(" 로그인이 필요한 서비스 입니다. ");
@@ -305,6 +303,7 @@ export class AuthService {
     }
   };
 
+  // 엑세스 토큰 만들기.
   createAccessToken = async (email: string) => {
     try {
       const accessToken = jwt.sign(
@@ -318,6 +317,7 @@ export class AuthService {
     }
   };
 
+  // 리프레쉬 토큰 만들기.
   createRefreshToken = async (email: string) => {
   try {
     const refreshToken = jwt.sign(

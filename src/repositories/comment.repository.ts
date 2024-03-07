@@ -2,7 +2,7 @@ import { Comments } from "../../models/Comments";
 
 export class CommentRepository {
 
-
+    // 댓글 작성
     postComment = async (content: string, boardId: any, user: any) => {
         try {
             await Comments.create({
@@ -18,7 +18,7 @@ export class CommentRepository {
         }
     }
 
-
+    // 댓글 수정
     updateComment = async (content: string, commentId: any, boardId: any, user: any) => {
         try {
             const comment = await Comments.update({ content },
@@ -40,7 +40,7 @@ export class CommentRepository {
         }
     }
 
-
+    // 댓글 삭제
     deleteComment = async (content: string, commentId: any, boardId: any, user: any) => {
         try {
             const comment = await Comments.update({ deletedAt: 'deleted' },
@@ -62,6 +62,7 @@ export class CommentRepository {
         }
     }
 
+    // 대댓글 작성
     postComment2 = async (content: string, boardId: any, user: any, commentId: any) => {
         try {
             await Comments.create({

@@ -9,6 +9,7 @@ import { where } from 'sequelize';
 export class CommentController {
     commentService = new CommentService();
 
+    // 댓글 작성
     postComment = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { content } = req.body;
@@ -24,6 +25,7 @@ export class CommentController {
         }
     }
 
+    // 댓글 수정
     updateComment = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { content } = req.body;
@@ -39,6 +41,7 @@ export class CommentController {
         }
     }
 
+    // 댓글 삭제
     deleteComment = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { content } = req.body;
@@ -54,6 +57,7 @@ export class CommentController {
         }
     }
 
+    // 대댓글 작성하기
     postComment2 = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { content } = req.body;

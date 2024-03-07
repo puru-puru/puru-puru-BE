@@ -13,7 +13,7 @@ const diarySchema = Joi.object({
   });
 // 질문에 대한 답변은 5자이상 25자 이하로.
 const answerSchema = Joi.object({
-    answer: Joi.string().pattern(new RegExp("^[\\s\\S]{5,25}$")).required(),
+    answer: Joi.string().pattern(new RegExp("^[\\s\\S]{1,25}$")).required(),
 })
 // 식물 이름(별명)은 2자 이상 10자 이하로. 특수문자 허용 안함
 // 식물 타입은 2자 이상 6자 이하로. 특수문자 허용 안함

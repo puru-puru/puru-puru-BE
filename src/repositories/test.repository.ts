@@ -11,7 +11,7 @@ export class TestRepository {
             throw err;
         }
     }
-
+    
     getDB = async () => {
         try {
             const plants = await Plants.findAll({

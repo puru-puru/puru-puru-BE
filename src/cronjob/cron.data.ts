@@ -20,13 +20,16 @@ export function initializeCronJob() {
     });
 }
 
+// plantDB에서 데이터를 가져와 1 개월 주기로 식물을 뿌려주는 역할을 한다
 export function initializeCronRecomendation(){
     cron.schedule('0 0 1 * *', async () => {
         try {
+            // 새롭게 식물을 가져오기 전, RecommendPlants에 있는 모든 식물을 삭제 처리한다
             const recoplants = await RecommendPlants.update({ deletedAt: Date() }, {
                 where: { deletedAt: null }
             });
             console.log('데이터 삭제처리 완료');
+            // 기존 plantsDB에서 모든 식물을 가져온다
             const plantsDB = await Plants.findAll();
 
             function shuffelArray(array: any[]){
@@ -36,8 +39,11 @@ export function initializeCronRecomendation(){
                 }
                 return array;
             }
+            // 가져온 모든 식물의 순서가 DB와 동일하니, 이를 뒤죽박죽 바꾼다.
             const shuffelPlants = shuffelArray(plantsDB);
+            // 이후 앞에서 3개만 짤라서 가져온다.
             const slicedPlants = shuffelPlants.slice(0,3);
+            // 잘라서 나온 3개의 식물을 RecommendPlants DB에 자리에 맞게 조립한다.
             const mappedPlants = slicedPlants.map(plant =>({
                 plantName: plant.plantName,
                 type: plant.type,
@@ -45,7 +51,7 @@ export function initializeCronRecomendation(){
                 content: plant.content,
                 tag: plant.tag
             }))
-            
+            // 이후 RecommendPlants DB에 본격적으로 넣는다.
             const newRecommendation = await RecommendPlants.bulkCreate(mappedPlants);
 
 

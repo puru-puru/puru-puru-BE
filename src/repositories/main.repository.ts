@@ -15,7 +15,7 @@ export class MainRepository {
             throw err;
         }
     }
-
+    // RecommendPlants에서 식물 데이터를 가져온다
     getSelectedDB = async () => {
         try {
             const plants = await RecommendPlants.findAll({

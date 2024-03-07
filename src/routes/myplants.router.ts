@@ -32,4 +32,5 @@ router.post('/newplants', authMiddleware, myplantscontroller.newPlants)
 // 관리자용 이미지 업로드
 router.post('/auth-image-uploader', authMiddleware, upload.single('image'), myplantscontroller.postImage )
 
+// ====> 자세한 내용은 서비스 및 레포지토리 계층에서 알아 볼 수 있다.
 export default router

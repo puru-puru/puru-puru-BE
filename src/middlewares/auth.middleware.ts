@@ -39,7 +39,7 @@ export default async function (req: Request, res: Response, next: NextFunction) 
       throw new Error (" 토큰 사용자 없음 ")
     }
 
-    // 사용자의 정보를 이런식으로 담아서 다른 서비스 에서 사용 할 수 있게 넘김.
+    // 사용자의 정보를 담아서 다른 서비스 에서 사용 할 수 있게 넘김.
     req.user = user
     
     next()

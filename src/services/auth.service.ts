@@ -160,7 +160,7 @@ export class AuthService {
     }
   }
 
-  // 동의 약관 처리 부분.. 아직 테스트 진행 해보지 모했음. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  // 동의 약관 처리 부분  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   agreedService = async (userId: any, agreedService: boolean) => {
     try {

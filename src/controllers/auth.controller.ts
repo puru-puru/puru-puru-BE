@@ -34,25 +34,19 @@ export class AuthController {
 
   emailVerification = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { email } = req.body;
+      const { email } = await userSchema.validateAsync(req.body) // 바디 값으로 이메일 받음
   
-      // email 유효성 검사
-      const { error } = userSchema.validate({ email });
-      if (error) {
-        return res.status(400).json({ message: error.message });
-      }
+      const isGoogleEmail = email.endsWith('@gmail.com'); // 만약 이메일 부부에 구글이 들어가면. 이라는 조건 달고.
   
-      const isGoogleEmail = email.endsWith('@gmail.com');
-  
-      const result = await this.authService.sendEmailAndRegister(email);
+      const result = await this.authService.sendEmailAndRegister(email); // 여기서 서비스 부분으로 넘기고 받고.
   
       // 인증 메일 보내기
       // const url = `http://localhost:3000/api/test/auth/verify-email?email=${email}`;
       // await this.emailUtils.sendVerificationEmail(email, url, isGoogleEmail);
   
       // // 배포 환경.
-      const url = `https://purupuru.store/api/test/auth/verify-email?email=${email}`;
-      await this.emailUtils.sendVerificationEmail(email, url, isGoogleEmail);
+      const url = `https://purupuru.store/api/test/auth/verify-email?email=${email}`; // 유알엘은 여기로.
+      await this.emailUtils.sendVerificationEmail(email, url, isGoogleEmail); // 구글이 붙어 있다면 이리로.
   
       return res.status(200).json({ message: "이메일 인증 메일이 발송되었습니다.", data: { result } });
     } catch (err) {
@@ -64,7 +58,7 @@ export class AuthController {
 
 testsignupUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password, confirmPassword } = await userSchema.validateAsync(req.body);
+    const { email, password, confirmPassword } = await userSchema.validateAsync(req.body); // 메일, 비밀번호, 일치하는지.
 
     // 이메일이 인증되었는지 확인
     const isEmailValid = await this.authService.isEmailValid(email);

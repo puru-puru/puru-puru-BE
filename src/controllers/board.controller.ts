@@ -22,8 +22,10 @@ export class BoardController {
         try {
             // 현재 로그인한 사용자 정보 가져오기
             const user: any = req.user;
+
             // 전체 게시글 목록 불러오기
             const boards = await this.boardService.boardListWithLikeCount(user);
+
             return res.status(200).json({ data: boards, loginUser: user.nickname });
         } catch (err) {
             next(err);
@@ -37,6 +39,7 @@ export class BoardController {
 
             // 유효성 검사
             const validationResult = this.checkcontent.validate({ title, content });
+
             if (validationResult.error) {
                 console.error(validationResult.error);
                 return res.status(400).json({ errormessage: "최소 2자 이상 입력하셔야 합니다." })
@@ -131,7 +134,6 @@ export class BoardController {
             // 현재 로그인한 사용자 정보 가져오기
             const user: any = req.user;
             const myPosts = await this.boardService.boardMyPostsList(user);
-
             res.status(200).json({ data: myPosts });
         } catch (err) {
             next(err);

@@ -33,8 +33,8 @@ router.get('/boards/:boardId', authMiddleware, boardController.boardDetail)
 // 커뮤니티 글 수정. ok <-- 되는데 S3 미연결 해보세요
 router.patch('/boards/:boardId', upload.single("image"), authMiddleware, boardController.boardPatch)
 
-// 커뮤니티 글 삭제. ok
-router.delete('/boards/:boardId', authMiddleware, boardController.boardDelete)
+// 커뮤니티 마이페이지 에서 글 삭제. ok
+router.delete('/boards/myposts/:boardId', authMiddleware, boardController.boardDelete)
 
 // 게시물 좋아요
 router.post('/boards/:boardId/like', authMiddleware, likeController.likePost);

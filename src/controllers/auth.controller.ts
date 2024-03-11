@@ -202,7 +202,7 @@ verifyGoogleEmail = async (req: Request, res: Response) => {
   };
 
 
-  // 사용자 약관 동의 부분인데 아직 잘 모르겠음.. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  // 사용자 약관 동의 부분 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
   agreedService = async (req: Request, res: Response, next: NextFunction) => {
     try {

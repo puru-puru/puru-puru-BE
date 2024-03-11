@@ -4,9 +4,7 @@ import { Comments } from "./Comments";
 import { Likes } from "./likes";
 
 class Boards extends Model {
-  static find(arg0: { where: { deletedAt: null; }; include: { model: typeof import("./Users").Users; attributes: string[]; as: string; }[]; }) {
-      throw new Error("Method not implemented.");
-  }
+  
   declare boardId: number;
   declare title: string;
   declare image?: string;
